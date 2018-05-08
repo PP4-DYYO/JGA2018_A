@@ -20,6 +20,10 @@ public class MyCharactor : MonoBehaviour
 	/// </summary>
 	[SerializeField]
 	MyGame myGame;
+	public MyGame GameScript
+	{
+		get { return myGame; }
+	}
 
 	/// <summary>
 	/// AIマネージャ

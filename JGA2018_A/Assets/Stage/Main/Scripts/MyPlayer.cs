@@ -27,6 +27,51 @@ public class MyPlayer : MonoBehaviour
 	Camera m_camera;
 
 	/// <summary>
+	/// アニメータ
+	/// </summary>
+	[SerializeField]
+	Animator m_anim;
+
+	#region アニメーション遷移
+	/// <summary>
+	/// 無操作遷移
+	/// </summary>
+	const string TRANS_IDLE = "Idle";
+
+	/// <summary>
+	/// 歩く遷移
+	/// </summary>
+	const string TRANS_WALK = "Walk";
+	#endregion
+
+	#region 状態
+	/// <summary>
+	/// 状態
+	/// </summary>
+	enum Status
+	{
+		/// <summary>
+		/// 無操作
+		/// </summary>
+		Idle,
+		/// <summary>
+		/// 徒歩
+		/// </summary>
+		Walk,
+	}
+
+	/// <summary>
+	/// 現在の状態
+	/// </summary>
+	Status m_state;
+
+	/// <summary>
+	/// フレーム前の状態
+	/// </summary>
+	Status m_statePrev;
+	#endregion
+
+	/// <summary>
 	/// フレーム前の位置
 	/// </summary>
 	Vector3 m_posPrev;
@@ -100,8 +145,8 @@ public class MyPlayer : MonoBehaviour
 		//移動
 		Move();
 
-		//移動に伴う回転
-		Rotation();
+		//アニメーション
+		Animation();
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -125,6 +170,9 @@ public class MyPlayer : MonoBehaviour
 		transform.position +=
 			(Vector3.Scale(m_camera.transform.forward, (Vector3.right + Vector3.forward)) * Input.GetAxis("Vertical")
 			+ m_camera.transform.right * Input.GetAxis("Horizontal")).normalized * m_speed * Time.deltaTime;
+
+		//移動に伴う回転
+		Rotation();
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -166,5 +214,45 @@ public class MyPlayer : MonoBehaviour
 		}
 
 		transform.eulerAngles = m_workVector3;
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// アニメーション関係
+	/// </summary>
+	void Animation()
+	{
+		//状態を調べる
+		CheckState();
+
+		//状態変化なし
+		if (m_state == m_statePrev)
+			return;
+
+		//アニメーションを変化
+		switch (m_state)
+		{
+			case Status.Walk:
+				m_anim.SetTrigger(TRANS_WALK);
+				break;
+			case Status.Idle:
+				m_anim.SetTrigger(TRANS_IDLE);
+				break;
+		}
+
+		m_statePrev = m_state;
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// 状態を調べる
+	/// </summary>
+	void CheckState()
+	{
+		//移動量あり
+		if (m_direction.sqrMagnitude > 0)
+			m_state = Status.Walk;
+		else
+			m_state = Status.Idle;
 	}
 }

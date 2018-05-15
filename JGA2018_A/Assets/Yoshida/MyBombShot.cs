@@ -11,7 +11,8 @@ using UnityEngine;
 /// <summary>
 /// 爆弾発射用
 /// </summary>
-public class MyBombShot : MonoBehaviour {
+public class MyBombShot : MonoBehaviour
+{
 
     /// <summary>
     // 爆弾prefab//
@@ -42,7 +43,8 @@ public class MyBombShot : MonoBehaviour {
     /// <summary>
     /// 初期状態設定
     /// </summary>
-    void Start () {
+    void Start ()
+    {
         m_PlayerObjct = GameObject.Find(PLAYER_OBJECT_NAME);
         m_throwPoint = this.gameObject.transform;
     }
@@ -51,7 +53,8 @@ public class MyBombShot : MonoBehaviour {
     /// <summary>
     /// 向きの変更のみ
     /// </summary>
-    void Update () {
+    void Update ()
+    {
         //常にプレイヤーの方向を向く//
         this.transform.LookAt(new Vector3(m_PlayerObjct.transform.position.x, 0, m_PlayerObjct.transform.position.z));
     }
@@ -60,14 +63,27 @@ public class MyBombShot : MonoBehaviour {
     /// <summary>
     /// MyVirusMinisterAIから実行、爆弾の発射
     /// </summary>
-    public void Shot()
+    public void Shot(int num)
     {
-        GameObject bombs = GameObject.Instantiate(m_bomb) as GameObject;
-        Vector3 force;
-        //力は斜め上に
-        force = this.gameObject.transform.forward * BOMBSPEED+ this.gameObject.transform.up * BOMBSPEED/2;
-        bombs.GetComponent<Rigidbody>().AddForce(force);
-        bombs.transform.position = m_throwPoint.position;
-        Debug.Log("爆弾投げ!");
+        if (num == 1)
+        {
+            GameObject bombs = GameObject.Instantiate(m_bomb) as GameObject;
+            Vector3 force;
+            //力は斜め上に
+            force = this.gameObject.transform.forward * BOMBSPEED / 3 + this.gameObject.transform.up * BOMBSPEED / 2;
+            bombs.GetComponent<Rigidbody>().AddForce(force);
+            bombs.transform.position = m_throwPoint.position;
+            Debug.Log("爆弾下投げ!");
+        }
+        else
+        {
+            GameObject bombs = GameObject.Instantiate(m_bomb) as GameObject;
+            Vector3 force;
+            //力は斜め上に
+            force = this.gameObject.transform.forward * ((2*BOMBSPEED)/5)  ;
+            bombs.GetComponent<Rigidbody>().AddForce(force);
+            bombs.transform.position = m_throwPoint.position;
+            Debug.Log("爆弾転がし!");
+        }
     }
 }

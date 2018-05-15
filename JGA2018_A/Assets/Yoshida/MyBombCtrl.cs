@@ -11,7 +11,8 @@ using UnityEngine;
 /// <summary>
 /// エフェクト発生用
 /// </summary>
-public class MyBombCtrl : MonoBehaviour {
+public class MyBombCtrl : MonoBehaviour
+{
 
     /// <summary>
     // 爆発エフェクト//
@@ -27,7 +28,8 @@ public class MyBombCtrl : MonoBehaviour {
     /// <summary>
     /// 着弾点がエフェクトの発生点
     /// </summary>
-    void Update () {
+    void Update ()
+    {
         m_effectPoint = this.gameObject.transform;
     }
 
@@ -35,7 +37,23 @@ public class MyBombCtrl : MonoBehaviour {
     /// <summary>
     /// 当たった時に爆発
     /// </summary>
-    private void OnCollisionEnter(Collision collision)
+    private void OnCollisionEnter(Collision other)
+    {
+        if (other.gameObject.CompareTag("VirusMinister"))
+        {
+            //なにかするかも
+        }
+        else if(other.gameObject.CompareTag("Player"))
+        {
+            Explosion();
+        }
+    }
+
+    //----------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// 爆発本体
+    /// </summary>
+   public void Explosion()
     {
         GameObject bombeffect = GameObject.Instantiate(m_bombEffect) as GameObject;
         bombeffect.transform.position = m_effectPoint.position;

@@ -27,10 +27,16 @@ public class MyPlayer : MonoBehaviour
 	Camera m_camera;
 
 	/// <summary>
+	/// リジッドボディ
+	/// </summary>
+	[SerializeField]
+	Rigidbody RB;
+
+	/// <summary>
 	/// アニメータ
 	/// </summary>
 	[SerializeField]
-	Animator m_anim;
+	Animator Anim;
 
 	#region アニメーション遷移
 	/// <summary>
@@ -119,6 +125,34 @@ public class MyPlayer : MonoBehaviour
 	float m_rotationSpeed;
 
 	/// <summary>
+	/// ジャンプ力
+	/// </summary>
+	[SerializeField]
+	float m_jumpingPower;
+
+	#region キーボード関係
+	/// <summary>
+	/// 水平移動軸
+	/// </summary>
+	const string HORIZONTAL = "Horizontal";
+
+	/// <summary>
+	/// 垂直移動軸
+	/// </summary>
+	const string VERTICAL = "Vertical";
+
+	/// <summary>
+	/// ジャンプ軸
+	/// </summary>
+	const string JUMP = "Jump";
+
+	/// <summary>
+	/// スペースキーを押された
+	/// </summary>
+	bool m_isPressedSpace = false;
+	#endregion
+
+	/// <summary>
 	/// 作業用のVector３
 	/// </summary>
 	Vector3 m_workVector3;
@@ -131,6 +165,28 @@ public class MyPlayer : MonoBehaviour
 	{
 		//アクセスしやすいように
 		m_camera = myCharactor.GameScript.CameraScript;
+
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// フレーム
+	/// </summary>
+	void Update()
+	{
+		//キーの状態を調べる
+		CheckKeyStatus();
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// キーの状態を調べる
+	/// </summary>
+	void CheckKeyStatus()
+	{
+		//スペースキーの押下
+		if (Input.GetButtonDown(JUMP))
+			m_isPressedSpace = true;
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -145,8 +201,14 @@ public class MyPlayer : MonoBehaviour
 		//移動
 		Move();
 
+		//ジャンプ
+		Jump();
+
 		//アニメーション
 		Animation();
+
+		//キー状態のリセット
+		ResetKeyStatus();
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -168,8 +230,8 @@ public class MyPlayer : MonoBehaviour
 
 		//カメラの向きに対応した移動
 		transform.position +=
-			(Vector3.Scale(m_camera.transform.forward, (Vector3.right + Vector3.forward)) * Input.GetAxis("Vertical")
-			+ m_camera.transform.right * Input.GetAxis("Horizontal")).normalized * m_speed * Time.deltaTime;
+			(Vector3.Scale(m_camera.transform.forward, (Vector3.right + Vector3.forward)) * Input.GetAxis(VERTICAL)
+			+ m_camera.transform.right * Input.GetAxis(HORIZONTAL)).normalized * m_speed * Time.deltaTime;
 
 		//移動に伴う回転
 		Rotation();
@@ -218,6 +280,16 @@ public class MyPlayer : MonoBehaviour
 
 	//----------------------------------------------------------------------------------------------------
 	/// <summary>
+	/// ジャンプ
+	/// </summary>
+	void Jump()
+	{
+		if (m_isPressedSpace)
+			RB.AddForce(m_jumpingPower * Vector3.up);
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
 	/// アニメーション関係
 	/// </summary>
 	void Animation()
@@ -233,10 +305,10 @@ public class MyPlayer : MonoBehaviour
 		switch (m_state)
 		{
 			case Status.Walk:
-				m_anim.SetTrigger(TRANS_WALK);
+				Anim.SetTrigger(TRANS_WALK);
 				break;
 			case Status.Idle:
-				m_anim.SetTrigger(TRANS_IDLE);
+				Anim.SetTrigger(TRANS_IDLE);
 				break;
 		}
 
@@ -254,5 +326,14 @@ public class MyPlayer : MonoBehaviour
 			m_state = Status.Walk;
 		else
 			m_state = Status.Idle;
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// キー状態のリセット
+	/// </summary>
+	void ResetKeyStatus()
+	{
+		m_isPressedSpace = false;
 	}
 }

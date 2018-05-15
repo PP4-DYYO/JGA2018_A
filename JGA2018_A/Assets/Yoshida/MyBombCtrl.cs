@@ -5,8 +5,7 @@
 //
 //////////////////////////////////////////////////////////////////
 
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 /// <summary>
@@ -14,20 +13,32 @@ using UnityEngine;
 /// </summary>
 public class MyBombCtrl : MonoBehaviour {
 
+    /// <summary>
     // 爆発エフェクト//
-    public GameObject BombEffect;
+    /// </summary>
+    public GameObject m_bombEffect;
+
+    /// <summary>
     // 発生点//
-    private Transform effectPoint;
-	
-	// Update is called once per frame
-	void Update () {
-        effectPoint = this.gameObject.transform;
+    /// </summary>
+    Transform m_effectPoint;
+
+    //----------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// 着弾点がエフェクトの発生点
+    /// </summary>
+    void Update () {
+        m_effectPoint = this.gameObject.transform;
     }
+
+    //----------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// 当たった時に爆発
+    /// </summary>
     private void OnCollisionEnter(Collision collision)
     {
-        GameObject bombeffect = GameObject.Instantiate(BombEffect) as GameObject;
-        bombeffect.transform.position = effectPoint.position;
+        GameObject bombeffect = GameObject.Instantiate(m_bombEffect) as GameObject;
+        bombeffect.transform.position = m_effectPoint.position;
         Destroy(this.gameObject);
-
     }
 }

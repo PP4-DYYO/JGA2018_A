@@ -5,26 +5,23 @@
 //
 //////////////////////////////////////////////////////////////////
 
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
-
 
 /// <summary>
 /// エフェクト自動消滅用
 /// </summary>
 public class MyAutoDestroyer : MonoBehaviour {
 
-    int time;
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-        time++;
-        if (time > 180)
+    int m_time;
+
+    //----------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// 時間経過で削除
+    /// </summary>
+    void Update () {
+        m_time++;
+        if (m_time > 180)
         {
             Destroy(this.gameObject);
         }

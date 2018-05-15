@@ -27,7 +27,7 @@ public class MyVirusMinisterAI : MonoBehaviour
     /// <summary>
     /// HP//
     /// </summary>
-    const int VIRUS_MINISTER_HIT_POINT = 100;
+    int VirusMinisterHitPoint = 100;
 
     /// <summary>
     /// 攻撃力
@@ -45,6 +45,11 @@ public class MyVirusMinisterAI : MonoBehaviour
     bool isPerceived;
 
     /// <summary>
+    /// 攻撃後か
+    /// </summary>
+    bool isAttacked;
+
+    /// <summary>
     /// 攻撃間隔//
     /// </summary>
     const int ATTACK_INTERVAL = 120;
@@ -52,7 +57,7 @@ public class MyVirusMinisterAI : MonoBehaviour
     /// <summary>
     /// 一歩の移動距離//
     /// </summary>
-    const float step = 0.05f;
+    const float step = 0.03f;
     /// <summary>
     /// xへの移動はt:プラス/f:マイナス//
     /// </summary>
@@ -126,26 +131,41 @@ public class MyVirusMinisterAI : MonoBehaviour
     /// </summary>
     void Update()
     {
-        ////////////////////（仮）プレイヤーをここで操作する//////////////
-        if (Input.GetKey("right"))
-        {
-            m_playerObjct.transform.Translate(new Vector3(0.2f, 0, 0));
-        }
-        if (Input.GetKey("left"))
-        {
-            m_playerObjct.transform.Translate(new Vector3(-0.2f, 0, 0));
-        }
-        if (Input.GetKey("up"))
-        {
-            m_playerObjct.transform.Translate(new Vector3(0, 0, 0.2f));
-        }
-        if (Input.GetKey("down"))
-        {
-            m_playerObjct.transform.Translate(new Vector3(0, 0, -0.2f));
-        }
-        /////////////////////////////////////////////////////////////
+        //////////////////////（仮）プレイヤーをここで操作する//////////////
+        //if (Input.GetKey("right"))
+        //{
+        //    m_playerObjct.transform.Translate(new Vector3(0.2f, 0, 0));
+        //}
+        //if (Input.GetKey("left"))
+        //{
+        //    m_playerObjct.transform.Translate(new Vector3(-0.2f, 0, 0));
+        //}
+        //if (Input.GetKey("up"))
+        //{
+        //    m_playerObjct.transform.Translate(new Vector3(0, 0, 0.2f));
+        //}
+        //if (Input.GetKey("down"))
+        //{
+        //    m_playerObjct.transform.Translate(new Vector3(0, 0, -0.2f));
+        //}
+        ///////////////////////////////////////////////////////////////
 
-        m_gameTime++;
+        if (Input.GetKeyDown("space"))
+        {
+            if (VirusMinisterHitPoint == 100)
+            {
+                VirusMinisterHitPoint = 90;
+            }
+            else
+            {
+                VirusMinisterHitPoint = 100;
+            }
+        }
+
+        if (m_gameTime < 120)
+        {
+            m_gameTime++;
+        }
 
         //プレイヤーとの距離
         float m_distance = (m_playerObjct.transform.position - this.gameObject.transform.position).magnitude;
@@ -173,8 +193,10 @@ public class MyVirusMinisterAI : MonoBehaviour
 
         //知覚範囲に入れば気づいた状態に遷移する
         if (m_distance < PERCEIVEDRANGE)
+        {
             isPerceived = true;
-        
+        }
+
         if (isPerceived)
         {
             //距離が５より小さければ離れる
@@ -205,7 +227,7 @@ public class MyVirusMinisterAI : MonoBehaviour
             {
                 if (m_distance < PERCEIVEDRANGE * 3)
                 {
-                    aiMode = AIMode.APPROACH;
+                   // aiMode = AIMode.APPROACH;
                 }
                 //大きく離れるとターゲットから外れる
                 else
@@ -214,24 +236,24 @@ public class MyVirusMinisterAI : MonoBehaviour
                     isPerceived = false;
                 }
 
-                //移動の+-切り替え
-                if (moveX == true)
-                {
-                    m_moveX = step;
-                }
-                else
-                {
-                    m_moveX = -step;
-                }
+                ////移動の+-切り替え
+                //if (moveX == true)
+                //{
+                //    m_moveX = step;
+                //}
+                //else
+                //{
+                //    m_moveX = -step;
+                //}
 
-                if (moveZ == true)
-                {
-                    m_moveZ = step;
-                }
-                else
-                {
-                    m_moveZ = -step;
-                }
+                //if (moveZ == true)
+                //{
+                //    m_moveZ = step;
+                //}
+                //else
+                //{
+                //    m_moveZ = -step;
+                //}
 
             }
             else
@@ -239,7 +261,15 @@ public class MyVirusMinisterAI : MonoBehaviour
                 aiMode = AIMode.ATTACK;
             }
         }
-
+        if (isAttacked == true)
+        {
+           aiMode = AIMode.LEAVE;
+            if(m_distance > 5)
+            {
+                isAttacked = false;
+                aiMode = AIMode.STOP;
+            }
+        }
         //状態によって行動を切り替える
         switch (aiMode)
         {
@@ -247,9 +277,8 @@ public class MyVirusMinisterAI : MonoBehaviour
                 break;
             case AIMode.ATTACK:
                 //一定時間毎に攻撃をする
-                if (m_gameTime > ATTACK_INTERVAL)
+                if (m_gameTime >= ATTACK_INTERVAL)
                     NomalAttack();
-                    m_gameTime = 0;
                 break;
             case AIMode.DEFENSE:
                 break;
@@ -268,10 +297,21 @@ public class MyVirusMinisterAI : MonoBehaviour
     void NomalAttack()
     {
         //HPが一定で制限に達していないとき
-        if (VIRUS_MINISTER_HIT_POINT < VIRUS_MINISTER_HIT_POINT / 4 && m_specialAttackCount < SPECIAL_ATTACKLIMIT)
+        if (VirusMinisterHitPoint < VirusMinisterHitPoint / 4 && m_specialAttackCount < SPECIAL_ATTACKLIMIT)
+        {
             SpecialAttack();
+        }
+        m_gameTime = 0;
 
-        mb.Shot();
+        if (VirusMinisterHitPoint == 100)
+        {
+            mb.Shot(1);
+        }
+        else 
+        {
+            mb.Shot(2);
+        }
+        isAttacked = true;
     }
 
     //----------------------------------------------------------------------------------------------------

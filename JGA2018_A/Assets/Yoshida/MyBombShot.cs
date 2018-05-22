@@ -69,18 +69,22 @@ public class MyBombShot : MonoBehaviour
         {
             GameObject bombs = GameObject.Instantiate(m_bomb) as GameObject;
             Vector3 force;
-            //力は斜め上に
-            force = this.gameObject.transform.forward * BOMBSPEED / 3 + this.gameObject.transform.up * BOMBSPEED / 2;
+            //力は斜め上に、ややランダム性あり
+            int m_randomX = UnityEngine.Random.Range(0, 500);
+            int m_randomY = UnityEngine.Random.Range(0, 100);
+            Debug.Log(m_randomX);
+            force = this.gameObject.transform.forward * ((2*BOMBSPEED+m_randomX) / 5) + this.gameObject.transform.up *((BOMBSPEED+m_randomY)/ 2);
             bombs.GetComponent<Rigidbody>().AddForce(force);
             bombs.transform.position = m_throwPoint.position;
-            Debug.Log("爆弾下投げ!");
+            Debug.Log("爆弾投げ!");
         }
         else
         {
             GameObject bombs = GameObject.Instantiate(m_bomb) as GameObject;
             Vector3 force;
-            //力は斜め上に
-            force = this.gameObject.transform.forward * ((2*BOMBSPEED)/5)  ;
+            //力は横だけ、ややランダム性あり
+            int m_random = UnityEngine.Random.Range(0, 100);
+            force = this.gameObject.transform.forward * ((2*BOMBSPEED+m_random)/5)  ;
             bombs.GetComponent<Rigidbody>().AddForce(force);
             bombs.transform.position = m_throwPoint.position;
             Debug.Log("爆弾転がし!");

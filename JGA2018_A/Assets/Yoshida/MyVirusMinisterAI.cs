@@ -99,6 +99,11 @@ public class MyVirusMinisterAI : MonoBehaviour
     /// </summary>
     int m_gameTime;
 
+    /// <summary>
+    /// 爆弾近距離遠距離 0:近距離　1:遠距離
+    /// </summary>
+    int m_BombNum;
+
     //スクリプト参照用//
     MyBombShot mb;
 
@@ -111,6 +116,7 @@ public class MyVirusMinisterAI : MonoBehaviour
         m_playerObjct = GameObject.Find(PLAYER_OBJECT_NAME);
         aiMode = AIMode.STOP;
         mb = GameObject.Find("BombPoint").GetComponent<MyBombShot>();
+        m_BombNum = 1;
     }
 
     /// <summary>
@@ -203,6 +209,7 @@ public class MyVirusMinisterAI : MonoBehaviour
             if (m_distance < 5)
             {
                 aiMode = AIMode.LEAVE;
+                
                 //移動の+-切り替え
                 if (moveX == true)
                 {
@@ -270,6 +277,15 @@ public class MyVirusMinisterAI : MonoBehaviour
                 aiMode = AIMode.STOP;
             }
         }
+
+        if (aiMode == AIMode.LEAVE)
+        {
+            m_BombNum = 0;
+        }
+        else
+        {
+            m_BombNum = 1;
+        }
         //状態によって行動を切り替える
         switch (aiMode)
         {
@@ -278,12 +294,21 @@ public class MyVirusMinisterAI : MonoBehaviour
             case AIMode.ATTACK:
                 //一定時間毎に攻撃をする
                 if (m_gameTime >= ATTACK_INTERVAL)
+                {
                     NomalAttack();
+                }
                 break;
             case AIMode.DEFENSE:
                 break;
             case AIMode.APPROACH:
+                //近づいてこない
+                break;
             case AIMode.LEAVE:
+                //逃げながら投げる
+                if (m_gameTime >= ATTACK_INTERVAL)
+                {
+                    NomalAttack();
+                }
                 //離れるまたは近づく(ここは同じ)            
                 this.transform.Translate(new Vector3(m_moveX, 0, m_moveZ));
                 break;
@@ -302,16 +327,8 @@ public class MyVirusMinisterAI : MonoBehaviour
             SpecialAttack();
         }
         m_gameTime = 0;
-
-        if (VirusMinisterHitPoint == 100)
-        {
-            mb.Shot(1);
-        }
-        else 
-        {
-            mb.Shot(2);
-        }
-        isAttacked = true;
+        mb.Shot(m_BombNum);
+       isAttacked = true;
     }
 
     //----------------------------------------------------------------------------------------------------

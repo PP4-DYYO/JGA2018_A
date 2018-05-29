@@ -166,10 +166,26 @@ public class MyPlayer : MonoBehaviour
 	float m_rotationSpeed;
 
 	/// <summary>
+	/// ジャンプしている
+	/// </summary>
+	bool m_isJump;
+
+	/// <summary>
 	/// ジャンプ力
 	/// </summary>
 	[SerializeField]
 	float m_jumpingPower;
+
+	/// <summary>
+	/// ジャンプで力を入れている時間
+	/// </summary>
+	float m_jumpForceCountTime;
+
+	/// <summary>
+	/// ジャンプで力を入れる時間
+	/// </summary>
+	[SerializeField]
+	float m_jumpForceTime;
 
 	/// <summary>
 	/// 攻撃の連続回数
@@ -422,8 +438,42 @@ public class MyPlayer : MonoBehaviour
 	/// </summary>
 	void Jump()
 	{
-		if (m_isPressedSpace)
-			RB.AddForce(m_jumpingPower * Vector3.up);
+		//スペースキーを押したandジャンプしていない
+		if (m_isPressedSpace && m_jumpForceCountTime == -1)
+			m_jumpForceCountTime = 0;
+
+		//ジャンプしない
+		if (m_jumpForceCountTime == -1)
+			return;
+
+		//スペースキーを押しているandジャンプする力を入れている間
+		if(Input.GetButton(JUMP) && m_jumpForceCountTime < m_jumpForceTime)
+			RB.AddForce(m_jumpingPower * Vector3.up * (1.0f - m_jumpForceCountTime / m_jumpForceTime));
+
+		//ジャンプ中
+		if (m_jumpForceCountTime >= 0)
+			m_jumpForceCountTime += Time.deltaTime;
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// 当たり判定（くっついている）
+	/// </summary>
+	/// <param name="other">当たっているもの</param>
+	void OnCollisionStay(Collision other)
+	{
+		//当たった位置
+		foreach(var point in other.contacts)
+		{
+			//足で乗っている
+			if(point.point.y <= transform.position.y)
+			{
+				//ジャンプしきった時、ジャンプ終了を許可
+				if (m_jumpForceCountTime >= m_jumpForceTime)
+					m_jumpForceCountTime = -1;
+				return;
+			}
+		}
 	}
 
 	//----------------------------------------------------------------------------------------------------

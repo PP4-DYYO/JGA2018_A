@@ -39,7 +39,7 @@ public class MyAutoDestroyer : MonoBehaviour
         //爆弾は１秒
         if (this.gameObject.CompareTag("Bomb"))
         {
-            if (m_time > 60)
+            if (m_time > 90)
             {
                 mybombctrl.Explosion();
             }

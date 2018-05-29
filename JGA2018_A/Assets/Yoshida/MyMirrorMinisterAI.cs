@@ -1,23 +1,25 @@
 ﻿//////////////////////////////////////////////////////////////////
 //
-//2018/5/8～
+//2018/5/22～
 //製作者 京都コンピュータ学院京都駅前校ゲーム学科四回生　吉田純基
 //
 //////////////////////////////////////////////////////////////////
 
 using System;
+using UnityEditor;
 using UnityEngine;
 
+
 ///<summary>
-///ウイルス大臣のAI
+///ミラー大臣のAI
 ///</summary>
-public class MyVirusMinisterAI : MonoBehaviour
+public class MyMirrorMinisterAI : MonoBehaviour
 {
 
     /// <summary>
     /// プレイヤーのオブジェクト
     /// </summary>
-     GameObject m_playerObjct;
+    GameObject m_playerObjct;
 
     /// <summary>
     /// プレイヤーオブジェクトの名前
@@ -27,17 +29,17 @@ public class MyVirusMinisterAI : MonoBehaviour
     /// <summary>
     /// HP//
     /// </summary>
-    int VirusMinisterHitPoint = 100;
+    int MirrorMinisterHitPoint = 100;
 
     /// <summary>
     /// 攻撃力
     /// </summary>
-    const int VIRUS_MINISTER_ATTACK = 100;
+    const int MIRROR_MINISTER_ATTACK = 100;
 
     /// <summary>
     /// 知覚範囲
     /// </summary>
-    const int PERCEIVEDRANGE = 5;
+    const int PERCEIVED_RANGE = 30;
 
     /// <summary>
     /// このAIが気づいたか
@@ -52,12 +54,12 @@ public class MyVirusMinisterAI : MonoBehaviour
     /// <summary>
     /// 攻撃間隔//
     /// </summary>
-    const int ATTACK_INTERVAL = 120;
+    const int ATTACK_INTERVAL = 30;
 
     /// <summary>
     /// 一歩の移動距離//
     /// </summary>
-    const float step = 0.03f;
+    const float step = 0.06f;
     /// <summary>
     /// xへの移動はt:プラス/f:マイナス//
     /// </summary>
@@ -99,24 +101,16 @@ public class MyVirusMinisterAI : MonoBehaviour
     /// </summary>
     int m_gameTime;
 
-    /// <summary>
-    /// 爆弾近距離遠距離 0:近距離　1:遠距離
-    /// </summary>
-    int m_BombNum;
-
-    //スクリプト参照用//
-    MyBombShot mb;
 
     //----------------------------------------------------------------------------------------------------
     /// <summary>
     /// 初期状態設定
     /// </summary>
     void Start()
-    {
+    {  
         m_playerObjct = GameObject.Find(PLAYER_OBJECT_NAME);
         aiMode = AIMode.STOP;
-        mb = GameObject.Find("BombPoint").GetComponent<MyBombShot>();
-        m_BombNum = 1;
+        m_gameTime = ATTACK_INTERVAL;
     }
 
     /// <summary>
@@ -131,48 +125,13 @@ public class MyVirusMinisterAI : MonoBehaviour
         LEAVE
     }
 
+
     //----------------------------------------------------------------------------------------------------
     /// <summary>
     /// 移動、行動
     /// </summary>
     void Update()
     {
-        //////////////////////（仮）プレイヤーをここで操作する//////////////
-        //if (Input.GetKey("right"))
-        //{
-        //    m_playerObjct.transform.Translate(new Vector3(0.2f, 0, 0));
-        //}
-        //if (Input.GetKey("left"))
-        //{
-        //    m_playerObjct.transform.Translate(new Vector3(-0.2f, 0, 0));
-        //}
-        //if (Input.GetKey("up"))
-        //{
-        //    m_playerObjct.transform.Translate(new Vector3(0, 0, 0.2f));
-        //}
-        //if (Input.GetKey("down"))
-        //{
-        //    m_playerObjct.transform.Translate(new Vector3(0, 0, -0.2f));
-        //}
-        ///////////////////////////////////////////////////////////////
-
-        if (Input.GetKeyDown("space"))
-        {
-            if (VirusMinisterHitPoint == 100)
-            {
-                VirusMinisterHitPoint = 90;
-            }
-            else
-            {
-                VirusMinisterHitPoint = 100;
-            }
-        }
-
-        if (m_gameTime < 120)
-        {
-            m_gameTime++;
-        }
-
         //プレイヤーとの距離
         float m_distance = (m_playerObjct.transform.position - this.gameObject.transform.position).magnitude;
 
@@ -195,21 +154,35 @@ public class MyVirusMinisterAI : MonoBehaviour
             moveZ = false;
         }
 
-        //Debug.Log("距離は"+ m_distance);
+        //Debug.Log("距離は" + m_distance);
 
         //知覚範囲に入れば気づいた状態に遷移する
-        if (m_distance < PERCEIVEDRANGE)
+        if (m_distance < PERCEIVED_RANGE)
         {
             isPerceived = true;
         }
 
+        if (m_gameTime < ATTACK_INTERVAL)
+        {
+            m_gameTime++;
+        }
         if (isPerceived)
         {
-            //距離が５より小さければ離れる
-            if (m_distance < 5)
+            //距離が0.5より小さければ離れる
+            if (m_distance < 0.5)
             {
-                aiMode = AIMode.LEAVE;
-                
+                //近距離爆弾
+                //  ArrowNumber = 0;
+
+                //ATTACK_INTERVALまで到達していれば攻撃する
+                if (m_gameTime >= ATTACK_INTERVAL)
+                {
+                    aiMode = AIMode.ATTACK;
+                }
+                else
+                {
+                    aiMode = AIMode.LEAVE;
+                }
                 //移動の+-切り替え
                 if (moveX == true)
                 {
@@ -229,63 +202,43 @@ public class MyVirusMinisterAI : MonoBehaviour
                 }
 
             }
-            //距離が8より大きければ近づく
-            else if (m_distance > 8)
+            //距離が2より小さければ攻撃継続
+            else if (m_distance < 2)
             {
-                if (m_distance < PERCEIVEDRANGE * 3)
+                //ATTACK_INTERVALまで到達していれば攻撃する
+                if (m_gameTime >= ATTACK_INTERVAL)
                 {
-                   // aiMode = AIMode.APPROACH;
+                    aiMode = AIMode.ATTACK;
                 }
-                //大きく離れるとターゲットから外れる
                 else
                 {
                     aiMode = AIMode.STOP;
-                    isPerceived = false;
                 }
-
-                ////移動の+-切り替え
-                //if (moveX == true)
-                //{
-                //    m_moveX = step;
-                //}
-                //else
-                //{
-                //    m_moveX = -step;
-                //}
-
-                //if (moveZ == true)
-                //{
-                //    m_moveZ = step;
-                //}
-                //else
-                //{
-                //    m_moveZ = -step;
-                //}
-
             }
             else
             {
-                aiMode = AIMode.ATTACK;
-            }
-        }
-        if (isAttacked == true)
-        {
-           aiMode = AIMode.LEAVE;
-            if(m_distance > 5)
-            {
-                isAttacked = false;
-                aiMode = AIMode.STOP;
+                //それ以上離れると近づく
+                aiMode = AIMode.APPROACH;
+                //移動の+-切り替え
+                if (moveX == true)
+                {
+                    m_moveX = step;
+                }
+                else
+                {
+                    m_moveX = -step;
+                }
+                if (moveZ == true)
+                {
+                    m_moveZ = step;
+                }
+                else
+                {
+                    m_moveZ = -step;
+                }
             }
         }
 
-        if (aiMode == AIMode.LEAVE)
-        {
-            m_BombNum = 0;
-        }
-        else
-        {
-            m_BombNum = 1;
-        }
         //状態によって行動を切り替える
         switch (aiMode)
         {
@@ -293,23 +246,19 @@ public class MyVirusMinisterAI : MonoBehaviour
                 break;
             case AIMode.ATTACK:
                 //一定時間毎に攻撃をする
-                if (m_gameTime >= ATTACK_INTERVAL)
-                {
-                    NomalAttack();
-                }
+                NomalAttack();
                 break;
             case AIMode.DEFENSE:
                 break;
             case AIMode.APPROACH:
-                //近づいてこない
+                //近づく(y座標は固定)            
+               this.transform.position=Vector3.MoveTowards(
+                  new Vector3(this.transform.position.x, this.transform.position.y, this.transform.position.z),
+                  new Vector3( m_playerObjct.transform.position.x, this.transform.position.y, m_playerObjct.transform.position.z),
+                  step);
                 break;
             case AIMode.LEAVE:
-                //逃げながら投げる
-                if (m_gameTime >= ATTACK_INTERVAL)
-                {
-                    NomalAttack();
-                }
-                //離れるまたは近づく(ここは同じ)            
+                //離れる            
                 this.transform.Translate(new Vector3(m_moveX, 0, m_moveZ));
                 break;
         }
@@ -322,13 +271,13 @@ public class MyVirusMinisterAI : MonoBehaviour
     void NomalAttack()
     {
         //HPが一定で制限に達していないとき
-        if (VirusMinisterHitPoint < VirusMinisterHitPoint / 4 && m_specialAttackCount < SPECIAL_ATTACKLIMIT)
+        if (MirrorMinisterHitPoint < MirrorMinisterHitPoint / 4 && m_specialAttackCount < SPECIAL_ATTACKLIMIT)
         {
             SpecialAttack();
         }
         m_gameTime = 0;
-        mb.Shot(m_BombNum);
-       isAttacked = true;
+        isAttacked = true;
+        Debug.Log("攻撃!");
     }
 
     //----------------------------------------------------------------------------------------------------

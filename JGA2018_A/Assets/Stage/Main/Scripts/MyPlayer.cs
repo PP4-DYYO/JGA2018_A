@@ -38,7 +38,7 @@ public class MyPlayer : MonoBehaviour
 	[SerializeField]
 	Animator Anim;
 
-	#region アニメーション遷移
+	#region アニメーション
 	/// <summary>
 	/// 無操作遷移
 	/// </summary>
@@ -48,6 +48,31 @@ public class MyPlayer : MonoBehaviour
 	/// 歩く遷移
 	/// </summary>
 	const string TRANS_WALK = "Walk";
+
+	/// <summary>
+	/// 攻撃１のパターンA遷移
+	/// </summary>
+	const string TRANS_ATTACK1A = "Attack1A";
+
+	/// <summary>
+	/// 攻撃１のパターンB遷移
+	/// </summary>
+	const string TRANS_ATTACK1B = "Attack1B";
+
+	/// <summary>
+	/// 攻撃１のパターンC遷移
+	/// </summary>
+	const string TRANS_ATTACK1C = "Attack1C";
+
+	/// <summary>
+	/// 攻撃２遷移
+	/// </summary>
+	const string TRANS_ATTACK2 = "Attack2";
+
+	/// <summary>
+	/// 攻撃時間
+	/// </summary>
+	const float ATTACK_TIME = 1.125f;
 	#endregion
 
 	#region 状態
@@ -64,6 +89,22 @@ public class MyPlayer : MonoBehaviour
 		/// 徒歩
 		/// </summary>
 		Walk,
+		/// <summary>
+		/// 攻撃１のAパターン
+		/// </summary>
+		Attack1A,
+		/// <summary>
+		/// 攻撃１のBパターン
+		/// </summary>
+		Attack1B,
+		/// <summary>
+		/// 攻撃１のCパターン
+		/// </summary>
+		Attack1C,
+		/// <summary>
+		/// 攻撃２
+		/// </summary>
+		Attack2,
 	}
 
 	/// <summary>
@@ -130,6 +171,26 @@ public class MyPlayer : MonoBehaviour
 	[SerializeField]
 	float m_jumpingPower;
 
+	/// <summary>
+	/// 攻撃の連続回数
+	/// </summary>
+	int m_attackCount;
+
+	/// <summary>
+	/// 連続攻撃の上限数
+	/// </summary>
+	const int CONSECUTIVE_ATTACK_LIMIT_NUM = 3;
+
+	/// <summary>
+	/// 攻撃の時間
+	/// </summary>
+	float m_attackTime;
+
+	/// <summary>
+	/// コンボ間の時間
+	/// </summary>
+	const float COMBO_TIME = 1.5f;
+
 	#region キーボード関係
 	/// <summary>
 	/// 水平移動軸
@@ -147,9 +208,29 @@ public class MyPlayer : MonoBehaviour
 	const string JUMP = "Jump";
 
 	/// <summary>
+	/// 攻撃１
+	/// </summary>
+	const string ATTACK1 = "Attack1";
+
+	/// <summary>
+	/// 攻撃２
+	/// </summary>
+	const string ATTACK2 = "Attack2";
+
+	/// <summary>
 	/// スペースキーを押された
 	/// </summary>
 	bool m_isPressedSpace = false;
+
+	/// <summary>
+	/// 左クリックを押された
+	/// </summary>
+	bool m_isPressedLeftClick = false;
+
+	/// <summary>
+	/// 右クリックを押された
+	/// </summary>
+	bool m_isPressedRightClick = false;
 	#endregion
 
 	/// <summary>
@@ -166,6 +247,7 @@ public class MyPlayer : MonoBehaviour
 		//アクセスしやすいように
 		m_camera = myCharactor.GameScript.CameraScript;
 
+		m_attackCount = 0;
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -187,6 +269,14 @@ public class MyPlayer : MonoBehaviour
 		//スペースキーの押下
 		if (Input.GetButtonDown(JUMP))
 			m_isPressedSpace = true;
+
+		//左クリックの押下
+		if (Input.GetButtonDown(ATTACK1))
+			m_isPressedLeftClick = true;
+
+		//右クリックの押下
+		if (Input.GetButtonDown(ATTACK2))
+			m_isPressedRightClick = true;
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -195,6 +285,9 @@ public class MyPlayer : MonoBehaviour
 	/// </summary>
 	void FixedUpdate()
 	{
+		//攻撃
+		Attack();
+
 		//速度の決定
 		Speed();
 
@@ -209,6 +302,51 @@ public class MyPlayer : MonoBehaviour
 
 		//キー状態のリセット
 		ResetKeyStatus();
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// 攻撃
+	/// </summary>
+	void Attack()
+	{
+		//左クリック
+		if(m_isPressedLeftClick)
+		{
+			//コンボの種類
+			if (m_attackTime == -1) //攻撃していない
+			{
+				//初めの攻撃設定
+				m_attackTime = 0;
+				m_attackCount = 1;
+			}
+			else if (m_attackTime > ATTACK_TIME && m_attackCount != int.MaxValue) //攻撃が終わったand攻撃２を繰り出していない
+			{
+				//次の攻撃設定
+				m_attackTime = 0;
+				m_attackCount = Mathf.Min(++m_attackCount, CONSECUTIVE_ATTACK_LIMIT_NUM);
+			}
+		}
+
+		//右クリック
+		if (m_isPressedRightClick)
+		{
+			//攻撃していない
+			if (m_attackTime == -1 || m_attackCount <= CONSECUTIVE_ATTACK_LIMIT_NUM)
+			{
+				//攻撃２
+				m_attackTime = 0;
+				m_attackCount = int.MaxValue;
+			}
+		}
+
+		//攻撃中
+		if (m_attackTime >= 0)
+			m_attackTime += Time.deltaTime;
+
+		//コンボキャンセル
+		if (m_attackTime >= ATTACK_TIME + COMBO_TIME)
+			m_attackTime = -1;
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -310,6 +448,18 @@ public class MyPlayer : MonoBehaviour
 			case Status.Idle:
 				Anim.SetTrigger(TRANS_IDLE);
 				break;
+			case Status.Attack1A:
+				Anim.SetTrigger(TRANS_ATTACK1A);
+				break;
+			case Status.Attack1B:
+				Anim.SetTrigger(TRANS_ATTACK1B);
+				break;
+			case Status.Attack1C:
+				Anim.SetTrigger(TRANS_ATTACK1C);
+				break;
+			case Status.Attack2:
+				Anim.SetTrigger(TRANS_ATTACK2);
+				break;
 		}
 
 		m_statePrev = m_state;
@@ -321,11 +471,34 @@ public class MyPlayer : MonoBehaviour
 	/// </summary>
 	void CheckState()
 	{
-		//移動量あり
+		//動きがあるか
 		if (m_direction.sqrMagnitude > 0)
 			m_state = Status.Walk;
 		else
 			m_state = Status.Idle;
+
+		//攻撃が終了している
+		if (m_attackTime >= ATTACK_TIME || m_attackTime == -1)
+			return;
+
+		//攻撃
+		switch (m_attackCount)
+		{
+			case 1:
+				m_state = Status.Attack1A;
+				break;
+			case 2:
+				m_state = Status.Attack1B;
+				break;
+			case 3:
+				m_state = Status.Attack1C;
+				break;
+			case int.MaxValue:
+				m_state = Status.Attack2;
+				break;
+			default:
+				return;
+		}
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -335,5 +508,7 @@ public class MyPlayer : MonoBehaviour
 	void ResetKeyStatus()
 	{
 		m_isPressedSpace = false;
+		m_isPressedLeftClick = false;
+		m_isPressedRightClick = false;
 	}
 }

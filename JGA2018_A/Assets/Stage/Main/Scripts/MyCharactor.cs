@@ -45,15 +45,13 @@ public class MyCharactor : MonoBehaviour
 		get { return myPlayer; }
 	}
 
-	// Use this for initialization
-	void Start()
+	/// <summary>
+	/// 攻撃マネージャ
+	/// </summary>
+	[SerializeField]
+	MyAttackManager myAttackManager;
+	public MyAttackManager AttackManagerScript
 	{
-
-	}
-
-	// Update is called once per frame
-	void Update()
-	{
-
+		get { return myAttackManager; }
 	}
 }

@@ -121,6 +121,12 @@ public struct MyCube
 public class MyAttackManager : MonoBehaviour
 {
 	/// <summary>
+	/// キャラクター
+	/// </summary>
+	[SerializeField]
+	MyCharactor myCharactor;
+
+	/// <summary>
 	/// プレイヤーの攻撃範囲
 	/// </summary>
 	[SerializeField]

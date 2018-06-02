@@ -578,73 +578,37 @@ public class MyPlayer : MonoBehaviour
 
 	//----------------------------------------------------------------------------------------------------
 	/// <summary>
-	/// 攻撃１のAパターンの攻撃開始
+	/// 攻撃１のAパターンの攻撃
 	/// </summary>
-	void Attack1AStartEvent()
+	void Attack1AEvent()
 	{
 		Debug.Log("Attack1AStartEvent");
 	}
 
 	//----------------------------------------------------------------------------------------------------
 	/// <summary>
-	/// 攻撃１のAパターンの攻撃終了
+	/// 攻撃１のBパターンの攻撃
 	/// </summary>
-	void Attack1AEndEvent()
-	{
-		Debug.Log("Attack1AEndEvent");
-	}
-
-	//----------------------------------------------------------------------------------------------------
-	/// <summary>
-	/// 攻撃１のBパターンの攻撃開始
-	/// </summary>
-	void Attack1BStartEvent()
+	void Attack1BEvent()
 	{
 		Debug.Log("Attack1BStartEvent");
 	}
 
 	//----------------------------------------------------------------------------------------------------
 	/// <summary>
-	/// 攻撃１のBパターンの攻撃終了
+	/// 攻撃１のCパターンの攻撃
 	/// </summary>
-	void Attack1BEndEvent()
-	{
-		Debug.Log("Attack1BEndEvent");
-	}
-
-	//----------------------------------------------------------------------------------------------------
-	/// <summary>
-	/// 攻撃１のCパターンの攻撃開始
-	/// </summary>
-	void Attack1CStartEvent()
+	void Attack1CEvent()
 	{
 		Debug.Log("Attack1CStartEvent");
 	}
 
 	//----------------------------------------------------------------------------------------------------
 	/// <summary>
-	/// 攻撃１のCパターンの攻撃終了
+	/// 攻撃2の攻撃
 	/// </summary>
-	void Attack1CEndEvent()
-	{
-		Debug.Log("Attack1CEndEvent");
-	}
-
-	//----------------------------------------------------------------------------------------------------
-	/// <summary>
-	/// 攻撃2の攻撃開始
-	/// </summary>
-	void Attack2StartEvent()
+	void Attack2Event()
 	{
 		Debug.Log("Attack2StartEvent");
-	}
-
-	//----------------------------------------------------------------------------------------------------
-	/// <summary>
-	/// 攻撃2の攻撃終了
-	/// </summary>
-	void Attack2EndEvent()
-	{
-		Debug.Log("Attack2EndEvent");
 	}
 }

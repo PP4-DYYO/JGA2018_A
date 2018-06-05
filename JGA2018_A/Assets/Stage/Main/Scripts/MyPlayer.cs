@@ -203,9 +203,82 @@ public class MyPlayer : MonoBehaviour
 	float m_attackTime;
 
 	/// <summary>
+	/// 攻撃の有効時間
+	/// </summary>
+	[SerializeField]
+	float m_effectiveAttackTime;
+
+	/// <summary>
 	/// コンボ間の時間
 	/// </summary>
-	const float COMBO_TIME = 1.5f;
+	const float COMBO_TIME = 0.75f;
+
+	/// <summary>
+	/// 立方体の頂点数
+	/// </summary>
+	const int VERTEX_CUBE_NUM = 8;
+
+	#region 攻撃範囲
+	/// <summary>
+	/// 攻撃１のAパターンの頂点
+	/// </summary>
+	static readonly Vector3[] ATTACK1_A_VERTECES =
+	{
+		new Vector3(0.08698074f, 2.237455f, 1.532429f),
+		new Vector3(0.1659906f, 1.311585f, 0.6939639f),
+		new Vector3(-0.6301885f, 0.4820206f, 1.491178f),
+		new Vector3(-0.04720514f, 1.017675f, 0.5212768f),
+		new Vector3(-0.04720514f, 1.017675f, 0.5212768f),
+		new Vector3(-0.04720514f, 1.017675f, 0.5212768f),
+		new Vector3(-0.04720514f, 1.017675f, 0.5212768f),
+		new Vector3(-0.04720514f, 1.017675f, 0.5212768f),
+	};
+
+	/// <summary>
+	/// 攻撃１のBパターンの頂点
+	/// </summary>
+	static readonly Vector3[] ATTACK1_B_VERTECES =
+	{
+		new Vector3(-1.086515f, 0.9399486f, 0.6289284f),
+		new Vector3(0.1558482f, 0.9843702f,0.519088f),
+		new Vector3(1.140949f,1.735734f,1.729904f),
+		new Vector3(0.6208854f,1.634966f,0.604331f),
+		new Vector3(0.6208854f,1.634966f,0.604331f),
+		new Vector3(0.6208854f,1.634966f,0.604331f),
+		new Vector3(0.6208854f,1.634966f,0.604331f),
+		new Vector3(0.6208854f,1.634966f,0.604331f),
+	};
+
+	/// <summary>
+	/// 攻撃１のCパターンの頂点
+	/// </summary>
+	static readonly Vector3[] ATTACK1_C_VERTECES =
+	{
+		new Vector3(-1.76715f,0.6671497f,0.5825509f),
+		new Vector3(-0.658033f,1.108374f,0.2252046f),
+		new Vector3(-0.5207606f,0.5439724f,-1.696099f),
+		new Vector3(-0.2424484f,1.081343f,-0.624122f),
+		new Vector3(1.695093f,0.4451257f,-0.3083975f),
+		new Vector3(0.6111093f,1.063734f,-0.1974359f),
+		new Vector3(0.0841179f,0.4025702f,1.660222f),
+		new Vector3(0.1402777f,1.054813f,0.6047654f),
+	};
+
+	/// <summary>
+	/// 攻撃２の頂点
+	/// </summary>
+	static readonly Vector3[] ATTACK2_VERTECES =
+	{
+		new Vector3(0.3140665f,0.9749715f,1.035166f),
+		new Vector3(0.3246632f,1.034966f,-0.009343892f),
+		new Vector3(0.25f,1.330896f,1.93709f),
+		new Vector3(0.25f,1.284438f,0.6949587f),
+		new Vector3(0.25f,1.284438f,0.6949587f),
+		new Vector3(0.25f,1.284438f,0.6949587f),
+		new Vector3(0.25f,1.284438f,0.6949587f),
+		new Vector3(0.25f,1.284438f,0.6949587f),
+	};
+	#endregion
 
 	#region キーボード関係
 	/// <summary>
@@ -253,6 +326,31 @@ public class MyPlayer : MonoBehaviour
 	/// 作業用のVector３
 	/// </summary>
 	Vector3 m_workVector3;
+
+	/// <summary>
+	/// 作業用のVector３配列
+	/// </summary>
+	Vector3[] m_workVector3Array =
+	{
+		Vector3.zero,
+		Vector3.zero,
+		Vector3.zero,
+		Vector3.zero,
+		Vector3.zero,
+		Vector3.zero,
+		Vector3.zero,
+		Vector3.zero,
+	};
+
+	/// <summary>
+	/// 作業用のMatrix
+	/// </summary>
+	Matrix4x4 m_workMatrix = new Matrix4x4();
+
+	/// <summary>
+	/// 作業用の直方体
+	/// </summary>
+	MyCube m_workMyCube = new MyCube();
 
 	//----------------------------------------------------------------------------------------------------
 	/// <summary>
@@ -327,7 +425,7 @@ public class MyPlayer : MonoBehaviour
 	void Attack()
 	{
 		//左クリック
-		if(m_isPressedLeftClick)
+		if (m_isPressedLeftClick)
 		{
 			//コンボの種類
 			if (m_attackTime == -1) //攻撃していない
@@ -447,7 +545,7 @@ public class MyPlayer : MonoBehaviour
 			return;
 
 		//スペースキーを押しているandジャンプする力を入れている間
-		if(Input.GetButton(JUMP) && m_jumpForceCountTime < m_jumpForceTime)
+		if (Input.GetButton(JUMP) && m_jumpForceCountTime < m_jumpForceTime)
 			RB.AddForce(m_jumpingPower * Vector3.up * (1.0f - m_jumpForceCountTime / m_jumpForceTime));
 
 		//ジャンプ中
@@ -463,10 +561,10 @@ public class MyPlayer : MonoBehaviour
 	void OnCollisionStay(Collision other)
 	{
 		//当たった位置
-		foreach(var point in other.contacts)
+		foreach (var point in other.contacts)
 		{
 			//足で乗っている
-			if(point.point.y <= transform.position.y)
+			if (point.point.y <= transform.position.y)
 			{
 				//ジャンプしきった時、ジャンプ終了を許可
 				if (m_jumpForceCountTime >= m_jumpForceTime)
@@ -582,7 +680,22 @@ public class MyPlayer : MonoBehaviour
 	/// </summary>
 	void Attack1AEvent()
 	{
-		Debug.Log("Attack1AStartEvent");
+		//ワールド座標でプレイヤーの原点と方向
+		m_workMatrix.SetTRS(transform.position, transform.rotation, Vector3.one);
+
+		//攻撃範囲頂点の決定
+		for (var i = 0; i < VERTEX_CUBE_NUM; i++)
+		{
+			//絶対的な攻撃範囲の決定
+			m_workVector3Array[i] = m_workMatrix.MultiplyPoint(ATTACK1_A_VERTECES[i]);
+		}
+
+		//攻撃範囲の直方体の構築
+		m_workMyCube.SetCube(m_workVector3Array[0], m_workVector3Array[1], m_workVector3Array[2], m_workVector3Array[3],
+			m_workVector3Array[4], m_workVector3Array[5], m_workVector3Array[6], m_workVector3Array[6]);
+
+		//攻撃範囲の生成
+		myCharactor.AttackManagerScript.PlayerAttack(m_workMyCube, m_effectiveAttackTime);
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -591,7 +704,22 @@ public class MyPlayer : MonoBehaviour
 	/// </summary>
 	void Attack1BEvent()
 	{
-		Debug.Log("Attack1BStartEvent");
+		//ワールド座標でプレイヤーの原点と方向
+		m_workMatrix.SetTRS(transform.position, transform.rotation, Vector3.one);
+
+		//攻撃範囲頂点の決定
+		for (var i = 0; i < VERTEX_CUBE_NUM; i++)
+		{
+			//絶対的な攻撃範囲の決定
+			m_workVector3Array[i] = m_workMatrix.MultiplyPoint(ATTACK1_B_VERTECES[i]);
+		}
+
+		//攻撃範囲の直方体の構築
+		m_workMyCube.SetCube(m_workVector3Array[0], m_workVector3Array[1], m_workVector3Array[2], m_workVector3Array[3],
+			m_workVector3Array[4], m_workVector3Array[5], m_workVector3Array[6], m_workVector3Array[6]);
+
+		//攻撃範囲の生成
+		myCharactor.AttackManagerScript.PlayerAttack(m_workMyCube, m_effectiveAttackTime);
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -600,7 +728,22 @@ public class MyPlayer : MonoBehaviour
 	/// </summary>
 	void Attack1CEvent()
 	{
-		Debug.Log("Attack1CStartEvent");
+		//ワールド座標でプレイヤーの原点と方向
+		m_workMatrix.SetTRS(transform.position, transform.rotation, Vector3.one);
+
+		//攻撃範囲頂点の決定
+		for (var i = 0; i < VERTEX_CUBE_NUM; i++)
+		{
+			//絶対的な攻撃範囲の決定
+			m_workVector3Array[i] = m_workMatrix.MultiplyPoint(ATTACK1_C_VERTECES[i]);
+		}
+
+		//攻撃範囲の直方体の構築
+		m_workMyCube.SetCube(m_workVector3Array[0], m_workVector3Array[1], m_workVector3Array[2], m_workVector3Array[3],
+			m_workVector3Array[4], m_workVector3Array[5], m_workVector3Array[6], m_workVector3Array[6]);
+
+		//攻撃範囲の生成
+		myCharactor.AttackManagerScript.PlayerAttack(m_workMyCube, m_effectiveAttackTime);
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -609,6 +752,21 @@ public class MyPlayer : MonoBehaviour
 	/// </summary>
 	void Attack2Event()
 	{
-		Debug.Log("Attack2StartEvent");
+		//ワールド座標でプレイヤーの原点と方向
+		m_workMatrix.SetTRS(transform.position, transform.rotation, Vector3.one);
+
+		//攻撃範囲頂点の決定
+		for (var i = 0; i < VERTEX_CUBE_NUM; i++)
+		{
+			//絶対的な攻撃範囲の決定
+			m_workVector3Array[i] = m_workMatrix.MultiplyPoint(ATTACK2_VERTECES[i]);
+		}
+
+		//攻撃範囲の直方体の構築
+		m_workMyCube.SetCube(m_workVector3Array[0], m_workVector3Array[1], m_workVector3Array[2], m_workVector3Array[3],
+			m_workVector3Array[4], m_workVector3Array[5], m_workVector3Array[6], m_workVector3Array[6]);
+
+		//攻撃範囲の生成
+		myCharactor.AttackManagerScript.PlayerAttack(m_workMyCube, m_effectiveAttackTime);
 	}
 }

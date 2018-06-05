@@ -138,6 +138,37 @@ public class MyAttackManager : MonoBehaviour
 	[SerializeField]
 	GameObject EnemyAttackRange;
 
+	/// <summary>
+	/// デバッグモード
+	/// </summary>
+	[SerializeField]
+	bool m_isDebug;
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// フレームメソッド
+	/// </summary>
+	void Update()
+	{
+		//デバッグモードで表示する
+		if (m_isDebug)
+		{
+			//子供にアクセス
+			foreach (Transform child in transform)
+			{
+				child.GetComponent<MeshRenderer>().enabled = true;
+			}
+		}
+		else
+		{
+			//子供にアクセス
+			foreach (Transform child in transform)
+			{
+				child.GetComponent<MeshRenderer>().enabled = false;
+			}
+		}
+	}
+
 	//----------------------------------------------------------------------------------------------------
 	/// <summary>
 	/// プレイヤーの攻撃
@@ -172,7 +203,7 @@ public class MyAttackManager : MonoBehaviour
 		for (int i = 0; i < vertex.Length; i++)
 		{
 			//頂点番号に対応する直方体の頂点を代入
-			switch(i)
+			switch (i)
 			{
 				case 0:
 				case 13:

@@ -15,6 +15,7 @@ using UnityEngine;
 /// </summary>
 public class MyPlayer : MonoBehaviour
 {
+	#region 外部のインスタンス
 	/// <summary>
 	/// キャラクター
 	/// </summary>
@@ -25,7 +26,9 @@ public class MyPlayer : MonoBehaviour
 	/// カメラ
 	/// </summary>
 	Camera m_camera;
+	#endregion
 
+	#region コンポーネント
 	/// <summary>
 	/// リジッドボディ
 	/// </summary>
@@ -37,6 +40,7 @@ public class MyPlayer : MonoBehaviour
 	/// </summary>
 	[SerializeField]
 	Animator Anim;
+	#endregion
 
 	#region アニメーション
 	/// <summary>
@@ -118,6 +122,7 @@ public class MyPlayer : MonoBehaviour
 	Status m_statePrev;
 	#endregion
 
+	#region トランスポート
 	/// <summary>
 	/// フレーム前の位置
 	/// </summary>
@@ -134,6 +139,12 @@ public class MyPlayer : MonoBehaviour
 	float m_angle;
 
 	/// <summary>
+	/// 回転スピード
+	/// </summary>
+	[SerializeField]
+	float m_rotationSpeed;
+
+	/// <summary>
 	/// １周の角度
 	/// </summary>
 	const int ONE_TURNING_ANGLE = 360;
@@ -147,7 +158,9 @@ public class MyPlayer : MonoBehaviour
 	/// 補正角度
 	/// </summary>
 	const int CORRECTION_ANGLE = 5;
+	#endregion
 
+	#region 移動速度
 	/// <summary>
 	/// 速度
 	/// </summary>
@@ -158,13 +171,9 @@ public class MyPlayer : MonoBehaviour
 	/// </summary>
 	[SerializeField]
 	float m_walkSpeed;
+	#endregion
 
-	/// <summary>
-	/// 回転スピード
-	/// </summary>
-	[SerializeField]
-	float m_rotationSpeed;
-
+	#region ジャンプ
 	/// <summary>
 	/// ジャンプしている
 	/// </summary>
@@ -186,7 +195,9 @@ public class MyPlayer : MonoBehaviour
 	/// </summary>
 	[SerializeField]
 	float m_jumpForceTime;
+	#endregion
 
+	#region 攻撃
 	/// <summary>
 	/// 攻撃の連続回数
 	/// </summary>
@@ -209,14 +220,25 @@ public class MyPlayer : MonoBehaviour
 	float m_effectiveAttackTime;
 
 	/// <summary>
+	/// 攻撃２のコンボ数
+	/// </summary>
+	int m_numAttack2Combo;
+
+	/// <summary>
 	/// コンボ間の時間
 	/// </summary>
 	const float COMBO_TIME = 0.75f;
 
 	/// <summary>
-	/// 立方体の頂点数
+	/// 攻撃休憩時間
 	/// </summary>
-	const int VERTEX_CUBE_NUM = 8;
+	float m_attackBreakTime;
+
+	/// <summary>
+	/// 攻撃の後休憩する時間
+	/// </summary>
+	const float ATTACK_BREAK_TIME = 1.0f;
+	#endregion
 
 	#region 攻撃範囲
 	/// <summary>
@@ -322,6 +344,7 @@ public class MyPlayer : MonoBehaviour
 	bool m_isPressedRightClick = false;
 	#endregion
 
+	#region 作業用
 	/// <summary>
 	/// 作業用のVector３
 	/// </summary>
@@ -351,6 +374,7 @@ public class MyPlayer : MonoBehaviour
 	/// 作業用の直方体
 	/// </summary>
 	MyCube m_workMyCube = new MyCube();
+	#endregion
 
 	//----------------------------------------------------------------------------------------------------
 	/// <summary>
@@ -362,6 +386,7 @@ public class MyPlayer : MonoBehaviour
 		m_camera = myCharactor.GameScript.CameraScript;
 
 		m_attackCount = 0;
+		m_numAttack2Combo = 1;
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -399,20 +424,32 @@ public class MyPlayer : MonoBehaviour
 	/// </summary>
 	void FixedUpdate()
 	{
-		//攻撃
-		Attack();
+		//攻撃休憩時間
+		if (m_attackBreakTime > 0)
+		{
+			m_attackBreakTime -= Time.deltaTime;
 
-		//速度の決定
-		Speed();
+			//攻撃休憩時間の終了
+			if(m_attackBreakTime <= 0)
+				m_attackTime = -1;
+		}
+		else
+		{
+			//攻撃
+			Attack();
 
-		//移動
-		Move();
+			//速度の決定
+			Speed();
 
-		//ジャンプ
-		Jump();
+			//移動
+			Move();
 
-		//アニメーション
-		Animation();
+			//ジャンプ
+			Jump();
+
+			//アニメーション
+			Animation();
+		}
 
 		//キー状態のリセット
 		ResetKeyStatus();
@@ -424,33 +461,59 @@ public class MyPlayer : MonoBehaviour
 	/// </summary>
 	void Attack()
 	{
-		//左クリック
+		//左クリック（攻撃１）
 		if (m_isPressedLeftClick)
 		{
-			//コンボの種類
-			if (m_attackTime == -1) //攻撃していない
+			//攻撃していない
+			if (m_attackTime == -1)
 			{
-				//初めの攻撃設定
+				//初めの攻撃１設定
 				m_attackTime = 0;
 				m_attackCount = 1;
 			}
-			else if (m_attackTime > ATTACK_TIME && m_attackCount != int.MaxValue) //攻撃が終わったand攻撃２を繰り出していない
+			else if (m_attackTime > ATTACK_TIME && m_attackCount <= CONSECUTIVE_ATTACK_LIMIT_NUM) //攻撃が終わったand攻撃２を繰り出していない
 			{
-				//次の攻撃設定
+				//次の攻撃１設定
 				m_attackTime = 0;
-				m_attackCount = Mathf.Min(++m_attackCount, CONSECUTIVE_ATTACK_LIMIT_NUM);
+				m_attackCount++;
+			}
+
+			//攻撃１のコンボ終了
+			if (m_attackCount == CONSECUTIVE_ATTACK_LIMIT_NUM)
+			{
+				//攻撃１の最後のパターンにする
+				m_attackCount = CONSECUTIVE_ATTACK_LIMIT_NUM;
+				m_attackBreakTime = ATTACK_TIME + ATTACK_BREAK_TIME;
+				m_attackTime = ATTACK_TIME;
+				return;
 			}
 		}
 
-		//右クリック
+		//右クリック（攻撃２）
 		if (m_isPressedRightClick)
 		{
-			//攻撃していない
-			if (m_attackTime == -1 || m_attackCount <= CONSECUTIVE_ATTACK_LIMIT_NUM)
+			//攻撃していないor攻撃１のコンボが終わっていない
+			if (m_attackTime == -1 || m_attackCount < CONSECUTIVE_ATTACK_LIMIT_NUM)
 			{
-				//攻撃２
+				//初めの攻撃２設定
 				m_attackTime = 0;
-				m_attackCount = int.MaxValue;
+				m_attackCount = CONSECUTIVE_ATTACK_LIMIT_NUM + 1;
+			}
+			else if (m_attackTime > ATTACK_TIME && m_attackCount > CONSECUTIVE_ATTACK_LIMIT_NUM) //攻撃が終わったand攻撃１でない
+			{
+				//次の攻撃２設定
+				m_attackTime = 0;
+				m_attackCount++;
+			}
+
+			//攻撃２のコンボ終了
+			if (m_attackCount >= CONSECUTIVE_ATTACK_LIMIT_NUM + m_numAttack2Combo)
+			{
+				//攻撃２を最後のパターンにする
+				m_attackCount = CONSECUTIVE_ATTACK_LIMIT_NUM + m_numAttack2Combo;
+				m_attackBreakTime = ATTACK_TIME + ATTACK_BREAK_TIME;
+				m_attackTime = ATTACK_TIME;
+				return;
 			}
 		}
 
@@ -625,8 +688,8 @@ public class MyPlayer : MonoBehaviour
 		else
 			m_state = Status.Idle;
 
-		//攻撃が終了している
-		if (m_attackTime >= ATTACK_TIME || m_attackTime == -1)
+		//攻撃が終了しているor攻撃していない
+		if (m_attackTime > ATTACK_TIME || m_attackTime == -1)
 			return;
 
 		//攻撃
@@ -641,7 +704,9 @@ public class MyPlayer : MonoBehaviour
 			case 3:
 				m_state = Status.Attack1C;
 				break;
-			case int.MaxValue:
+			case CONSECUTIVE_ATTACK_LIMIT_NUM + 1:
+			case CONSECUTIVE_ATTACK_LIMIT_NUM + 2:
+			case CONSECUTIVE_ATTACK_LIMIT_NUM + 3:
 				m_state = Status.Attack2;
 				break;
 			default:
@@ -684,7 +749,7 @@ public class MyPlayer : MonoBehaviour
 		m_workMatrix.SetTRS(transform.position, transform.rotation, Vector3.one);
 
 		//攻撃範囲頂点の決定
-		for (var i = 0; i < VERTEX_CUBE_NUM; i++)
+		for (var i = 0; i < MyCube.NUM_VERTICES; i++)
 		{
 			//絶対的な攻撃範囲の決定
 			m_workVector3Array[i] = m_workMatrix.MultiplyPoint(ATTACK1_A_VERTECES[i]);
@@ -708,7 +773,7 @@ public class MyPlayer : MonoBehaviour
 		m_workMatrix.SetTRS(transform.position, transform.rotation, Vector3.one);
 
 		//攻撃範囲頂点の決定
-		for (var i = 0; i < VERTEX_CUBE_NUM; i++)
+		for (var i = 0; i < MyCube.NUM_VERTICES; i++)
 		{
 			//絶対的な攻撃範囲の決定
 			m_workVector3Array[i] = m_workMatrix.MultiplyPoint(ATTACK1_B_VERTECES[i]);
@@ -732,7 +797,7 @@ public class MyPlayer : MonoBehaviour
 		m_workMatrix.SetTRS(transform.position, transform.rotation, Vector3.one);
 
 		//攻撃範囲頂点の決定
-		for (var i = 0; i < VERTEX_CUBE_NUM; i++)
+		for (var i = 0; i < MyCube.NUM_VERTICES; i++)
 		{
 			//絶対的な攻撃範囲の決定
 			m_workVector3Array[i] = m_workMatrix.MultiplyPoint(ATTACK1_C_VERTECES[i]);
@@ -756,7 +821,7 @@ public class MyPlayer : MonoBehaviour
 		m_workMatrix.SetTRS(transform.position, transform.rotation, Vector3.one);
 
 		//攻撃範囲頂点の決定
-		for (var i = 0; i < VERTEX_CUBE_NUM; i++)
+		for (var i = 0; i < MyCube.NUM_VERTICES; i++)
 		{
 			//絶対的な攻撃範囲の決定
 			m_workVector3Array[i] = m_workMatrix.MultiplyPoint(ATTACK2_VERTECES[i]);

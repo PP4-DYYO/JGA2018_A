@@ -59,6 +59,11 @@ public struct MyCube
 	/// </summary>
 	public Vector3 vRUF;
 
+	/// <summary>
+	/// 頂点数
+	/// </summary>
+	public const int NUM_VERTICES = 8;
+
 	//----------------------------------------------------------------------------------------------------
 	/// <summary>
 	/// 直方体の設定

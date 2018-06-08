@@ -49,7 +49,7 @@
      <Compile Include="Assets\Stage\Main\Scripts\MyAiManager.cs" />
      <Compile Include="Assets\Stage\Main\Scripts\MyAttackManager.cs" />
      <Compile Include="Assets\Stage\Main\Scripts\MyCamera.cs" />
-     <Compile Include="Assets\Stage\Main\Scripts\MyCharactor.cs" />
+     <Compile Include="Assets\Stage\Main\Scripts\MyCharacter.cs" />
      <Compile Include="Assets\Stage\Main\Scripts\MyGame.cs" />
      <Compile Include="Assets\Stage\Main\Scripts\MyPlayer.cs" />
      <Compile Include="Assets\Stage\Main\Scripts\MyStage.cs" />

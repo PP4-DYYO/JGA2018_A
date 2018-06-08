@@ -13,7 +13,7 @@ using UnityEngine;
 /// <summary>
 /// キャラクタークラス
 /// </summary>
-public class MyCharactor : MonoBehaviour
+public class MyCharacter : MonoBehaviour
 {
 	/// <summary>
 	/// ゲーム

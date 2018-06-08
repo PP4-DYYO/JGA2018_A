@@ -20,7 +20,7 @@ public class MyPlayer : MonoBehaviour
 	/// キャラクター
 	/// </summary>
 	[SerializeField]
-	MyCharactor myCharactor;
+	MyCharacter myCharacter;
 
 	/// <summary>
 	/// カメラ
@@ -383,7 +383,7 @@ public class MyPlayer : MonoBehaviour
 	void Start()
 	{
 		//アクセスしやすいように
-		m_camera = myCharactor.GameScript.CameraScript;
+		m_camera = myCharacter.GameScript.CameraScript;
 
 		m_attackCount = 0;
 		m_numAttack2Combo = 1;
@@ -760,7 +760,7 @@ public class MyPlayer : MonoBehaviour
 			m_workVector3Array[4], m_workVector3Array[5], m_workVector3Array[6], m_workVector3Array[6]);
 
 		//攻撃範囲の生成
-		myCharactor.AttackManagerScript.PlayerAttack(m_workMyCube, m_effectiveAttackTime);
+		myCharacter.AttackManagerScript.PlayerAttack(m_workMyCube, m_effectiveAttackTime);
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -784,7 +784,7 @@ public class MyPlayer : MonoBehaviour
 			m_workVector3Array[4], m_workVector3Array[5], m_workVector3Array[6], m_workVector3Array[6]);
 
 		//攻撃範囲の生成
-		myCharactor.AttackManagerScript.PlayerAttack(m_workMyCube, m_effectiveAttackTime);
+		myCharacter.AttackManagerScript.PlayerAttack(m_workMyCube, m_effectiveAttackTime);
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -808,7 +808,7 @@ public class MyPlayer : MonoBehaviour
 			m_workVector3Array[4], m_workVector3Array[5], m_workVector3Array[6], m_workVector3Array[6]);
 
 		//攻撃範囲の生成
-		myCharactor.AttackManagerScript.PlayerAttack(m_workMyCube, m_effectiveAttackTime);
+		myCharacter.AttackManagerScript.PlayerAttack(m_workMyCube, m_effectiveAttackTime);
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -832,6 +832,6 @@ public class MyPlayer : MonoBehaviour
 			m_workVector3Array[4], m_workVector3Array[5], m_workVector3Array[6], m_workVector3Array[6]);
 
 		//攻撃範囲の生成
-		myCharactor.AttackManagerScript.PlayerAttack(m_workMyCube, m_effectiveAttackTime);
+		myCharacter.AttackManagerScript.PlayerAttack(m_workMyCube, m_effectiveAttackTime);
 	}
 }

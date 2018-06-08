@@ -129,7 +129,7 @@ public class MyAttackManager : MonoBehaviour
 	/// キャラクター
 	/// </summary>
 	[SerializeField]
-	MyCharactor myCharactor;
+	MyCharacter myCharacter;
 
 	/// <summary>
 	/// プレイヤーの攻撃範囲

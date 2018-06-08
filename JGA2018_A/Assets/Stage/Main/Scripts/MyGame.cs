@@ -19,10 +19,10 @@ public class MyGame : MonoBehaviour
 	/// キャラクター
 	/// </summary>
 	[SerializeField]
-	MyCharactor myCharactor;
-	public MyCharactor CharactorScript
+	MyCharacter myCharacter;
+	public MyCharacter CharacterScript
 	{
-		get { return myCharactor; }
+		get { return myCharacter; }
 	}
 
 	/// <summary>

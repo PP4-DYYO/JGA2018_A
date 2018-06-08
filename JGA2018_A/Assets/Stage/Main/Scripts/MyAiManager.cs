@@ -19,7 +19,11 @@ public class MyAiManager : MonoBehaviour
 	/// キャラクター
 	/// </summary>
 	[SerializeField]
-	MyCharactor myCharactor;
+	MyCharacter myCharacter;
+	public MyCharacter CharacterScript
+	{
+		get { return myCharacter; }
+	}
 
 	// Use this for initialization
 	void Start()

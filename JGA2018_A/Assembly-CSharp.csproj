@@ -56,10 +56,17 @@
      <Compile Include="Assets\Yoshida\BombPointCtrl.cs" />
      <Compile Include="Assets\Yoshida\MyArrowShot.cs" />
      <Compile Include="Assets\Yoshida\MyAutoDestroyer.cs" />
+     <Compile Include="Assets\Yoshida\MyBaseButtonCtrl.cs" />
      <Compile Include="Assets\Yoshida\MyBombCtrl.cs" />
+     <Compile Include="Assets\Yoshida\MyBombPointCtrl.cs" />
      <Compile Include="Assets\Yoshida\MyBombShot.cs" />
+     <Compile Include="Assets\Yoshida\MyButtonCtrl.cs" />
      <Compile Include="Assets\Yoshida\MyCarryMinisterAI.cs" />
+     <Compile Include="Assets\Yoshida\MyMagicMinisterAI.cs" />
+     <Compile Include="Assets\Yoshida\MyMenu.cs" />
      <Compile Include="Assets\Yoshida\MyMirrorMinisterAI.cs" />
+     <Compile Include="Assets\Yoshida\MyPositionRotate.cs" />
+     <Compile Include="Assets\Yoshida\MyShadowMagicMinisterAI.cs" />
      <Compile Include="Assets\Yoshida\MyVirusMinisterAI.cs" />
      <Compile Include="Assets\Yoshida\Particle_Dissolve_Shader\Scripts\HUDFPS.cs" />
      <Compile Include="Assets\Yoshida\Particle_Dissolve_Shader\Scripts\PDS_GameController.cs" />

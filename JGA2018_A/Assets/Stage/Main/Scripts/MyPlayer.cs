@@ -383,6 +383,12 @@ public class MyPlayer : MonoBehaviour
 	#region 仮面関係
 	[Header("仮面関係")]
 	/// <summary>
+	/// マスクオブジェクト
+	/// </summary>
+	[SerializeField]
+	GameObject MaskObj;
+
+	/// <summary>
 	/// 配達マスクゲージの最大値
 	/// </summary>
 	[SerializeField]
@@ -939,6 +945,7 @@ public class MyPlayer : MonoBehaviour
 	{
 		//マスク状態の前回を更新
 		m_maskStatePrev = m_maskState;
+		MaskObj.SetActive(m_maskState != MaskAttribute.Non);
 
 		//配達マスクが使用可能
 		if (m_carryMask.isObtained)

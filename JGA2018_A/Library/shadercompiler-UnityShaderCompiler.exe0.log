@@ -1,2 +1,50 @@
 Base path: C:/Program Files/Unity/Editor/Data
 Cmd: getPlatforms
+Cmd: preprocess
+  insize=1257 outsize=466 ok=1
+Cmd: preprocess
+  insize=1120 outsize=391 ok=1
+Cmd: preprocess
+  insize=1102 outsize=373 ok=1
+Cmd: preprocess
+  insize=1778 outsize=437 ok=1
+Cmd: preprocess
+  insize=1760 outsize=419 ok=1
+Cmd: preprocess
+  insize=1197 outsize=437 ok=1
+Cmd: preprocess
+  insize=1139 outsize=378 ok=1
+Cmd: preprocess
+  insize=3496 outsize=684 ok=1
+Cmd: preprocess
+  insize=1340 outsize=431 ok=1
+Cmd: preprocess
+  insize=1216 outsize=426 ok=1
+Cmd: preprocess
+  insize=1179 outsize=419 ok=1
+Cmd: preprocess
+  insize=1947 outsize=513 ok=1
+Cmd: preprocess
+  insize=3493 outsize=681 ok=1
+Cmd: preprocess
+  insize=1797 outsize=424 ok=1
+Cmd: preprocess
+  insize=1838 outsize=465 ok=1
+Cmd: preprocess
+  insize=1855 outsize=485 ok=1
+Cmd: preprocess
+  insize=1874 outsize=472 ok=1
+Cmd: preprocess
+  insize=1180 outsize=419 ok=1
+Cmd: preprocess
+  insize=1755 outsize=443 ok=1
+Cmd: preprocess
+  insize=1363 outsize=454 ok=1
+Cmd: preprocess
+  insize=1837 outsize=467 ok=1
+Cmd: preprocess
+  insize=1778 outsize=466 ok=1
+Cmd: compileSnippet
+  api=4 type=0 insize=1517 outsize=666 kw= pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_PBS_USE_BRDF1 UNITY_SPECCUBE_BOX_PROJECTION UNITY_SPECCUBE_BLENDING SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA ok=1
+Cmd: compileSnippet
+  api=4 type=1 insize=1517 outsize=666 kw= pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_PBS_USE_BRDF1 UNITY_SPECCUBE_BOX_PROJECTION UNITY_SPECCUBE_BLENDING SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA ok=1

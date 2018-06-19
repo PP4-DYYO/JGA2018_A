@@ -16,6 +16,16 @@ using UnityEngine;
 public class MyAttack : MonoBehaviour
 {
 	/// <summary>
+	/// 属性
+	/// </summary>
+	MaskAttribute m_attribute;
+	public MaskAttribute Attribute
+	{
+		get { return m_attribute; }
+		set { m_attribute = value; }
+	}
+
+	/// <summary>
 	/// 威力
 	/// </summary>
 	int m_power;

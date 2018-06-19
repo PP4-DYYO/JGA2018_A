@@ -183,9 +183,10 @@ public class MyAttackManager : MonoBehaviour
 	/// プレイヤーの攻撃
 	/// </summary>
 	/// <param name="attackCube">攻撃用の直方体</param>
+	/// <param name="attribute">攻撃属性</param>
 	/// <param name="power">攻撃威力</param>
 	/// <param name="time">攻撃時間</param>
-	public void PlayerAttack(MyCube attackCube, int power = 0, float time = -1)
+	public void PlayerAttack(MyCube attackCube, MaskAttribute attribute, int power = 0, float time = -1)
 	{
 		//攻撃範囲の生成
 		var attackRange = Instantiate(PlayerAttackRange, transform);
@@ -195,6 +196,7 @@ public class MyAttackManager : MonoBehaviour
 		AdjustAttackRange(attackRange, attackCube);
 
 		//攻撃の詳細
+		m_workAttack.Attribute = attribute;
 		m_workAttack.Power = power;
 
 		//攻撃時間
@@ -285,9 +287,10 @@ public class MyAttackManager : MonoBehaviour
 	/// 敵の攻撃
 	/// </summary>
 	/// <param name="attackCube">攻撃用の直方体</param>
+	/// <param name="attribute">攻撃属性</param>
 	/// <param name="power">攻撃威力</param>
 	/// <param name="time">攻撃時間</param>
-	public void EnemyAttack(MyCube attackCube, int power = 0, float time = -1)
+	public void EnemyAttack(MyCube attackCube, MaskAttribute attribute, int power = 0, float time = -1)
 	{
 		//攻撃範囲の生成
 		var attackRange = Instantiate(EnemyAttackRange, transform);
@@ -297,6 +300,7 @@ public class MyAttackManager : MonoBehaviour
 		AdjustAttackRange(attackRange, attackCube);
 
 		//攻撃の詳細
+		m_workAttack.Attribute = attribute;
 		m_workAttack.Power = power;
 
 		//攻撃時間

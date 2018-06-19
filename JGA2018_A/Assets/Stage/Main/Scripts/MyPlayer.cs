@@ -16,6 +16,7 @@ using UnityEngine;
 public class MyPlayer : MonoBehaviour
 {
 	#region 外部のインスタンス
+	[Header("外部のインスタンス")]
 	/// <summary>
 	/// キャラクター
 	/// </summary>
@@ -29,6 +30,7 @@ public class MyPlayer : MonoBehaviour
 	#endregion
 
 	#region コンポーネント
+	[Header("コンポーネント")]
 	/// <summary>
 	/// リジッドボディ
 	/// </summary>
@@ -43,6 +45,7 @@ public class MyPlayer : MonoBehaviour
 	#endregion
 
 	#region アニメーション
+	[Header("アニメーション")]
 	/// <summary>
 	/// 無操作遷移
 	/// </summary>
@@ -72,11 +75,6 @@ public class MyPlayer : MonoBehaviour
 	/// 攻撃２遷移
 	/// </summary>
 	const string TRANS_ATTACK2 = "Attack2";
-
-	/// <summary>
-	/// 攻撃時間
-	/// </summary>
-	const float ATTACK_TIME = 1.125f;
 	#endregion
 
 	#region 状態
@@ -111,6 +109,8 @@ public class MyPlayer : MonoBehaviour
 		Attack2,
 	}
 
+	[Header("状態")]
+
 	/// <summary>
 	/// 現在の状態
 	/// </summary>
@@ -123,6 +123,19 @@ public class MyPlayer : MonoBehaviour
 	#endregion
 
 	#region トランスポート
+	[Header("トランスポート")]
+	/// <summary>
+	/// 回転スピード
+	/// </summary>
+	[SerializeField]
+	float m_rotationSpeed;
+
+	/// <summary>
+	/// 補正角度
+	/// </summary>
+	[SerializeField]
+	int m_correctionAngle;
+
 	/// <summary>
 	/// フレーム前の位置
 	/// </summary>
@@ -139,12 +152,6 @@ public class MyPlayer : MonoBehaviour
 	float m_angle;
 
 	/// <summary>
-	/// 回転スピード
-	/// </summary>
-	[SerializeField]
-	float m_rotationSpeed;
-
-	/// <summary>
 	/// １周の角度
 	/// </summary>
 	const int ONE_TURNING_ANGLE = 360;
@@ -153,32 +160,24 @@ public class MyPlayer : MonoBehaviour
 	/// 半周の角度
 	/// </summary>
 	const int HALF_CIRCUMFERENCE_ANGLE = 180;
-
-	/// <summary>
-	/// 補正角度
-	/// </summary>
-	const int CORRECTION_ANGLE = 5;
 	#endregion
 
 	#region 移動速度
-	/// <summary>
-	/// 速度
-	/// </summary>
-	float m_speed;
-
+	[Header("移動速度")]
 	/// <summary>
 	/// 徒歩速度
 	/// </summary>
 	[SerializeField]
 	float m_walkSpeed;
+	
+	/// <summary>
+	/// 速度
+	/// </summary>
+	float m_speed;
 	#endregion
 
 	#region ジャンプ
-	/// <summary>
-	/// ジャンプしている
-	/// </summary>
-	bool m_isJump;
-
+	[Header("ジャンプ")]
 	/// <summary>
 	/// ジャンプ力
 	/// </summary>
@@ -186,18 +185,60 @@ public class MyPlayer : MonoBehaviour
 	float m_jumpingPower;
 
 	/// <summary>
-	/// ジャンプで力を入れている時間
-	/// </summary>
-	float m_jumpForceCountTime;
-
-	/// <summary>
 	/// ジャンプで力を入れる時間
 	/// </summary>
 	[SerializeField]
 	float m_jumpForceTime;
+
+	/// <summary>
+	/// ジャンプしている
+	/// </summary>
+	bool m_isJump;
+
+	/// <summary>
+	/// ジャンプで力を入れている時間
+	/// </summary>
+	float m_jumpForceCountTime;
 	#endregion
 
 	#region 攻撃
+	[Header("攻撃")]
+	/// <summary>
+	/// 攻撃テンポ時間
+	/// </summary>
+	[SerializeField]
+	float m_attackTempoTime;
+
+	/// <summary>
+	/// 攻撃の有効時間
+	/// </summary>
+	[SerializeField]
+	float m_effectiveAttackTime;
+
+	/// <summary>
+	/// コンボ間の時間
+	/// </summary>
+	[SerializeField]
+	float m_comboTime;
+
+	/// <summary>
+	/// 攻撃の後休憩する時間
+	/// </summary>
+	[SerializeField]
+	float m_attackBreakTime;
+
+	/// <summary>
+	/// 攻撃１の威力
+	/// </summary>
+	[SerializeField]
+	int m_powerAttack1;
+
+	/// <summary>
+	/// 攻撃２の威力
+	/// </summary>
+	[SerializeField]
+	int m_powerAttack2;
+
 	/// <summary>
 	/// 攻撃の連続回数
 	/// </summary>
@@ -214,33 +255,18 @@ public class MyPlayer : MonoBehaviour
 	float m_attackTime;
 
 	/// <summary>
-	/// 攻撃の有効時間
-	/// </summary>
-	[SerializeField]
-	float m_effectiveAttackTime;
-
-	/// <summary>
 	/// 攻撃２のコンボ数
 	/// </summary>
 	int m_numAttack2Combo;
 
 	/// <summary>
-	/// コンボ間の時間
+	/// 現在の攻撃休憩時間
 	/// </summary>
-	const float COMBO_TIME = 0.75f;
-
-	/// <summary>
-	/// 攻撃休憩時間
-	/// </summary>
-	float m_attackBreakTime;
-
-	/// <summary>
-	/// 攻撃の後休憩する時間
-	/// </summary>
-	const float ATTACK_BREAK_TIME = 1.0f;
+	float m_currentAttackBreakTime;
 	#endregion
 
 	#region 攻撃範囲
+	[Header("攻撃範囲")]
 	/// <summary>
 	/// 攻撃１のAパターンの頂点
 	/// </summary>
@@ -303,6 +329,7 @@ public class MyPlayer : MonoBehaviour
 	#endregion
 
 	#region キーボード関係
+	[Header("キーボード関係")]
 	/// <summary>
 	/// 水平移動軸
 	/// </summary>
@@ -425,12 +452,12 @@ public class MyPlayer : MonoBehaviour
 	void FixedUpdate()
 	{
 		//攻撃休憩時間
-		if (m_attackBreakTime > 0)
+		if (m_currentAttackBreakTime > 0)
 		{
-			m_attackBreakTime -= Time.deltaTime;
+			m_currentAttackBreakTime -= Time.deltaTime;
 
 			//攻撃休憩時間の終了
-			if(m_attackBreakTime <= 0)
+			if (m_currentAttackBreakTime <= 0)
 				m_attackTime = -1;
 		}
 		else
@@ -471,7 +498,7 @@ public class MyPlayer : MonoBehaviour
 				m_attackTime = 0;
 				m_attackCount = 1;
 			}
-			else if (m_attackTime > ATTACK_TIME && m_attackCount <= CONSECUTIVE_ATTACK_LIMIT_NUM) //攻撃が終わったand攻撃２を繰り出していない
+			else if (m_attackTime > m_attackTempoTime && m_attackCount <= CONSECUTIVE_ATTACK_LIMIT_NUM) //攻撃が終わったand攻撃２を繰り出していない
 			{
 				//次の攻撃１設定
 				m_attackTime = 0;
@@ -483,8 +510,8 @@ public class MyPlayer : MonoBehaviour
 			{
 				//攻撃１の最後のパターンにする
 				m_attackCount = CONSECUTIVE_ATTACK_LIMIT_NUM;
-				m_attackBreakTime = ATTACK_TIME + ATTACK_BREAK_TIME;
-				m_attackTime = ATTACK_TIME;
+				m_currentAttackBreakTime = m_attackTempoTime + m_attackBreakTime;
+				m_attackTime = m_attackTempoTime;
 				return;
 			}
 		}
@@ -499,7 +526,7 @@ public class MyPlayer : MonoBehaviour
 				m_attackTime = 0;
 				m_attackCount = CONSECUTIVE_ATTACK_LIMIT_NUM + 1;
 			}
-			else if (m_attackTime > ATTACK_TIME && m_attackCount > CONSECUTIVE_ATTACK_LIMIT_NUM) //攻撃が終わったand攻撃１でない
+			else if (m_attackTime > m_attackTempoTime && m_attackCount > CONSECUTIVE_ATTACK_LIMIT_NUM) //攻撃が終わったand攻撃１でない
 			{
 				//次の攻撃２設定
 				m_attackTime = 0;
@@ -511,8 +538,8 @@ public class MyPlayer : MonoBehaviour
 			{
 				//攻撃２を最後のパターンにする
 				m_attackCount = CONSECUTIVE_ATTACK_LIMIT_NUM + m_numAttack2Combo;
-				m_attackBreakTime = ATTACK_TIME + ATTACK_BREAK_TIME;
-				m_attackTime = ATTACK_TIME;
+				m_currentAttackBreakTime = m_attackTempoTime + m_attackBreakTime;
+				m_attackTime = m_attackTempoTime;
 				return;
 			}
 		}
@@ -522,7 +549,7 @@ public class MyPlayer : MonoBehaviour
 			m_attackTime += Time.deltaTime;
 
 		//コンボキャンセル
-		if (m_attackTime >= ATTACK_TIME + COMBO_TIME)
+		if (m_attackTime >= m_attackTempoTime + m_comboTime)
 			m_attackTime = -1;
 	}
 
@@ -577,7 +604,7 @@ public class MyPlayer : MonoBehaviour
 		m_workVector3 = transform.eulerAngles;
 
 		//回転したい角度が小さい
-		if (Mathf.Abs(m_workVector3.y - m_angle) <= CORRECTION_ANGLE)
+		if (Mathf.Abs(m_workVector3.y - m_angle) <= m_correctionAngle)
 		{
 			//向きたい方向に向く
 			m_workVector3.y = m_angle;
@@ -689,7 +716,7 @@ public class MyPlayer : MonoBehaviour
 			m_state = Status.Idle;
 
 		//攻撃が終了しているor攻撃していない
-		if (m_attackTime > ATTACK_TIME || m_attackTime == -1)
+		if (m_attackTime > m_attackTempoTime || m_attackTime == -1)
 			return;
 
 		//攻撃
@@ -760,7 +787,7 @@ public class MyPlayer : MonoBehaviour
 			m_workVector3Array[4], m_workVector3Array[5], m_workVector3Array[6], m_workVector3Array[6]);
 
 		//攻撃範囲の生成
-		myCharacter.AttackManagerScript.PlayerAttack(m_workMyCube, m_effectiveAttackTime);
+		myCharacter.AttackManagerScript.PlayerAttack(m_workMyCube, m_powerAttack1, m_effectiveAttackTime);
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -784,7 +811,7 @@ public class MyPlayer : MonoBehaviour
 			m_workVector3Array[4], m_workVector3Array[5], m_workVector3Array[6], m_workVector3Array[6]);
 
 		//攻撃範囲の生成
-		myCharacter.AttackManagerScript.PlayerAttack(m_workMyCube, m_effectiveAttackTime);
+		myCharacter.AttackManagerScript.PlayerAttack(m_workMyCube, m_powerAttack1, m_effectiveAttackTime);
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -808,7 +835,7 @@ public class MyPlayer : MonoBehaviour
 			m_workVector3Array[4], m_workVector3Array[5], m_workVector3Array[6], m_workVector3Array[6]);
 
 		//攻撃範囲の生成
-		myCharacter.AttackManagerScript.PlayerAttack(m_workMyCube, m_effectiveAttackTime);
+		myCharacter.AttackManagerScript.PlayerAttack(m_workMyCube, m_powerAttack1, m_effectiveAttackTime);
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -832,6 +859,6 @@ public class MyPlayer : MonoBehaviour
 			m_workVector3Array[4], m_workVector3Array[5], m_workVector3Array[6], m_workVector3Array[6]);
 
 		//攻撃範囲の生成
-		myCharacter.AttackManagerScript.PlayerAttack(m_workMyCube, m_effectiveAttackTime);
+		myCharacter.AttackManagerScript.PlayerAttack(m_workMyCube, m_powerAttack2, m_effectiveAttackTime);
 	}
 }

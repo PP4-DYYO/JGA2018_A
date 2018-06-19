@@ -14,6 +14,7 @@ using UnityEngine;
 //構造体
 //----------------------------------------------------------------------------------------------------
 
+//----------------------------------------------------------------------------------------------------
 /// <summary>
 /// 直方体
 /// </summary>
@@ -64,7 +65,6 @@ public struct MyCube
 	/// </summary>
 	public const int NUM_VERTICES = 8;
 
-	//----------------------------------------------------------------------------------------------------
 	/// <summary>
 	/// 直方体の設定
 	/// </summary>
@@ -89,7 +89,6 @@ public struct MyCube
 		vRUF = vertexRUF;
 	}
 
-	//----------------------------------------------------------------------------------------------------
 	/// <summary>
 	/// 直方体の設定
 	/// </summary>
@@ -149,6 +148,11 @@ public class MyAttackManager : MonoBehaviour
 	[SerializeField]
 	bool m_isDebug;
 
+	/// <summary>
+	/// 作業用の攻撃
+	/// </summary>
+	MyAttack m_workAttack;
+
 	//----------------------------------------------------------------------------------------------------
 	/// <summary>
 	/// フレームメソッド
@@ -179,14 +183,19 @@ public class MyAttackManager : MonoBehaviour
 	/// プレイヤーの攻撃
 	/// </summary>
 	/// <param name="attackCube">攻撃用の直方体</param>
+	/// <param name="power">攻撃威力</param>
 	/// <param name="time">攻撃時間</param>
-	public void PlayerAttack(MyCube attackCube, float time = -1)
+	public void PlayerAttack(MyCube attackCube, int power = 0, float time = -1)
 	{
 		//攻撃範囲の生成
 		var attackRange = Instantiate(PlayerAttackRange, transform);
+		m_workAttack = attackRange.GetComponent<MyAttack>();
 
 		//攻撃範囲の調整
 		AdjustAttackRange(attackRange, attackCube);
+
+		//攻撃の詳細
+		m_workAttack.Power = power;
 
 		//攻撃時間
 		if (time >= 0)
@@ -276,14 +285,19 @@ public class MyAttackManager : MonoBehaviour
 	/// 敵の攻撃
 	/// </summary>
 	/// <param name="attackCube">攻撃用の直方体</param>
+	/// <param name="power">攻撃威力</param>
 	/// <param name="time">攻撃時間</param>
-	public void EnemyAttack(MyCube attackCube, float time = -1)
+	public void EnemyAttack(MyCube attackCube, int power = 0, float time = -1)
 	{
 		//攻撃範囲の生成
 		var attackRange = Instantiate(EnemyAttackRange, transform);
+		m_workAttack = attackRange.GetComponent<MyAttack>();
 
 		//攻撃範囲の調整
 		AdjustAttackRange(attackRange, attackCube);
+
+		//攻撃の詳細
+		m_workAttack.Power = power;
 
 		//攻撃時間
 		if (time >= 0)

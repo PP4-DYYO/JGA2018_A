@@ -91,4 +91,28 @@ public class MyCharacter : MonoBehaviour
 	{
 		get { return myAttackManager; }
 	}
+
+	/// <summary>
+	/// ボス
+	/// </summary>
+	GameObject m_boss;
+	public GameObject Boss
+	{
+		get { return m_boss; }
+		set { m_boss = value; }
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// ボスの位置を得る
+	/// </summary>
+	/// <returns>ボスの位置</returns>
+	public Vector3 GetPosBoss()
+	{
+		//ボス不在
+		if (!m_boss)
+			return Vector3.down * byte.MaxValue;
+
+		return m_boss.transform.position;
+	}
 }

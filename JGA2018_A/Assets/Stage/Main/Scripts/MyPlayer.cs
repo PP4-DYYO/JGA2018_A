@@ -292,6 +292,12 @@ public class MyPlayer : MonoBehaviour
 	int m_powerAttack2;
 
 	/// <summary>
+	/// マジックマスクの攻撃２の威力
+	/// </summary>
+	[SerializeField]
+	int m_powerAttack2MagicMask;
+
+	/// <summary>
 	/// 攻撃の連続回数
 	/// </summary>
 	int m_attackCount;
@@ -1382,7 +1388,7 @@ public class MyPlayer : MonoBehaviour
 			m_workVector3Array[4], m_workVector3Array[5], m_workVector3Array[6], m_workVector3Array[6]);
 
 		//攻撃範囲の生成
-		myCharacter.AttackManagerScript.PlayerAttack(m_workMyCube, m_maskState, m_powerAttack2, m_effectiveAttackTime);
+		myCharacter.AttackManagerScript.PlayerAttack(m_workMyCube, m_maskState, m_powerAttack2 / 3, m_effectiveAttackTime);
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -1391,8 +1397,8 @@ public class MyPlayer : MonoBehaviour
 	/// </summary>
 	void Attack2Kind4AEvent()
 	{
-		//ワールド座標でプレイヤーの原点と方向
-		m_workMatrix.SetTRS(transform.position, transform.rotation, Vector3.one);
+		//ワールド座標でボスの位置とプレイヤーの方向
+		m_workMatrix.SetTRS(myCharacter.GetPosBoss(), transform.rotation, Vector3.one);
 
 		//攻撃範囲頂点の決定
 		for (var i = 0; i < MyCube.NUM_VERTICES; i++)
@@ -1406,7 +1412,7 @@ public class MyPlayer : MonoBehaviour
 			m_workVector3Array[4], m_workVector3Array[5], m_workVector3Array[6], m_workVector3Array[6]);
 
 		//攻撃範囲の生成
-		myCharacter.AttackManagerScript.PlayerAttack(m_workMyCube, m_maskState, m_powerAttack2, m_effectiveAttackTime);
+		myCharacter.AttackManagerScript.PlayerAttack(m_workMyCube, m_maskState, m_powerAttack2MagicMask, m_effectiveAttackTime);
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -1415,8 +1421,8 @@ public class MyPlayer : MonoBehaviour
 	/// </summary>
 	void Attack2Kind4BEvent()
 	{
-		//ワールド座標でプレイヤーの原点と方向
-		m_workMatrix.SetTRS(transform.position, transform.rotation, Vector3.one);
+		//ワールド座標でボスの位置とプレイヤーの方向
+		m_workMatrix.SetTRS(myCharacter.GetPosBoss(), transform.rotation, Vector3.one);
 
 		//攻撃範囲頂点の決定
 		for (var i = 0; i < MyCube.NUM_VERTICES; i++)
@@ -1430,7 +1436,7 @@ public class MyPlayer : MonoBehaviour
 			m_workVector3Array[4], m_workVector3Array[5], m_workVector3Array[6], m_workVector3Array[6]);
 
 		//攻撃範囲の生成
-		myCharacter.AttackManagerScript.PlayerAttack(m_workMyCube, m_maskState, m_powerAttack2, m_effectiveAttackTime);
+		myCharacter.AttackManagerScript.PlayerAttack(m_workMyCube, m_maskState, m_powerAttack2MagicMask, m_effectiveAttackTime);
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -1439,8 +1445,8 @@ public class MyPlayer : MonoBehaviour
 	/// </summary>
 	void Attack2Kind4CEvent()
 	{
-		//ワールド座標でプレイヤーの原点と方向
-		m_workMatrix.SetTRS(transform.position, transform.rotation, Vector3.one);
+		//ワールド座標でボスの位置とプレイヤーの方向
+		m_workMatrix.SetTRS(myCharacter.GetPosBoss(), transform.rotation, Vector3.one);
 
 		//攻撃範囲頂点の決定
 		for (var i = 0; i < MyCube.NUM_VERTICES; i++)
@@ -1454,6 +1460,6 @@ public class MyPlayer : MonoBehaviour
 			m_workVector3Array[4], m_workVector3Array[5], m_workVector3Array[6], m_workVector3Array[6]);
 
 		//攻撃範囲の生成
-		myCharacter.AttackManagerScript.PlayerAttack(m_workMyCube, m_maskState, m_powerAttack2, m_effectiveAttackTime);
+		myCharacter.AttackManagerScript.PlayerAttack(m_workMyCube, m_maskState, m_powerAttack2MagicMask, m_effectiveAttackTime);
 	}
 }

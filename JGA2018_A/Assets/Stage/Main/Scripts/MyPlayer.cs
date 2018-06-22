@@ -10,8 +10,77 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//----------------------------------------------------------------------------------------------------
+//Enum・Struct
+//----------------------------------------------------------------------------------------------------
+
+//----------------------------------------------------------------------------------------------------
 /// <summary>
-/// プレイヤークラス
+/// 行動状態
+/// </summary>
+enum BehaviorStatus
+{
+	/// <summary>
+	/// 無操作
+	/// </summary>
+	Idle,
+	/// <summary>
+	/// 徒歩
+	/// </summary>
+	Walk,
+	/// <summary>
+	/// 攻撃１のAパターン
+	/// </summary>
+	Attack1A,
+	/// <summary>
+	/// 攻撃１のBパターン
+	/// </summary>
+	Attack1B,
+	/// <summary>
+	/// 攻撃１のCパターン
+	/// </summary>
+	Attack1C,
+	/// <summary>
+	/// 攻撃２
+	/// </summary>
+	Attack2,
+}
+
+//----------------------------------------------------------------------------------------------------
+/// <summary>
+/// プレイヤーのマスク
+/// </summary>
+struct PlayerMask
+{
+	/// <summary>
+	/// 属性
+	/// </summary>
+	public MaskAttribute attribute;
+	/// <summary>
+	/// 獲得済み
+	/// </summary>
+	public bool isObtained;
+	/// <summary>
+	/// 使用可能
+	/// </summary>
+	public bool isAvailable;
+	/// <summary>
+	/// 使用中
+	/// </summary>
+	public bool isUse;
+	/// <summary>
+	/// ゲージを数える
+	/// </summary>
+	public float countGauge;
+}
+
+//----------------------------------------------------------------------------------------------------
+//クラス
+//----------------------------------------------------------------------------------------------------
+
+//----------------------------------------------------------------------------------------------------
+/// <summary>
+/// プレイヤー
 /// </summary>
 public class MyPlayer : MonoBehaviour
 {
@@ -75,51 +144,34 @@ public class MyPlayer : MonoBehaviour
 	/// 攻撃２遷移
 	/// </summary>
 	const string TRANS_ATTACK2 = "Attack2";
+
+	/// <summary>
+	/// マスクチェンジ遷移
+	/// </summary>
+	const string TRANS_CHANGE_MASK = "ChangeMask";
 	#endregion
 
 	#region 状態
-	/// <summary>
-	/// 状態
-	/// </summary>
-	enum Status
-	{
-		/// <summary>
-		/// 無操作
-		/// </summary>
-		Idle,
-		/// <summary>
-		/// 徒歩
-		/// </summary>
-		Walk,
-		/// <summary>
-		/// 攻撃１のAパターン
-		/// </summary>
-		Attack1A,
-		/// <summary>
-		/// 攻撃１のBパターン
-		/// </summary>
-		Attack1B,
-		/// <summary>
-		/// 攻撃１のCパターン
-		/// </summary>
-		Attack1C,
-		/// <summary>
-		/// 攻撃２
-		/// </summary>
-		Attack2,
-	}
-
 	[Header("状態")]
-
 	/// <summary>
-	/// 現在の状態
+	/// 現在の行動状態
 	/// </summary>
-	Status m_state;
+	BehaviorStatus m_behaviorState;
 
 	/// <summary>
 	/// フレーム前の状態
 	/// </summary>
-	Status m_statePrev;
+	BehaviorStatus m_behaviorStatePrev;
+
+	/// <summary>
+	/// 現在のマスク状態
+	/// </summary>
+	MaskAttribute m_maskState;
+
+	/// <summary>
+	/// フレーム前のマスク状態
+	/// </summary>
+	MaskAttribute m_maskStatePrev;
 	#endregion
 
 	#region トランスポート
@@ -169,7 +221,7 @@ public class MyPlayer : MonoBehaviour
 	/// </summary>
 	[SerializeField]
 	float m_walkSpeed;
-	
+
 	/// <summary>
 	/// 速度
 	/// </summary>
@@ -328,6 +380,59 @@ public class MyPlayer : MonoBehaviour
 	};
 	#endregion
 
+	#region 仮面関係
+	[Header("仮面関係")]
+	/// <summary>
+	/// 配達マスクゲージの最大値
+	/// </summary>
+	[SerializeField]
+	float m_maxCarryMaskGauge;
+
+	/// <summary>
+	/// ウイルスマスクゲージの最大値
+	/// </summary>
+	[SerializeField]
+	float m_maxVirusMaskGauge;
+
+	/// <summary>
+	/// 鏡マスクゲージの最大値
+	/// </summary>
+	[SerializeField]
+	float m_maxMirrorMaskGauge;
+
+	/// <summary>
+	/// マジックマスクゲージの最大値
+	/// </summary>
+	[SerializeField]
+	float m_maxMagicMaskGauge;
+
+	/// <summary>
+	/// 能力使用時間の最大値
+	/// </summary>
+	[SerializeField]
+	float m_maxAbilityUseTime;
+
+	/// <summary>
+	/// 配達マスク
+	/// </summary>
+	PlayerMask m_carryMask;
+
+	/// <summary>
+	/// ウイルスマスク
+	/// </summary>
+	PlayerMask m_virusMask;
+
+	/// <summary>
+	/// 鏡マスク
+	/// </summary>
+	PlayerMask m_mirrorMask;
+
+	/// <summary>
+	/// マジックマスク
+	/// </summary>
+	PlayerMask m_magicMask;
+	#endregion
+
 	#region キーボード関係
 	[Header("キーボード関係")]
 	/// <summary>
@@ -356,6 +461,26 @@ public class MyPlayer : MonoBehaviour
 	const string ATTACK2 = "Attack2";
 
 	/// <summary>
+	/// 十字キー上
+	/// </summary>
+	const string CROSS_KEY_UP = "CrossKeyUp";
+
+	/// <summary>
+	/// 十字キー下
+	/// </summary>
+	const string CROSS_KEY_DOWN = "CrossKeyDown";
+
+	/// <summary>
+	/// 十字キー左
+	/// </summary>
+	const string CROSS_KEY_LEFT = "CrossKeyLeft";
+
+	/// <summary>
+	/// 十字キー右
+	/// </summary>
+	const string CROSS_KEY_RIGHT = "CrossKeyRight";
+
+	/// <summary>
 	/// スペースキーを押された
 	/// </summary>
 	bool m_isPressedSpace = false;
@@ -369,6 +494,26 @@ public class MyPlayer : MonoBehaviour
 	/// 右クリックを押された
 	/// </summary>
 	bool m_isPressedRightClick = false;
+
+	/// <summary>
+	/// 十字キー上が押された
+	/// </summary>
+	bool m_isPressedCrossKeyUp = false;
+
+	/// <summary>
+	/// 十字キー下が押された
+	/// </summary>
+	bool m_isPressedCrossKeyDown = false;
+
+	/// <summary>
+	/// 十字キー左が押された
+	/// </summary>
+	bool m_isPressedCrossKeyLeft = false;
+
+	/// <summary>
+	/// 十字キー右が押された
+	/// </summary>
+	bool m_isPressedCrossKeyRight = false;
 	#endregion
 
 	#region 作業用
@@ -412,8 +557,31 @@ public class MyPlayer : MonoBehaviour
 		//アクセスしやすいように
 		m_camera = myCharacter.GameScript.CameraScript;
 
+		m_maskState = MaskAttribute.Non;
 		m_attackCount = 0;
 		m_numAttack2Combo = 1;
+
+		//マスク関係
+		m_carryMask.attribute = MaskAttribute.Carry;
+		m_carryMask.isObtained = false;
+		m_carryMask.isAvailable = false;
+		m_carryMask.isUse = false;
+		m_carryMask.countGauge = 0;
+		m_virusMask.attribute = MaskAttribute.Virus;
+		m_virusMask.isObtained = false;
+		m_virusMask.isAvailable = false;
+		m_virusMask.isUse = false;
+		m_virusMask.countGauge = 0;
+		m_mirrorMask.attribute = MaskAttribute.Mirror;
+		m_mirrorMask.isObtained = false;
+		m_mirrorMask.isAvailable = false;
+		m_mirrorMask.isUse = false;
+		m_mirrorMask.countGauge = 0;
+		m_magicMask.attribute = MaskAttribute.Magic;
+		m_magicMask.isObtained = false;
+		m_magicMask.isAvailable = false;
+		m_magicMask.isUse = false;
+		m_magicMask.countGauge = 0;
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -443,6 +611,22 @@ public class MyPlayer : MonoBehaviour
 		//右クリックの押下
 		if (Input.GetButtonDown(ATTACK2))
 			m_isPressedRightClick = true;
+
+		//十字キー上の押下
+		if (Input.GetButtonDown(CROSS_KEY_UP))
+			m_isPressedCrossKeyUp = true;
+
+		//十字キー下の押下
+		if (Input.GetButtonDown(CROSS_KEY_DOWN))
+			m_isPressedCrossKeyDown = true;
+
+		//十字キー左の押下
+		if (Input.GetButtonDown(CROSS_KEY_LEFT))
+			m_isPressedCrossKeyLeft = true;
+
+		//十字キー右の押下
+		if (Input.GetButtonDown(CROSS_KEY_RIGHT))
+			m_isPressedCrossKeyRight = true;
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -477,6 +661,9 @@ public class MyPlayer : MonoBehaviour
 			//アニメーション
 			Animation();
 		}
+
+		//マスク関係
+		Mask();
 
 		//キー状態のリセット
 		ResetKeyStatus();
@@ -674,33 +861,38 @@ public class MyPlayer : MonoBehaviour
 		CheckState();
 
 		//状態変化なし
-		if (m_state == m_statePrev)
+		if (m_behaviorState == m_behaviorStatePrev)
+		{
+			//アイドル状態中andマスクの切り替え
+			if (m_behaviorState == BehaviorStatus.Idle && m_maskState != m_maskStatePrev)
+				Anim.SetTrigger(TRANS_CHANGE_MASK);
 			return;
+		}
 
 		//アニメーションを変化
-		switch (m_state)
+		switch (m_behaviorState)
 		{
-			case Status.Walk:
+			case BehaviorStatus.Walk:
 				Anim.SetTrigger(TRANS_WALK);
 				break;
-			case Status.Idle:
+			case BehaviorStatus.Idle:
 				Anim.SetTrigger(TRANS_IDLE);
 				break;
-			case Status.Attack1A:
+			case BehaviorStatus.Attack1A:
 				Anim.SetTrigger(TRANS_ATTACK1A);
 				break;
-			case Status.Attack1B:
+			case BehaviorStatus.Attack1B:
 				Anim.SetTrigger(TRANS_ATTACK1B);
 				break;
-			case Status.Attack1C:
+			case BehaviorStatus.Attack1C:
 				Anim.SetTrigger(TRANS_ATTACK1C);
 				break;
-			case Status.Attack2:
+			case BehaviorStatus.Attack2:
 				Anim.SetTrigger(TRANS_ATTACK2);
 				break;
 		}
 
-		m_statePrev = m_state;
+		m_behaviorStatePrev = m_behaviorState;
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -711,9 +903,9 @@ public class MyPlayer : MonoBehaviour
 	{
 		//動きがあるか
 		if (m_direction.sqrMagnitude > 0)
-			m_state = Status.Walk;
+			m_behaviorState = BehaviorStatus.Walk;
 		else
-			m_state = Status.Idle;
+			m_behaviorState = BehaviorStatus.Idle;
 
 		//攻撃が終了しているor攻撃していない
 		if (m_attackTime > m_attackTempoTime || m_attackTime == -1)
@@ -723,21 +915,155 @@ public class MyPlayer : MonoBehaviour
 		switch (m_attackCount)
 		{
 			case 1:
-				m_state = Status.Attack1A;
+				m_behaviorState = BehaviorStatus.Attack1A;
 				break;
 			case 2:
-				m_state = Status.Attack1B;
+				m_behaviorState = BehaviorStatus.Attack1B;
 				break;
 			case 3:
-				m_state = Status.Attack1C;
+				m_behaviorState = BehaviorStatus.Attack1C;
 				break;
 			case CONSECUTIVE_ATTACK_LIMIT_NUM + 1:
 			case CONSECUTIVE_ATTACK_LIMIT_NUM + 2:
 			case CONSECUTIVE_ATTACK_LIMIT_NUM + 3:
-				m_state = Status.Attack2;
+				m_behaviorState = BehaviorStatus.Attack2;
 				break;
 			default:
 				return;
+		}
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	//マスク関係
+	void Mask()
+	{
+		//マスク状態の前回を更新
+		m_maskStatePrev = m_maskState;
+
+		//配達マスクが使用可能
+		if (m_carryMask.isObtained)
+		{
+			AttributeMask(ref m_carryMask);
+		}
+
+		//ウイルスマスクが使用可能
+		if (m_virusMask.isObtained)
+		{
+			AttributeMask(ref m_virusMask);
+		}
+
+		//鏡マスクが使用可能
+		if (m_mirrorMask.isObtained)
+		{
+			AttributeMask(ref m_mirrorMask);
+		}
+
+		//マジックマスクが使用可能
+		if (m_magicMask.isObtained)
+		{
+			AttributeMask(ref m_magicMask);
+		}
+
+		//装着したマスク
+		MountingMask();
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// １つの属性のマスク関係
+	/// </summary>
+	/// <param name="mask">属性のマスク</param>
+	void AttributeMask(ref PlayerMask mask)
+	{
+		//利用可能
+		if (mask.isAvailable)
+		{
+			//使用中
+			if (mask.isUse)
+			{
+				//ゲージが減る
+				switch (mask.attribute)
+				{
+					case MaskAttribute.Carry:
+						mask.countGauge -= (m_maxCarryMaskGauge / m_maxAbilityUseTime) * Time.deltaTime;
+						break;
+					case MaskAttribute.Virus:
+						mask.countGauge -= (m_maxVirusMaskGauge / m_maxAbilityUseTime) * Time.deltaTime;
+						break;
+					case MaskAttribute.Mirror:
+						mask.countGauge -= (m_maxMirrorMaskGauge / m_maxAbilityUseTime) * Time.deltaTime;
+						break;
+					case MaskAttribute.Magic:
+						mask.countGauge -= (m_maxMagicMaskGauge / m_maxAbilityUseTime) * Time.deltaTime;
+						break;
+				}
+			}
+
+			//利用不可にする
+			mask.isAvailable = !(mask.countGauge <= 0);
+			if (!mask.isAvailable)
+			{
+				mask.isUse = false;
+				m_maskState = MaskAttribute.Non;
+			}
+		}
+		else
+		{
+			mask.countGauge += Time.deltaTime;
+
+			//利用可能にする
+			switch (mask.attribute)
+			{
+				case MaskAttribute.Carry:
+					mask.isAvailable = (mask.countGauge >= m_maxCarryMaskGauge);
+					break;
+				case MaskAttribute.Virus:
+					mask.isAvailable = (mask.countGauge >= m_maxVirusMaskGauge);
+					break;
+				case MaskAttribute.Mirror:
+					mask.isAvailable = (mask.countGauge >= m_maxMirrorMaskGauge);
+					break;
+				case MaskAttribute.Magic:
+					mask.isAvailable = (mask.countGauge >= m_maxMagicMaskGauge);
+					break;
+			}
+		}
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// 装着したマスク
+	/// </summary>
+	void MountingMask()
+	{
+		//仮面を被っていない
+		if (m_maskState == MaskAttribute.Non)
+		{
+			//十字キーの押下and仮面の使用可能か
+			if (m_isPressedCrossKeyUp && m_carryMask.isAvailable)
+			{
+				//配達マスク
+				m_maskState = MaskAttribute.Carry;
+				m_carryMask.isUse = true;
+			}
+			else if (m_isPressedCrossKeyLeft && m_virusMask.isAvailable)
+			{
+				//ウイルスマスク
+				m_maskState = MaskAttribute.Virus;
+				m_virusMask.isUse = true;
+			}
+			else if (m_isPressedCrossKeyDown && m_mirrorMask.isAvailable)
+			{
+				//鏡マスク
+				m_maskState = MaskAttribute.Mirror;
+				m_mirrorMask.isUse = true;
+			}
+			else if (m_isPressedCrossKeyRight && m_magicMask.isAvailable)
+			{
+				//マジックマスク
+				m_maskState = MaskAttribute.Magic;
+				m_magicMask.isUse = true;
+			}
 		}
 	}
 
@@ -750,6 +1076,10 @@ public class MyPlayer : MonoBehaviour
 		m_isPressedSpace = false;
 		m_isPressedLeftClick = false;
 		m_isPressedRightClick = false;
+		m_isPressedCrossKeyUp = false;
+		m_isPressedCrossKeyDown = false;
+		m_isPressedCrossKeyLeft = false;
+		m_isPressedCrossKeyRight = false;
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -787,7 +1117,7 @@ public class MyPlayer : MonoBehaviour
 			m_workVector3Array[4], m_workVector3Array[5], m_workVector3Array[6], m_workVector3Array[6]);
 
 		//攻撃範囲の生成
-		myCharacter.AttackManagerScript.PlayerAttack(m_workMyCube, m_powerAttack1, m_effectiveAttackTime);
+		myCharacter.AttackManagerScript.PlayerAttack(m_workMyCube, MaskAttribute.Non, m_powerAttack1, m_effectiveAttackTime);
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -811,7 +1141,7 @@ public class MyPlayer : MonoBehaviour
 			m_workVector3Array[4], m_workVector3Array[5], m_workVector3Array[6], m_workVector3Array[6]);
 
 		//攻撃範囲の生成
-		myCharacter.AttackManagerScript.PlayerAttack(m_workMyCube, m_powerAttack1, m_effectiveAttackTime);
+		myCharacter.AttackManagerScript.PlayerAttack(m_workMyCube, MaskAttribute.Non, m_powerAttack1, m_effectiveAttackTime);
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -835,7 +1165,7 @@ public class MyPlayer : MonoBehaviour
 			m_workVector3Array[4], m_workVector3Array[5], m_workVector3Array[6], m_workVector3Array[6]);
 
 		//攻撃範囲の生成
-		myCharacter.AttackManagerScript.PlayerAttack(m_workMyCube, m_powerAttack1, m_effectiveAttackTime);
+		myCharacter.AttackManagerScript.PlayerAttack(m_workMyCube, MaskAttribute.Non, m_powerAttack1, m_effectiveAttackTime);
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -859,6 +1189,6 @@ public class MyPlayer : MonoBehaviour
 			m_workVector3Array[4], m_workVector3Array[5], m_workVector3Array[6], m_workVector3Array[6]);
 
 		//攻撃範囲の生成
-		myCharacter.AttackManagerScript.PlayerAttack(m_workMyCube, m_powerAttack2, m_effectiveAttackTime);
+		myCharacter.AttackManagerScript.PlayerAttack(m_workMyCube, m_maskState, m_powerAttack2, m_effectiveAttackTime);
 	}
 }

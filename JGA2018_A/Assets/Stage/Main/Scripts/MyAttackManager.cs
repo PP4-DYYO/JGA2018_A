@@ -143,22 +143,34 @@ public class MyAttackManager : MonoBehaviour
 	GameObject EnemyAttackRange;
 
 	/// <summary>
+	/// 作業用の攻撃
+	/// </summary>
+	MyAttack m_workAttack;
+
+#if DEBUG
+	/// <summary>
 	/// デバッグモード
 	/// </summary>
 	[SerializeField]
 	bool m_isDebug;
-
-	/// <summary>
-	/// 作業用の攻撃
-	/// </summary>
-	MyAttack m_workAttack;
+#endif
 
 	//----------------------------------------------------------------------------------------------------
 	/// <summary>
 	/// フレームメソッド
 	/// </summary>
-	void Update()
+	void FixedUpdate()
 	{
+		DebugProcess();
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// デバッグ処理
+	/// </summary>
+	void DebugProcess()
+	{
+#if DEBUG
 		//デバッグモードで表示する
 		if (m_isDebug)
 		{
@@ -176,6 +188,7 @@ public class MyAttackManager : MonoBehaviour
 				child.GetComponent<MeshRenderer>().enabled = false;
 			}
 		}
+#endif
 	}
 
 	//----------------------------------------------------------------------------------------------------

@@ -650,6 +650,35 @@ public class MyPlayer : MonoBehaviour
 	MyCube m_workMyCube = new MyCube();
 	#endregion
 
+#if DEBUG
+	#region デバッグ
+	[Header("デバッグ")]
+	/// <summary>
+	/// 配達マスクを獲得済み(デバッグ用)
+	/// </summary>
+	[SerializeField]
+	bool m_isObtainedCarryMask_debug;
+
+	/// <summary>
+	/// ウイルスマスクを獲得済み(デバッグ用)
+	/// </summary>
+	[SerializeField]
+	bool m_isObtainedVirusMask_debug;
+
+	/// <summary>
+	/// 鏡マスクを獲得済み(デバッグ用)
+	/// </summary>
+	[SerializeField]
+	bool m_isObtainedMirrorMask_debug;
+
+	/// <summary>
+	/// マジックマスクを獲得済み(デバッグ用)
+	/// </summary>
+	[SerializeField]
+	bool m_isObtainedMagicMask_debug;
+	#endregion
+#endif
+
 	//----------------------------------------------------------------------------------------------------
 	/// <summary>
 	/// 初期
@@ -769,6 +798,9 @@ public class MyPlayer : MonoBehaviour
 
 		//キー状態のリセット
 		ResetKeyStatus();
+
+		//デバッグ用の処理
+		DebugProcess();
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -1183,6 +1215,20 @@ public class MyPlayer : MonoBehaviour
 		m_isPressedCrossKeyDown = false;
 		m_isPressedCrossKeyLeft = false;
 		m_isPressedCrossKeyRight = false;
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// デバッグ用処理
+	/// </summary>
+	void DebugProcess()
+	{
+#if DEBUG
+		m_carryMask.isObtained = m_carryMask.isObtained || m_isObtainedCarryMask_debug;
+		m_virusMask.isObtained = m_virusMask.isObtained || m_isObtainedVirusMask_debug;
+		m_mirrorMask.isObtained = m_mirrorMask.isObtained || m_isObtainedMirrorMask_debug;
+		m_magicMask.isObtained = m_magicMask.isObtained || m_isObtainedMagicMask_debug;
+#endif
 	}
 
 	//----------------------------------------------------------------------------------------------------

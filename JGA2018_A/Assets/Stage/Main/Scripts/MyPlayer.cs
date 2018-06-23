@@ -44,6 +44,30 @@ enum BehaviorStatus
 	/// 攻撃２
 	/// </summary>
 	Attack2,
+	/// <summary>
+	/// 攻撃２の１種目
+	/// </summary>
+	Attack2Kind1,
+	/// <summary>
+	/// 攻撃２の２種目
+	/// </summary>
+	Attack2Kind2,
+	/// <summary>
+	/// 攻撃２の３種目
+	/// </summary>
+	Attack2Kind3,
+	/// <summary>
+	/// 攻撃２の４種目Aパターン
+	/// </summary>
+	Attack2Kind4A,
+	/// <summary>
+	/// 攻撃２の４種目Bパターン
+	/// </summary>
+	Attack2Kind4B,
+	/// <summary>
+	/// 攻撃２の４種目Cパターン
+	/// </summary>
+	Attack2Kind4C,
 }
 
 //----------------------------------------------------------------------------------------------------
@@ -144,6 +168,36 @@ public class MyPlayer : MonoBehaviour
 	/// 攻撃２遷移
 	/// </summary>
 	const string TRANS_ATTACK2 = "Attack2";
+
+	/// <summary>
+	/// 攻撃２の１種目遷移
+	/// </summary>
+	const string TRANS_ATTACK2_KIND1 = "Attack2Kind1";
+
+	/// <summary>
+	/// 攻撃２の２種目遷移
+	/// </summary>
+	const string TRANS_ATTACK2_KIND2 = "Attack2Kind2";
+
+	/// <summary>
+	/// 攻撃２の３種目遷移
+	/// </summary>
+	const string TRANS_ATTACK2_KIND3 = "Attack2Kind3";
+
+	/// <summary>
+	/// 攻撃２の４種目Aパターン遷移
+	/// </summary>
+	const string TRANS_ATTACK2_KIND4A = "Attack2Kind4A";
+
+	/// <summary>
+	/// 攻撃２の４種目Bパターン遷移
+	/// </summary>
+	const string TRANS_ATTACK2_KIND4B = "Attack2Kind4B";
+
+	/// <summary>
+	/// 攻撃２の４種目Cパターン遷移
+	/// </summary>
+	const string TRANS_ATTACK2_KIND4C = "Attack2Kind4C";
 
 	/// <summary>
 	/// マスクチェンジ遷移
@@ -812,57 +866,15 @@ public class MyPlayer : MonoBehaviour
 		//左クリック（攻撃１）
 		if (m_isPressedLeftClick)
 		{
-			//攻撃していない
-			if (m_attackTime == -1)
-			{
-				//初めの攻撃１設定
-				m_attackTime = 0;
-				m_attackCount = 1;
-			}
-			else if (m_attackTime > m_attackTempoTime && m_attackCount <= CONSECUTIVE_ATTACK_LIMIT_NUM) //攻撃が終わったand攻撃２を繰り出していない
-			{
-				//次の攻撃１設定
-				m_attackTime = 0;
-				m_attackCount++;
-			}
-
-			//攻撃１のコンボ終了
-			if (m_attackCount == CONSECUTIVE_ATTACK_LIMIT_NUM)
-			{
-				//攻撃１の最後のパターンにする
-				m_attackCount = CONSECUTIVE_ATTACK_LIMIT_NUM;
-				m_currentAttackBreakTime = m_attackTempoTime + m_attackBreakTime;
-				m_attackTime = m_attackTempoTime;
+			if (Attack1())
 				return;
-			}
 		}
 
 		//右クリック（攻撃２）
 		if (m_isPressedRightClick)
 		{
-			//攻撃していないor攻撃１のコンボが終わっていない
-			if (m_attackTime == -1 || m_attackCount < CONSECUTIVE_ATTACK_LIMIT_NUM)
-			{
-				//初めの攻撃２設定
-				m_attackTime = 0;
-				m_attackCount = CONSECUTIVE_ATTACK_LIMIT_NUM + 1;
-			}
-			else if (m_attackTime > m_attackTempoTime && m_attackCount > CONSECUTIVE_ATTACK_LIMIT_NUM) //攻撃が終わったand攻撃１でない
-			{
-				//次の攻撃２設定
-				m_attackTime = 0;
-				m_attackCount++;
-			}
-
-			//攻撃２のコンボ終了
-			if (m_attackCount >= CONSECUTIVE_ATTACK_LIMIT_NUM + m_numAttack2Combo)
-			{
-				//攻撃２を最後のパターンにする
-				m_attackCount = CONSECUTIVE_ATTACK_LIMIT_NUM + m_numAttack2Combo;
-				m_currentAttackBreakTime = m_attackTempoTime + m_attackBreakTime;
-				m_attackTime = m_attackTempoTime;
+			if (Attack2())
 				return;
-			}
 		}
 
 		//攻撃中
@@ -872,6 +884,73 @@ public class MyPlayer : MonoBehaviour
 		//コンボキャンセル
 		if (m_attackTime >= m_attackTempoTime + m_comboTime)
 			m_attackTime = -1;
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// 攻撃１
+	/// </summary>
+	bool Attack1()
+	{
+		//攻撃していない
+		if (m_attackTime == -1)
+		{
+			//初めの攻撃１設定
+			m_attackTime = 0;
+			m_attackCount = 1;
+		}
+		else if (m_attackTime > m_attackTempoTime && m_attackCount <= CONSECUTIVE_ATTACK_LIMIT_NUM) //攻撃が終わったand攻撃２を繰り出していない
+		{
+			//次の攻撃１設定
+			m_attackTime = 0;
+			m_attackCount++;
+		}
+
+		//攻撃１のコンボ終了
+		if (m_attackCount == CONSECUTIVE_ATTACK_LIMIT_NUM)
+		{
+			//攻撃１の最後のパターンにする
+			m_attackCount = CONSECUTIVE_ATTACK_LIMIT_NUM;
+			m_currentAttackBreakTime = m_attackTempoTime + m_attackBreakTime;
+			m_attackTime = m_attackTempoTime;
+			return true;
+		}
+
+		return false;
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// 攻撃２
+	/// </summary>
+	/// <returns></returns>
+	bool Attack2()
+	{
+		//攻撃していないor攻撃１のコンボが終わっていない
+		if (m_attackTime == -1 || m_attackCount < CONSECUTIVE_ATTACK_LIMIT_NUM)
+		{
+			//初めの攻撃２設定
+			m_attackTime = 0;
+			m_attackCount = CONSECUTIVE_ATTACK_LIMIT_NUM + 1;
+		}
+		else if (m_attackTime > m_attackTempoTime && m_attackCount > CONSECUTIVE_ATTACK_LIMIT_NUM) //攻撃が終わったand攻撃１でない
+		{
+			//次の攻撃２設定
+			m_attackTime = 0;
+			m_attackCount++;
+		}
+
+		//攻撃２のコンボ終了
+		if (m_attackCount >= CONSECUTIVE_ATTACK_LIMIT_NUM + m_numAttack2Combo)
+		{
+			//攻撃２を最後のパターンにする
+			m_attackCount = CONSECUTIVE_ATTACK_LIMIT_NUM + m_numAttack2Combo;
+			m_currentAttackBreakTime = m_attackTempoTime + m_attackBreakTime;
+			m_attackTime = m_attackTempoTime;
+			return true;
+		}
+
+		return false;
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -1004,6 +1083,81 @@ public class MyPlayer : MonoBehaviour
 		}
 
 		//アニメーションを変化
+		ChangeAnim();
+
+		m_behaviorStatePrev = m_behaviorState;
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// 状態を調べる
+	/// </summary>
+	void CheckState()
+	{
+		//攻撃２のコンボ数
+		if (m_maskState == MaskAttribute.Magic)
+			m_numAttack2Combo = 3;
+		else
+			m_numAttack2Combo = 1;
+
+		//動きがあるか
+		if (m_direction.sqrMagnitude > 0)
+			m_behaviorState = BehaviorStatus.Walk;
+		else
+			m_behaviorState = BehaviorStatus.Idle;
+
+		//攻撃が終了しているor攻撃していない
+		if (m_attackTime > m_attackTempoTime || m_attackTime == -1)
+			return;
+
+		//攻撃
+		CheckStateAttack();
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// 攻撃の状態を調べる
+	/// </summary>
+	void CheckStateAttack()
+	{
+		switch (m_attackCount)
+		{
+			case 1:
+				m_behaviorState = BehaviorStatus.Attack1A;
+				break;
+			case 2:
+				m_behaviorState = BehaviorStatus.Attack1B;
+				break;
+			case 3:
+				m_behaviorState = BehaviorStatus.Attack1C;
+				break;
+			case CONSECUTIVE_ATTACK_LIMIT_NUM + 1:
+				if (m_maskState == MaskAttribute.Non)
+					m_behaviorState = BehaviorStatus.Attack2;
+				else if (m_maskState == MaskAttribute.Carry)
+					m_behaviorState = BehaviorStatus.Attack2Kind1;
+				else if (m_maskState == MaskAttribute.Virus)
+					m_behaviorState = BehaviorStatus.Attack2Kind2;
+				else if (m_maskState == MaskAttribute.Mirror)
+					m_behaviorState = BehaviorStatus.Attack2Kind3;
+				else
+					m_behaviorState = BehaviorStatus.Attack2Kind4A;
+				break;
+			case CONSECUTIVE_ATTACK_LIMIT_NUM + 2:
+				m_behaviorState = BehaviorStatus.Attack2Kind4B;
+				break;
+			case CONSECUTIVE_ATTACK_LIMIT_NUM + 3:
+				m_behaviorState = BehaviorStatus.Attack2Kind4C;
+				break;
+		}
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// アニメーションを変化
+	/// </summary>
+	void ChangeAnim()
+	{
 		switch (m_behaviorState)
 		{
 			case BehaviorStatus.Walk:
@@ -1024,46 +1178,24 @@ public class MyPlayer : MonoBehaviour
 			case BehaviorStatus.Attack2:
 				Anim.SetTrigger(TRANS_ATTACK2);
 				break;
-		}
-
-		m_behaviorStatePrev = m_behaviorState;
-	}
-
-	//----------------------------------------------------------------------------------------------------
-	/// <summary>
-	/// 状態を調べる
-	/// </summary>
-	void CheckState()
-	{
-		//動きがあるか
-		if (m_direction.sqrMagnitude > 0)
-			m_behaviorState = BehaviorStatus.Walk;
-		else
-			m_behaviorState = BehaviorStatus.Idle;
-
-		//攻撃が終了しているor攻撃していない
-		if (m_attackTime > m_attackTempoTime || m_attackTime == -1)
-			return;
-
-		//攻撃
-		switch (m_attackCount)
-		{
-			case 1:
-				m_behaviorState = BehaviorStatus.Attack1A;
+			case BehaviorStatus.Attack2Kind1:
+				Anim.SetTrigger(TRANS_ATTACK2_KIND1);
 				break;
-			case 2:
-				m_behaviorState = BehaviorStatus.Attack1B;
+			case BehaviorStatus.Attack2Kind2:
+				Anim.SetTrigger(TRANS_ATTACK2_KIND2);
 				break;
-			case 3:
-				m_behaviorState = BehaviorStatus.Attack1C;
+			case BehaviorStatus.Attack2Kind3:
+				Anim.SetTrigger(TRANS_ATTACK2_KIND3);
 				break;
-			case CONSECUTIVE_ATTACK_LIMIT_NUM + 1:
-			case CONSECUTIVE_ATTACK_LIMIT_NUM + 2:
-			case CONSECUTIVE_ATTACK_LIMIT_NUM + 3:
-				m_behaviorState = BehaviorStatus.Attack2;
+			case BehaviorStatus.Attack2Kind4A:
+				Anim.SetTrigger(TRANS_ATTACK2_KIND4A);
 				break;
-			default:
-				return;
+			case BehaviorStatus.Attack2Kind4B:
+				Anim.SetTrigger(TRANS_ATTACK2_KIND4B);
+				break;
+			case BehaviorStatus.Attack2Kind4C:
+				Anim.SetTrigger(TRANS_ATTACK2_KIND4C);
+				break;
 		}
 	}
 

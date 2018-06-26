@@ -48,6 +48,9 @@ public class MyCamera : MonoBehaviour {
     float rotX = 0.0f;
     float rotY = 0.0f;
 
+    float rotXR = 0.0f;
+    float rotYR = 0.0f;
+
     void Start()
     {
         if (Target == null)
@@ -61,6 +64,10 @@ public class MyCamera : MonoBehaviour {
     {
         rotX = Input.GetAxis("Mouse X") * Time.deltaTime * rotationSensitivity;
         rotY = Input.GetAxis("Mouse Y") * Time.deltaTime * rotationSensitivity;
+
+        rotXR = Input.GetAxis("HorizontalR") * Time.deltaTime * rotationSensitivity;
+        rotYR = Input.GetAxis("VerticalR") * Time.deltaTime * rotationSensitivity;
+
 
         var lookAt = Target.position + Vector3.up * HeightM;
 

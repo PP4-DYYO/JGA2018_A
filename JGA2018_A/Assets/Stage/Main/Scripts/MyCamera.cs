@@ -16,89 +16,77 @@ using UnityEngine;
 /// <summary>
 /// カメラを制御するクラス（仮）
 /// </summary>
+
+//カメラ属性を付ける
+[RequireComponent(typeof(Camera))]
 public class MyCamera : MonoBehaviour {
-
     /// <summary>
-    /// カメラの対象
+    /// ゲーム
     /// </summary>
     [SerializeField]
-    Transform m_target = null;
-    /// <summary>
-    /// 座標
-    /// </summary>
+    MyGame myGame;
+    public MyGame GameScript
+    {
+        get { return myGame; }
+    }
+
+    //カメラの対象
     [SerializeField]
-    float m_speed = 0.0f;
+    Transform Target;
+    // カメラとプレイヤーとの距離[m]
+    [SerializeField]
+    float DistanceToPlayerM = 2f;
+    // カメラを横にスライドさせる；プラスの時右へ，マイナスの時左へ[m]
+    [SerializeField]
+    float slideDistanceM = 0f;  
+    // 注視点の高さ[m]
+    [SerializeField]
+    float HeightM = 1.2f;  
+    // 感度
+    [SerializeField]
+    float rotationSensitivity = 100f;
+    float rotX = 0.0f;
+    float rotY = 0.0f;
 
-    float m_posx = 0.0f;
-    float m_posy = 0.0f;
-    float m_posz = 0.0f;
+    float rotXR = 0.0f;
+    float rotYR = 0.0f;
 
-    public Transform Target
-    {
-        get { return m_target; }
-    }
-
-    Transform m_cameraTransform = null;
-    Transform m_pivot = null;
-
-    void Awake()
-    {
-        Camera camera = GetComponentInChildren<Camera>();
-        Debug.AssertFormat(camera != null, "カメラがありません");
-        if (camera == null)
-        {
-            return;
-        }
-
-        m_cameraTransform = camera.transform;
-        m_pivot = m_cameraTransform.parent;
-    }
-
-    void LateUpdate()
-    {
-        UpdateCamera();
-    }
-
-    void UpdateCamera()
+    void Start()
     {
         if (Target == null)
         {
-            return;
+            Debug.LogError("ターゲットが設定されていない");
+            Application.Quit();
         }
-        Vector3 targetPos = Target.position;
-        targetPos.y += 2.0f;
-        targetPos.z -= 2.5f;
-        transform.position = targetPos;
-        float deltaSpeed = m_speed * Time.deltaTime;
-        transform.position = Vector3.MoveTowards(transform.position, targetPos, m_speed);
     }
 
-    [ContextMenu("ApplyTarget")]
-    void ApplyForceTarget()
+    void FixedUpdate()
     {
-        if (Target == null)
-        {
-            return;
-        }
-        transform.position = Target.position;
-        SetCameraTransform();
+        rotX = Input.GetAxis("HorizontalR") * Time.deltaTime * rotationSensitivity;
+        rotY = Input.GetAxis("VerticalR") * Time.deltaTime * rotationSensitivity;
 
-        if (m_cameraTransform == null)
-        {
-            return;
-        }
-        m_cameraTransform.transform.LookAt(Target);
-    }
+        var lookAt = Target.position + Vector3.up * HeightM;
 
-    void SetCameraTransform()
-    {
-        Camera camera = GetComponentInChildren<Camera>();
-        Debug.AssertFormat(camera != null, "カメラがありません2");
-        if (camera == null)
+        // 回転
+        transform.RotateAround(lookAt, Vector3.up, rotX);
+        // カメラがプレイヤーの真上や真下にあるときにそれ以上回転させないようにする
+        if (transform.forward.y > 0.9f && rotY < 0)
         {
-            return;
+            rotY = 0;
         }
-        m_cameraTransform = camera.transform;
-        m_pivot = m_cameraTransform.parent;
+        if (transform.forward.y < -0.9f && rotY > 0)
+        {
+            rotY = 0;
+        }
+        transform.RotateAround(lookAt, transform.right, rotY);
+
+        // カメラとプレイヤーとの間の距離を調整
+        transform.position = lookAt - transform.forward * DistanceToPlayerM;
+
+        // 視点の設定
+        transform.LookAt(lookAt);
+
+        // カメラを横にずらして中央を開ける
+        transform.position = transform.position + transform.right * slideDistanceM;
     }
 }

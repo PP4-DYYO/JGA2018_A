@@ -46,31 +46,31 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Yoshida\Particle_Dissolve_Shader\Shaders\unity5\Editor\CustomMaterialEditor.cs" />
-     <Compile Include="Assets\Yoshida\Particle_Dissolve_Shader\Shaders\unity5\Editor\Shader_softrim_dissolve.cs" />
-     <None Include="Assets\Yoshida\Particle_Dissolve_Shader\Shaders\legacy\Dissolve_Alpha_Additive_Opacity_softrim.shader" />
-     <None Include="Assets\Yoshida\Particle_Dissolve_Shader\Shaders\legacy\DissolveSoft_Alpha_Additive_Opacity_softrim.shader" />
-     <None Include="Assets\Yoshida\Particle_Dissolve_Shader\Shaders\legacy\DissolveSoft_Alpha_Additive_softrim.shader" />
-     <None Include="Assets\Yoshida\Particle_Dissolve_Shader\Shaders\legacy\DissolveSoft_Alpha_Unlit.shader" />
-     <None Include="Assets\Yoshida\Particle_Dissolve_Shader\Shaders\softrim\Particle_softrim_alpha.shader" />
-     <None Include="Assets\Yoshida\Particle_Dissolve_Shader\Shaders\unity5\Particle_Softrim_Dissolve_alpha.shader" />
-     <None Include="Assets\Yoshida\Particle_Dissolve_Shader\Shaders\legacy\Dissolve_Alpha_Unlit_Opacity.shader" />
-     <None Include="Assets\Yoshida\Particle_Dissolve_Shader\Shaders\legacy\Dissolve_Alpha_Unlit.shader" />
-     <None Include="Assets\Yoshida\Particle_Dissolve_Shader\Shaders\legacy\DissolveSoft_Alpha_Additive.shader" />
-     <None Include="Assets\Yoshida\Particle_Dissolve_Shader\Shaders\legacy\Dissolve_Alpha_Additive_softrim.shader" />
-     <None Include="Assets\Yoshida\Particle_Dissolve_Shader\Shaders\legacy\Dissolve_Alpha_Unlit_softrim.shader" />
-     <None Include="Assets\Yoshida\Particle_Dissolve_Shader\Shaders\softrim\Particle_softrim_add_stretch.shader" />
-     <None Include="Assets\Yoshida\Particle_Dissolve_Shader\Shaders\legacy\DissolveSoft_Alpha_Unlit_Opacity_softrim.shader" />
-     <None Include="Assets\Yoshida\Particle_Dissolve_Shader\Shaders\legacy\DissolveSoft_Alpha_Unlit_softrim.shader" />
-     <None Include="Assets\Yoshida\Particle_Dissolve_Shader\Shaders\unity5\Particle_Softrim_Dissolve_additive.shader" />
-     <None Include="Assets\Yoshida\Particle_Dissolve_Shader\Shaders\legacy\Dissolve_Alpha_Additive_Opacity.shader" />
-     <None Include="Assets\Yoshida\Particle_Dissolve_Shader\ReadMe.txt" />
-     <None Include="Assets\Yoshida\Particle_Dissolve_Shader\Shaders\legacy\Dissolve_Alpha_Unlit_Opacity_softrim.shader" />
-     <None Include="Assets\Yoshida\Particle_Dissolve_Shader\Shaders\softrim\Particle_softrim_alpha_stretch.shader" />
-     <None Include="Assets\Yoshida\Particle_Dissolve_Shader\Shaders\legacy\DissolveSoft_Alpha_Unlit_Opacity.shader" />
-     <None Include="Assets\Yoshida\Particle_Dissolve_Shader\Shaders\softrim\Particle_softrim_add.shader" />
-     <None Include="Assets\Yoshida\Particle_Dissolve_Shader\Shaders\legacy\Dissolve_Alpha_Additive.shader" />
-     <None Include="Assets\Yoshida\Particle_Dissolve_Shader\Shaders\legacy\DissolveSoft_Alpha_Additive_Opacity.shader" />
+     <Compile Include="Assets\Dummy\AssetStore\Particle_Dissolve_Shader\Shaders\unity5\Editor\CustomMaterialEditor.cs" />
+     <Compile Include="Assets\Dummy\AssetStore\Particle_Dissolve_Shader\Shaders\unity5\Editor\Shader_softrim_dissolve.cs" />
+     <None Include="Assets\Dummy\AssetStore\Particle_Dissolve_Shader\Shaders\legacy\Dissolve_Alpha_Additive_Opacity_softrim.shader" />
+     <None Include="Assets\Dummy\AssetStore\Particle_Dissolve_Shader\Shaders\legacy\DissolveSoft_Alpha_Additive_Opacity_softrim.shader" />
+     <None Include="Assets\Dummy\AssetStore\Particle_Dissolve_Shader\Shaders\legacy\DissolveSoft_Alpha_Additive_softrim.shader" />
+     <None Include="Assets\Dummy\AssetStore\Particle_Dissolve_Shader\Shaders\legacy\DissolveSoft_Alpha_Unlit.shader" />
+     <None Include="Assets\Dummy\AssetStore\Particle_Dissolve_Shader\Shaders\softrim\Particle_softrim_alpha.shader" />
+     <None Include="Assets\Dummy\AssetStore\Particle_Dissolve_Shader\Shaders\unity5\Particle_Softrim_Dissolve_alpha.shader" />
+     <None Include="Assets\Dummy\AssetStore\Particle_Dissolve_Shader\Shaders\legacy\Dissolve_Alpha_Unlit_Opacity.shader" />
+     <None Include="Assets\Dummy\AssetStore\Particle_Dissolve_Shader\Shaders\legacy\Dissolve_Alpha_Unlit.shader" />
+     <None Include="Assets\Dummy\AssetStore\Particle_Dissolve_Shader\Shaders\legacy\DissolveSoft_Alpha_Additive.shader" />
+     <None Include="Assets\Dummy\AssetStore\Particle_Dissolve_Shader\Shaders\legacy\Dissolve_Alpha_Additive_softrim.shader" />
+     <None Include="Assets\Dummy\AssetStore\Particle_Dissolve_Shader\Shaders\legacy\Dissolve_Alpha_Unlit_softrim.shader" />
+     <None Include="Assets\Dummy\AssetStore\Particle_Dissolve_Shader\Shaders\softrim\Particle_softrim_add_stretch.shader" />
+     <None Include="Assets\Dummy\AssetStore\Particle_Dissolve_Shader\Shaders\legacy\DissolveSoft_Alpha_Unlit_Opacity_softrim.shader" />
+     <None Include="Assets\Dummy\AssetStore\Particle_Dissolve_Shader\Shaders\legacy\DissolveSoft_Alpha_Unlit_softrim.shader" />
+     <None Include="Assets\Dummy\AssetStore\Particle_Dissolve_Shader\Shaders\unity5\Particle_Softrim_Dissolve_additive.shader" />
+     <None Include="Assets\Dummy\AssetStore\Particle_Dissolve_Shader\Shaders\legacy\Dissolve_Alpha_Additive_Opacity.shader" />
+     <None Include="Assets\Dummy\AssetStore\Particle_Dissolve_Shader\ReadMe.txt" />
+     <None Include="Assets\Dummy\AssetStore\Particle_Dissolve_Shader\Shaders\legacy\Dissolve_Alpha_Unlit_Opacity_softrim.shader" />
+     <None Include="Assets\Dummy\AssetStore\Particle_Dissolve_Shader\Shaders\softrim\Particle_softrim_alpha_stretch.shader" />
+     <None Include="Assets\Dummy\AssetStore\Particle_Dissolve_Shader\Shaders\legacy\DissolveSoft_Alpha_Unlit_Opacity.shader" />
+     <None Include="Assets\Dummy\AssetStore\Particle_Dissolve_Shader\Shaders\softrim\Particle_softrim_add.shader" />
+     <None Include="Assets\Dummy\AssetStore\Particle_Dissolve_Shader\Shaders\legacy\Dissolve_Alpha_Additive.shader" />
+     <None Include="Assets\Dummy\AssetStore\Particle_Dissolve_Shader\Shaders\legacy\DissolveSoft_Alpha_Additive_Opacity.shader" />
  <Reference Include="UnityEditor.Advertisements">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/Advertisements/Editor/UnityEditor.Advertisements.dll</HintPath>
  </Reference>

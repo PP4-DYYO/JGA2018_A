@@ -292,6 +292,12 @@ public class MyPlayer : MonoBehaviour
 	int m_powerAttack2;
 
 	/// <summary>
+	/// マジックマスクの攻撃２の威力
+	/// </summary>
+	[SerializeField]
+	int m_powerAttack2MagicMask;
+
+	/// <summary>
 	/// 攻撃の連続回数
 	/// </summary>
 	int m_attackCount;
@@ -378,10 +384,106 @@ public class MyPlayer : MonoBehaviour
 		new Vector3(0.25f,1.284438f,0.6949587f),
 		new Vector3(0.25f,1.284438f,0.6949587f),
 	};
+
+	/// <summary>
+	/// 攻撃２の１種目の頂点
+	/// </summary>
+	static readonly Vector3[] ATTACK2_KIND1_VERTECES =
+	{
+		new Vector3(0.3140665f,0.9749715f,1.035166f),
+		new Vector3(0.3246632f,1.034966f,-0.009343892f),
+		new Vector3(0.25f,1.330896f,1.93709f),
+		new Vector3(0.25f,1.284438f,0.6949587f),
+		new Vector3(0.25f,1.284438f,0.6949587f),
+		new Vector3(0.25f,1.284438f,0.6949587f),
+		new Vector3(0.25f,1.284438f,0.6949587f),
+		new Vector3(0.25f,1.284438f,0.6949587f),
+	};
+
+	/// <summary>
+	/// 攻撃２の２種目の頂点
+	/// </summary>
+	static readonly Vector3[] ATTACK2_KIND2_VERTECES =
+	{
+		new Vector3(0.3140665f,0.9749715f,1.035166f),
+		new Vector3(0.3246632f,1.034966f,-0.009343892f),
+		new Vector3(0.25f,1.330896f,1.93709f),
+		new Vector3(0.25f,1.284438f,0.6949587f),
+		new Vector3(0.25f,1.284438f,0.6949587f),
+		new Vector3(0.25f,1.284438f,0.6949587f),
+		new Vector3(0.25f,1.284438f,0.6949587f),
+		new Vector3(0.25f,1.284438f,0.6949587f),
+	};
+
+	/// <summary>
+	/// 攻撃２の３種目の頂点
+	/// </summary>
+	static readonly Vector3[] ATTACK2_KIND3_VERTECES =
+	{
+		new Vector3(0.3140665f,0.9749715f,1.035166f),
+		new Vector3(0.3246632f,1.034966f,-0.009343892f),
+		new Vector3(0.25f,1.330896f,1.93709f),
+		new Vector3(0.25f,1.284438f,0.6949587f),
+		new Vector3(0.25f,1.284438f,0.6949587f),
+		new Vector3(0.25f,1.284438f,0.6949587f),
+		new Vector3(0.25f,1.284438f,0.6949587f),
+		new Vector3(0.25f,1.284438f,0.6949587f),
+	};
+
+	/// <summary>
+	/// 攻撃２の４種目のAパターンの頂点
+	/// </summary>
+	static readonly Vector3[] ATTACK2_KIND4_A_VERTECES =
+	{
+		new Vector3(0.08698074f, 2.237455f, 1.532429f),
+		new Vector3(0.1659906f, 1.311585f, 0.6939639f),
+		new Vector3(-0.6301885f, 0.4820206f, 1.491178f),
+		new Vector3(-0.04720514f, 1.017675f, 0.5212768f),
+		new Vector3(-0.04720514f, 1.017675f, 0.5212768f),
+		new Vector3(-0.04720514f, 1.017675f, 0.5212768f),
+		new Vector3(-0.04720514f, 1.017675f, 0.5212768f),
+		new Vector3(-0.04720514f, 1.017675f, 0.5212768f),
+	};
+
+	/// <summary>
+	/// 攻撃２の４種目のBパターンの頂点
+	/// </summary>
+	static readonly Vector3[] ATTACK2_KIND4_B_VERTECES =
+	{
+		new Vector3(-1.086515f, 0.9399486f, 0.6289284f),
+		new Vector3(0.1558482f, 0.9843702f,0.519088f),
+		new Vector3(1.140949f,1.735734f,1.729904f),
+		new Vector3(0.6208854f,1.634966f,0.604331f),
+		new Vector3(0.6208854f,1.634966f,0.604331f),
+		new Vector3(0.6208854f,1.634966f,0.604331f),
+		new Vector3(0.6208854f,1.634966f,0.604331f),
+		new Vector3(0.6208854f,1.634966f,0.604331f),
+	};
+
+	/// <summary>
+	/// 攻撃２の４種目のCパターンの頂点
+	/// </summary>
+	static readonly Vector3[] ATTACK2_KIND4_C_VERTECES =
+	{
+		new Vector3(-1.76715f,0.6671497f,0.5825509f),
+		new Vector3(-0.658033f,1.108374f,0.2252046f),
+		new Vector3(-0.5207606f,0.5439724f,-1.696099f),
+		new Vector3(-0.2424484f,1.081343f,-0.624122f),
+		new Vector3(1.695093f,0.4451257f,-0.3083975f),
+		new Vector3(0.6111093f,1.063734f,-0.1974359f),
+		new Vector3(0.0841179f,0.4025702f,1.660222f),
+		new Vector3(0.1402777f,1.054813f,0.6047654f),
+	};
 	#endregion
 
 	#region 仮面関係
 	[Header("仮面関係")]
+	/// <summary>
+	/// マスクオブジェクト
+	/// </summary>
+	[SerializeField]
+	GameObject MaskObj;
+
 	/// <summary>
 	/// 配達マスクゲージの最大値
 	/// </summary>
@@ -939,6 +1041,7 @@ public class MyPlayer : MonoBehaviour
 	{
 		//マスク状態の前回を更新
 		m_maskStatePrev = m_maskState;
+		MaskObj.SetActive(m_maskState != MaskAttribute.Non);
 
 		//配達マスクが使用可能
 		if (m_carryMask.isObtained)
@@ -1190,5 +1293,173 @@ public class MyPlayer : MonoBehaviour
 
 		//攻撃範囲の生成
 		myCharacter.AttackManagerScript.PlayerAttack(m_workMyCube, m_maskState, m_powerAttack2, m_effectiveAttackTime);
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// 攻撃2の１種目の攻撃
+	/// </summary>
+	void Attack2Kind1Event()
+	{
+		//ワールド座標でプレイヤーの原点と方向
+		m_workMatrix.SetTRS(transform.position, transform.rotation, Vector3.one);
+
+		//攻撃範囲頂点の決定
+		for (var i = 0; i < MyCube.NUM_VERTICES; i++)
+		{
+			//絶対的な攻撃範囲の決定
+			m_workVector3Array[i] = m_workMatrix.MultiplyPoint(ATTACK2_KIND1_VERTECES[i]);
+		}
+
+		//攻撃範囲の直方体の構築
+		m_workMyCube.SetCube(m_workVector3Array[0], m_workVector3Array[1], m_workVector3Array[2], m_workVector3Array[3],
+			m_workVector3Array[4], m_workVector3Array[5], m_workVector3Array[6], m_workVector3Array[6]);
+
+		//攻撃範囲の生成
+		myCharacter.AttackManagerScript.PlayerAttack(m_workMyCube, m_maskState, m_powerAttack2, m_effectiveAttackTime);
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// 攻撃2の２種目の攻撃
+	/// </summary>
+	void Attack2Kind2Event()
+	{
+		//ワールド座標でプレイヤーの原点と方向
+		m_workMatrix.SetTRS(transform.position, transform.rotation, Vector3.one);
+
+		//攻撃範囲頂点の決定
+		for (var i = 0; i < MyCube.NUM_VERTICES; i++)
+		{
+			//絶対的な攻撃範囲の決定
+			m_workVector3Array[i] = m_workMatrix.MultiplyPoint(ATTACK2_KIND2_VERTECES[i]);
+		}
+
+		//攻撃範囲の直方体の構築
+		m_workMyCube.SetCube(m_workVector3Array[0], m_workVector3Array[1], m_workVector3Array[2], m_workVector3Array[3],
+			m_workVector3Array[4], m_workVector3Array[5], m_workVector3Array[6], m_workVector3Array[6]);
+
+		//攻撃範囲の生成
+		myCharacter.AttackManagerScript.PlayerAttack(m_workMyCube, m_maskState, m_powerAttack2, m_effectiveAttackTime);
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// 攻撃2の３種目１撃目の攻撃
+	/// </summary>
+	void Attack2Kind3Hook1Event()
+	{
+		//ワールド座標でプレイヤーの原点と方向
+		m_workMatrix.SetTRS(transform.position, transform.rotation, Vector3.one);
+
+		//攻撃範囲頂点の決定
+		for (var i = 0; i < MyCube.NUM_VERTICES; i++)
+		{
+			//絶対的な攻撃範囲の決定
+			m_workVector3Array[i] = m_workMatrix.MultiplyPoint(ATTACK2_KIND3_VERTECES[i]);
+		}
+
+		//攻撃範囲の直方体の構築
+		m_workMyCube.SetCube(m_workVector3Array[0], m_workVector3Array[1], m_workVector3Array[2], m_workVector3Array[3],
+			m_workVector3Array[4], m_workVector3Array[5], m_workVector3Array[6], m_workVector3Array[6]);
+
+		//攻撃範囲の生成
+		myCharacter.AttackManagerScript.PlayerAttack(m_workMyCube, m_maskState, m_powerAttack2, m_effectiveAttackTime);
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// 攻撃2の３種目２撃目の攻撃
+	/// </summary>
+	void Attack2Kind3Hook2Event()
+	{
+		//ワールド座標でプレイヤーの原点と方向
+		m_workMatrix.SetTRS(transform.position, transform.rotation, Vector3.one);
+
+		//攻撃範囲頂点の決定
+		for (var i = 0; i < MyCube.NUM_VERTICES; i++)
+		{
+			//絶対的な攻撃範囲の決定
+			m_workVector3Array[i] = m_workMatrix.MultiplyPoint(ATTACK2_KIND3_VERTECES[i]);
+		}
+
+		//攻撃範囲の直方体の構築
+		m_workMyCube.SetCube(m_workVector3Array[0], m_workVector3Array[1], m_workVector3Array[2], m_workVector3Array[3],
+			m_workVector3Array[4], m_workVector3Array[5], m_workVector3Array[6], m_workVector3Array[6]);
+
+		//攻撃範囲の生成
+		myCharacter.AttackManagerScript.PlayerAttack(m_workMyCube, m_maskState, m_powerAttack2 / 3, m_effectiveAttackTime);
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// 攻撃2の4種目Aの攻撃
+	/// </summary>
+	void Attack2Kind4AEvent()
+	{
+		//ワールド座標でボスの位置とプレイヤーの方向
+		m_workMatrix.SetTRS(myCharacter.GetPosBoss(), transform.rotation, Vector3.one);
+
+		//攻撃範囲頂点の決定
+		for (var i = 0; i < MyCube.NUM_VERTICES; i++)
+		{
+			//絶対的な攻撃範囲の決定
+			m_workVector3Array[i] = m_workMatrix.MultiplyPoint(ATTACK2_KIND4_A_VERTECES[i]);
+		}
+
+		//攻撃範囲の直方体の構築
+		m_workMyCube.SetCube(m_workVector3Array[0], m_workVector3Array[1], m_workVector3Array[2], m_workVector3Array[3],
+			m_workVector3Array[4], m_workVector3Array[5], m_workVector3Array[6], m_workVector3Array[6]);
+
+		//攻撃範囲の生成
+		myCharacter.AttackManagerScript.PlayerAttack(m_workMyCube, m_maskState, m_powerAttack2MagicMask, m_effectiveAttackTime);
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// 攻撃2の4種目Bの攻撃
+	/// </summary>
+	void Attack2Kind4BEvent()
+	{
+		//ワールド座標でボスの位置とプレイヤーの方向
+		m_workMatrix.SetTRS(myCharacter.GetPosBoss(), transform.rotation, Vector3.one);
+
+		//攻撃範囲頂点の決定
+		for (var i = 0; i < MyCube.NUM_VERTICES; i++)
+		{
+			//絶対的な攻撃範囲の決定
+			m_workVector3Array[i] = m_workMatrix.MultiplyPoint(ATTACK2_KIND4_B_VERTECES[i]);
+		}
+
+		//攻撃範囲の直方体の構築
+		m_workMyCube.SetCube(m_workVector3Array[0], m_workVector3Array[1], m_workVector3Array[2], m_workVector3Array[3],
+			m_workVector3Array[4], m_workVector3Array[5], m_workVector3Array[6], m_workVector3Array[6]);
+
+		//攻撃範囲の生成
+		myCharacter.AttackManagerScript.PlayerAttack(m_workMyCube, m_maskState, m_powerAttack2MagicMask, m_effectiveAttackTime);
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// 攻撃2の4種目Cの攻撃
+	/// </summary>
+	void Attack2Kind4CEvent()
+	{
+		//ワールド座標でボスの位置とプレイヤーの方向
+		m_workMatrix.SetTRS(myCharacter.GetPosBoss(), transform.rotation, Vector3.one);
+
+		//攻撃範囲頂点の決定
+		for (var i = 0; i < MyCube.NUM_VERTICES; i++)
+		{
+			//絶対的な攻撃範囲の決定
+			m_workVector3Array[i] = m_workMatrix.MultiplyPoint(ATTACK2_KIND4_C_VERTECES[i]);
+		}
+
+		//攻撃範囲の直方体の構築
+		m_workMyCube.SetCube(m_workVector3Array[0], m_workVector3Array[1], m_workVector3Array[2], m_workVector3Array[3],
+			m_workVector3Array[4], m_workVector3Array[5], m_workVector3Array[6], m_workVector3Array[6]);
+
+		//攻撃範囲の生成
+		myCharacter.AttackManagerScript.PlayerAttack(m_workMyCube, m_maskState, m_powerAttack2MagicMask, m_effectiveAttackTime);
 	}
 }

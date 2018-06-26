@@ -62,8 +62,11 @@ public class MyCamera : MonoBehaviour {
 
     void FixedUpdate()
     {
-        rotX = Input.GetAxis("HorizontalR") * Time.deltaTime * rotationSensitivity;
-        rotY = Input.GetAxis("VerticalR") * Time.deltaTime * rotationSensitivity;
+        rotX = Input.GetAxis("Mouse X") * Time.deltaTime * rotationSensitivity;
+        rotY = Input.GetAxis("Mouse Y") * Time.deltaTime * rotationSensitivity;
+
+        rotXR = Input.GetAxis("HorizontalR") * Time.deltaTime * rotationSensitivity;
+        rotYR = Input.GetAxis("VerticalR") * Time.deltaTime * rotationSensitivity;
 
         var lookAt = Target.position + Vector3.up * HeightM;
 
@@ -79,6 +82,20 @@ public class MyCamera : MonoBehaviour {
             rotY = 0;
         }
         transform.RotateAround(lookAt, transform.right, rotY);
+
+
+        // 回転
+        transform.RotateAround(lookAt, Vector3.up, rotXR);
+        // カメラがプレイヤーの真上や真下にあるときにそれ以上回転させないようにする
+        if (transform.forward.y > 0.9f && rotYR < 0)
+        {
+            rotYR = 0;
+        }
+        if (transform.forward.y < -0.9f && rotYR > 0)
+        {
+            rotYR = 0;
+        }
+        transform.RotateAround(lookAt, transform.right, rotYR);
 
         // カメラとプレイヤーとの間の距離を調整
         transform.position = lookAt - transform.forward * DistanceToPlayerM;

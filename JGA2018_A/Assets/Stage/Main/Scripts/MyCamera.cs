@@ -62,12 +62,8 @@ public class MyCamera : MonoBehaviour {
 
     void FixedUpdate()
     {
-        rotX = Input.GetAxis("Mouse X") * Time.deltaTime * rotationSensitivity;
-        rotY = Input.GetAxis("Mouse Y") * Time.deltaTime * rotationSensitivity;
-
-        rotXR = Input.GetAxis("HorizontalR") * Time.deltaTime * rotationSensitivity;
-        rotYR = Input.GetAxis("VerticalR") * Time.deltaTime * rotationSensitivity;
-
+        rotX = Input.GetAxis("HorizontalR") * Time.deltaTime * rotationSensitivity;
+        rotY = Input.GetAxis("VerticalR") * Time.deltaTime * rotationSensitivity;
 
         var lookAt = Target.position + Vector3.up * HeightM;
 

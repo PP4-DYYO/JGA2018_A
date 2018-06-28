@@ -63,6 +63,7 @@
      <Compile Include="Assets\Stage\Main\Scripts\MyCamera.cs" />
      <Compile Include="Assets\Stage\Main\Scripts\MyCarryMinisterAI.cs" />
      <Compile Include="Assets\Stage\Main\Scripts\MyCharacter.cs" />
+     <Compile Include="Assets\Stage\Main\Scripts\MyField.cs" />
      <Compile Include="Assets\Stage\Main\Scripts\MyGame.cs" />
      <Compile Include="Assets\Stage\Main\Scripts\MyMagicMinisterAI.cs" />
      <Compile Include="Assets\Stage\Main\Scripts\MyMenu.cs" />

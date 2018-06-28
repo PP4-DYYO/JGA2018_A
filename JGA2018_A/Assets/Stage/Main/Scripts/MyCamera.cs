@@ -48,9 +48,6 @@ public class MyCamera : MonoBehaviour {
     float rotX = 0.0f;
     float rotY = 0.0f;
 
-    float rotXR = 0.0f;
-    float rotYR = 0.0f;
-
     void Start()
     {
         if (Target == null)
@@ -64,6 +61,7 @@ public class MyCamera : MonoBehaviour {
     {
         rotX = Input.GetAxis("HorizontalR") * Time.deltaTime * rotationSensitivity;
         rotY = Input.GetAxis("VerticalR") * Time.deltaTime * rotationSensitivity;
+
 
         var lookAt = Target.position + Vector3.up * HeightM;
 
@@ -79,6 +77,7 @@ public class MyCamera : MonoBehaviour {
             rotY = 0;
         }
         transform.RotateAround(lookAt, transform.right, rotY);
+
 
         // カメラとプレイヤーとの間の距離を調整
         transform.position = lookAt - transform.forward * DistanceToPlayerM;

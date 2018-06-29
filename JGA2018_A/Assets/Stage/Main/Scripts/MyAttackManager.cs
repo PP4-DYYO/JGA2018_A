@@ -116,6 +116,350 @@ public struct MyCube
 
 //----------------------------------------------------------------------------------------------------
 /// <summary>
+/// １２角柱
+/// </summary>
+public struct MyPrism12
+{
+	/// <summary>
+	/// 上00時位置の頂点
+	/// </summary>
+	Vector3 vU00;
+
+	/// <summary>
+	/// 上01時位置の頂点
+	/// </summary>
+	Vector3 vU01;
+
+	/// <summary>
+	/// 上02時位置の頂点
+	/// </summary>
+	Vector3 vU02;
+
+	/// <summary>
+	/// 上03時位置の頂点
+	/// </summary>
+	Vector3 vU03;
+
+	/// <summary>
+	/// 上04時位置の頂点
+	/// </summary>
+	Vector3 vU04;
+
+	/// <summary>
+	/// 上05時位置の頂点
+	/// </summary>
+	Vector3 vU05;
+
+	/// <summary>
+	/// 上06時位置の頂点
+	/// </summary>
+	Vector3 vU06;
+
+	/// <summary>
+	/// 上07時位置の頂点
+	/// </summary>
+	Vector3 vU07;
+
+	/// <summary>
+	/// 上08時位置の頂点
+	/// </summary>
+	Vector3 vU08;
+
+	/// <summary>
+	/// 上09時位置の頂点
+	/// </summary>
+	Vector3 vU09;
+
+	/// <summary>
+	/// 上10時位置の頂点
+	/// </summary>
+	Vector3 vU10;
+
+	/// <summary>
+	/// 上11時位置の頂点
+	/// </summary>
+	Vector3 vU11;
+
+	/// <summary>
+	/// 下00時位置の頂点
+	/// </summary>
+	Vector3 vD00;
+
+	/// <summary>
+	/// 下01時位置の頂点
+	/// </summary>
+	Vector3 vD01;
+
+	/// <summary>
+	/// 下02時位置の頂点
+	/// </summary>
+	Vector3 vD02;
+
+	/// <summary>
+	/// 下03時位置の頂点
+	/// </summary>
+	Vector3 vD03;
+
+	/// <summary>
+	/// 下04時位置の頂点
+	/// </summary>
+	Vector3 vD04;
+
+	/// <summary>
+	/// 下05時位置の頂点
+	/// </summary>
+	Vector3 vD05;
+
+	/// <summary>
+	/// 下06時位置の頂点
+	/// </summary>
+	Vector3 vD06;
+
+	/// <summary>
+	/// 下07時位置の頂点
+	/// </summary>
+	Vector3 vD07;
+
+	/// <summary>
+	/// 下08時位置の頂点
+	/// </summary>
+	Vector3 vD08;
+
+	/// <summary>
+	/// 下09時位置の頂点
+	/// </summary>
+	Vector3 vD09;
+
+	/// <summary>
+	/// 下10時位置の頂点
+	/// </summary>
+	Vector3 vD10;
+
+	/// <summary>
+	/// 下11時位置の頂点
+	/// </summary>
+	Vector3 vD11;
+
+	/// <summary>
+	/// 高さ
+	/// </summary>
+	float height;
+
+	/// <summary>
+	/// 頂点数
+	/// </summary>
+	const int NUM_VERTICES = 24;
+
+	/// <summary>
+	/// 頂点の組み合わせ
+	/// </summary>
+	public static int[] COMBINATION_VERTICES =
+	{
+		//上辺
+		0, 1, 11, 1, 10, 11,
+		1, 2, 10, 2, 9, 10,
+		2, 3, 9, 3, 8, 9,
+		3, 4, 8, 4, 7, 8,
+		4, 5, 7, 5, 6, 7,
+		//側面
+		0, 12, 1, 1, 12, 13,
+		1, 13, 2, 2, 13, 14,
+		2, 14, 3, 3, 14, 15,
+		3, 15, 4, 4, 15, 16,
+		4, 16, 5, 5, 16, 17,
+		5, 17, 6, 6, 17, 18,
+		6, 18, 7, 7, 18, 19,
+		7, 19, 8, 8, 19, 20,
+		8, 20, 9, 9, 20, 21,
+		9, 21, 10, 10, 21, 22,
+		10, 22, 11, 11, 22, 23,
+		11, 23, 0, 0, 23, 12,
+		//下辺
+		12, 23, 13, 13, 23, 22,
+		13, 22, 14, 14, 22, 21,
+		14, 21, 15, 15, 21, 20,
+		15, 20, 16, 16, 20, 19,
+		16, 19, 17, 17, 19, 18,
+	};
+
+	/// <summary>
+	/// 作業用のVector３
+	/// </summary>
+	Vector3[] workVector3;
+
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
+	/// <param name="height">高さ</param>
+	/// <param name="radius">半径</param>
+	public MyPrism12(float height = 0, float radius = 1)
+	{
+		vU00 = new Vector3();
+		vU01 = new Vector3();
+		vU02 = new Vector3();
+		vU03 = new Vector3();
+		vU04 = new Vector3();
+		vU05 = new Vector3();
+		vU06 = new Vector3();
+		vU07 = new Vector3();
+		vU08 = new Vector3();
+		vU09 = new Vector3();
+		vU10 = new Vector3();
+		vU11 = new Vector3();
+		vD00 = new Vector3();
+		vD01 = new Vector3();
+		vD02 = new Vector3();
+		vD03 = new Vector3();
+		vD04 = new Vector3();
+		vD05 = new Vector3();
+		vD06 = new Vector3();
+		vD07 = new Vector3();
+		vD08 = new Vector3();
+		vD09 = new Vector3();
+		vD10 = new Vector3();
+		vD11 = new Vector3();
+		this.height = height;
+		workVector3 = new Vector3[NUM_VERTICES];
+		SetRadius(radius);
+	}
+
+	/// <summary>
+	/// 頂点を取得
+	/// </summary>
+	/// <returns></returns>
+	public Vector3[] GetVertices()
+	{
+		workVector3[0] = vU00;
+		workVector3[1] = vU01;
+		workVector3[2] = vU02;
+		workVector3[3] = vU03;
+		workVector3[4] = vU04;
+		workVector3[5] = vU05;
+		workVector3[6] = vU06;
+		workVector3[7] = vU07;
+		workVector3[8] = vU08;
+		workVector3[9] = vU09;
+		workVector3[10] = vU10;
+		workVector3[11] = vU11;
+		workVector3[12] = vD00;
+		workVector3[13] = vD01;
+		workVector3[14] = vD02;
+		workVector3[15] = vD03;
+		workVector3[16] = vD04;
+		workVector3[17] = vD05;
+		workVector3[18] = vD06;
+		workVector3[19] = vD07;
+		workVector3[20] = vD08;
+		workVector3[21] = vD09;
+		workVector3[22] = vD10;
+		workVector3[23] = vD11;
+		return workVector3;
+	}
+
+	/// <summary>
+	/// MyPrism１２の設定
+	/// </summary>
+	/// <param name="height"></param>
+	/// <param name="radius"></param>
+	public void SetMyPrism12(float height, float radius = 1)
+	{
+		this.height = height;
+		SetRadius(radius);
+	}
+
+	/// <summary>
+	/// 半径の設定
+	/// </summary>
+	/// <param name="radius">半径</param>
+	public void SetRadius(float radius)
+	{
+		//半径１の時の座標
+		ResetPrism12();
+
+		//半径を考慮した座標
+		vU00 *= radius;
+		vU01 *= radius;
+		vU02 *= radius;
+		vU03 *= radius;
+		vU04 *= radius;
+		vU05 *= radius;
+		vU06 *= radius;
+		vU07 *= radius;
+		vU08 *= radius;
+		vU09 *= radius;
+		vU10 *= radius;
+		vU11 *= radius;
+		vD00 = vU00;
+		vD01 = vU01;
+		vD02 = vU02;
+		vD03 = vU03;
+		vD04 = vU04;
+		vD05 = vU05;
+		vD06 = vU06;
+		vD07 = vU07;
+		vD08 = vU08;
+		vD09 = vU09;
+		vD10 = vU10;
+		vD11 = vU11;
+
+		//高さを元に戻す
+		SetHeight(height);
+	}
+
+	/// <summary>
+	/// リセット（半径１の状態にする）
+	/// </summary>
+	void ResetPrism12()
+	{
+		vU00 = new Vector3(0, 0, 1);
+		vU01 = new Vector3(0.5f, 0, 0.8660254037844386467637f);
+		vU02 = new Vector3(0.8660254037844386467637f, 0, 0.5f);
+		vU03 = new Vector3(1, 0, 0);
+		vU04 = new Vector3(0.8660254037844386467637f, 0, -0.5f);
+		vU05 = new Vector3(0.5f, 0, -0.8660254037844386467637f);
+		vU06 = new Vector3(0, 0, -1);
+		vU07 = new Vector3(-0.5f, 0, -0.8660254037844386467637f);
+		vU08 = new Vector3(-0.8660254037844386467637f, 0, -0.5f);
+		vU09 = new Vector3(-1, 0, 0);
+		vU10 = new Vector3(-0.8660254037844386467637f, 0, 0.5f);
+		vU11 = new Vector3(-0.5f, 0, 0.8660254037844386467637f);
+		vD00 = vU00;
+		vD01 = vU01;
+		vD02 = vU02;
+		vD03 = vU03;
+		vD04 = vU04;
+		vD05 = vU05;
+		vD06 = vU06;
+		vD07 = vU07;
+		vD08 = vU08;
+		vD09 = vU09;
+		vD10 = vU10;
+		vD11 = vU11;
+	}
+
+	/// <summary>
+	/// 高さの設定
+	/// </summary>
+	/// <param name="height">高さ</param>
+	void SetHeight(float height)
+	{
+		vU00.y = height;
+		vU01.y = height;
+		vU02.y = height;
+		vU03.y = height;
+		vU04.y = height;
+		vU05.y = height;
+		vU06.y = height;
+		vU07.y = height;
+		vU08.y = height;
+		vU09.y = height;
+		vU10.y = height;
+		vU11.y = height;
+	}
+}
+
+//----------------------------------------------------------------------------------------------------
+/// <summary>
 /// 必殺技番号
 /// </summary>
 enum NumDeathblow
@@ -311,6 +655,15 @@ public class MyAttackManager : MonoBehaviour
 	float m_blowingTimeDeathblow1Attack4;
 	#endregion
 
+	#region 必殺技２
+	[Header("必殺技２")]
+	/// <summary>
+	/// 必殺技2の時間
+	/// </summary>
+	[SerializeField]
+	float m_deathblow2Time;
+	#endregion
+
 	#region 作業用
 	/// <summary>
 	/// 作業用の攻撃
@@ -339,11 +692,13 @@ public class MyAttackManager : MonoBehaviour
 	#endregion
 #endif
 
+	//----------------------------------------------------------------------------------------------------
 	/// <summary>
 	/// 初期
 	/// </summary>
 	void Start()
 	{
+		//インスタンスの取得
 		m_player = myCharacter.PlayerScript;
 		m_boss = myCharacter.Boss;
 		m_stage = myCharacter.GameScript.StageScript;
@@ -364,6 +719,9 @@ public class MyAttackManager : MonoBehaviour
 				break;
 			case NumDeathblow.Dethblow1:
 				Deathblow1();
+				break;
+			case NumDeathblow.Dethblow2:
+				Deathblow2();
 				break;
 		}
 
@@ -551,7 +909,7 @@ public class MyAttackManager : MonoBehaviour
 	void Deathblow1Boss()
 	{
 		//始めてステータスが変わった
-		if(m_bossStateNum != m_bossStateNumPrev)
+		if (m_bossStateNum != m_bossStateNumPrev)
 		{
 			//状態
 			switch (m_bossStateNum)
@@ -655,7 +1013,7 @@ public class MyAttackManager : MonoBehaviour
 					break;
 			}
 		}
-		
+
 		//状態
 		switch (m_cameraStateNum)
 		{
@@ -672,6 +1030,139 @@ public class MyAttackManager : MonoBehaviour
 				break;
 			case 4:
 				break;
+		}
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// 必殺技２
+	/// </summary>
+	void Deathblow2()
+	{
+		m_countTimeDeathblow += Time.deltaTime;
+
+		//終了
+		if (m_countTimeDeathblow >= m_deathblow2Time)
+		{
+			m_numDeathblow = NumDeathblow.Non;
+			SetManipulateObject(false);
+			return;
+		}
+
+		//必殺技２の状態を取得
+		GetStateDeathblow2();
+
+		//必殺技の実行
+		Deathblow2Player();
+		Deathblow2Boss();
+		Deathblow2Camera();
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// 必殺技２の状態を取得
+	/// </summary>
+	void GetStateDeathblow2()
+	{
+		GetStateDeathblow2Player();
+		GetStateDeathblow2Boss();
+		GetStateDeathblow2Camera();
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// プレイヤーの必殺技２の状態を取得
+	/// </summary>
+	void GetStateDeathblow2Player()
+	{
+		m_playerStateNumPrev = m_playerStateNum;
+
+		//タイムライン
+		m_playerStateNum = 0;
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// ボスの必殺技２の状態を取得
+	/// </summary>
+	void GetStateDeathblow2Boss()
+	{
+		m_bossStateNumPrev = m_bossStateNum;
+
+		//タイムライン
+		m_bossStateNum = 0;
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// カメラの必殺技２の状態を取得
+	/// </summary>
+	void GetStateDeathblow2Camera()
+	{
+		m_cameraStateNumPrev = m_cameraStateNum;
+
+		//タイムライン
+		m_cameraStateNum = 0;
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// 必殺技２でのプレイヤー
+	/// </summary>
+	void Deathblow2Player()
+	{
+		//ステータスが初めて変わった
+		if (m_playerStateNum != m_playerStateNumPrev)
+		{
+			//状態
+			switch (m_playerStateNum)
+			{
+				case 0:
+					//アニメーション再生
+					m_player.StartAnimAttackDeathblow2A();
+					break;
+			}
+		}
+	}
+	
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// 必殺技２でのボス
+	/// </summary>
+	void Deathblow2Boss()
+	{
+		//始めてステータスが変わった
+		if (m_bossStateNum != m_bossStateNumPrev)
+		{
+			//状態
+			switch (m_bossStateNum)
+			{
+				case 0:
+					break;
+			}
+		}
+
+	}
+	
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// 必殺技２でのカメラ
+	/// </summary>
+	void Deathblow2Camera()
+	{
+		//初めてステータスが変わった
+		if (m_cameraStateNum != m_cameraStateNumPrev)
+		{
+			//状態
+			switch (m_cameraStateNum)
+			{
+				case 0:
+					//初期位置と方向
+					Teleportation(m_camera.gameObject, m_player.transform.position);
+					m_camera.transform.position += m_player.transform.forward * m_cameraDistanceDeathblowHit + Vector3.up * m_cameraHeightDeathblow;
+					m_camera.transform.LookAt(m_player.transform.position + (Vector3.up * m_cameraHeightDeathblow));
+					break;
+			}
 		}
 	}
 
@@ -723,6 +1214,42 @@ public class MyAttackManager : MonoBehaviour
 		//攻撃の詳細
 		m_workAttack.Attribute = attribute;
 		m_workAttack.Power = power;
+
+		//攻撃時間
+		if (time >= 0)
+			Destroy(attackRange, time);
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// プレイヤーの攻撃
+	/// </summary>
+	/// <param name="attacattackPrism12kCube">攻撃用の12角柱</param>
+	/// <param name="pos">位置</param>
+	/// <param name="attribute">攻撃属性</param>
+	/// <param name="power">攻撃威力</param>
+	/// <param name="time">攻撃時間</param>
+	/// <param name="time">攻撃時間</param>
+	/// <param name="isDeathblowTrriger">必殺技トリガーか</param>
+	/// <param name="expansionTime">拡張する時間</param>
+	/// <param name="expansionDistance">拡張した距離</param>
+	public void PlayerAttack(MyPrism12 attackPrism12, Vector3 pos, MaskAttribute attribute, int power = 0, float time = -1, bool isDeathblowTrriger = false, float expansionTime = 0, float expansionDistance = 0)
+	{
+		//攻撃範囲の生成
+		var attackRange = Instantiate(!isDeathblowTrriger ? PlayerAttackRange : PlayerAttackDeathblowRange, transform);
+		m_workAttack = attackRange.GetComponent<MyAttack>();
+
+		//攻撃範囲の調整
+		AdjustAttackRange(attackRange, attackPrism12);
+
+		//攻撃の詳細
+		m_workAttack.Pos = pos;
+		m_workAttack.Attribute = attribute;
+		m_workAttack.Power = power;
+		m_workAttack.ExpansionTime = expansionTime;
+		m_workAttack.ExpansionDistance = expansionDistance;
+		m_workAttack.Kind = AttackKind.MyPrism12;
+		m_workAttack.Prism12 = attackPrism12;
 
 		//攻撃時間
 		if (time >= 0)
@@ -809,6 +1336,28 @@ public class MyAttackManager : MonoBehaviour
 
 	//----------------------------------------------------------------------------------------------------
 	/// <summary>
+	/// 攻撃範囲の調整
+	/// </summary>
+	/// <param name="attackRange">攻撃範囲</param>
+	/// <param name="attackPrism12">攻撃用の12角柱</param>
+	void AdjustAttackRange(GameObject attackRange, MyPrism12 attackPrism12)
+	{
+		var mf = attackRange.GetComponent<MeshFilter>();
+
+		//頂点の設定
+		mf.mesh.vertices = attackPrism12.GetVertices();
+		mf.mesh.triangles = MyPrism12.COMBINATION_VERTICES;
+		mf.mesh.RecalculateBounds(); //メッシュコンポーネントのプロパティboundsを再計算する
+		mf.mesh.RecalculateNormals();
+
+		//編集した頂点で当たり判定を作る
+		var mc = attackRange.AddComponent<MeshCollider>();
+		mc.convex = true;
+		mc.isTrigger = true;
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
 	/// 敵の攻撃
 	/// </summary>
 	/// <param name="attackCube">攻撃用の直方体</param>
@@ -839,6 +1388,8 @@ public class MyAttackManager : MonoBehaviour
 	/// </summary>
 	public void StartDeathblow1()
 	{
+		m_boss = myCharacter.Boss;
+
 		//攻撃マネージャが操作する
 		SetManipulateObject(true);
 
@@ -863,5 +1414,26 @@ public class MyAttackManager : MonoBehaviour
 		m_player.enabled = !isManipulate;
 		m_boss.GetComponent<MonoBehaviour>().enabled = !isManipulate;
 		myCharacter.GameScript.CameraScript.enabled = !isManipulate;
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// 必殺技２を開始する
+	/// </summary>
+	public void StartDeathblow2()
+	{
+		m_boss = myCharacter.Boss;
+
+		//攻撃マネージャが操作する
+		SetManipulateObject(true);
+
+		//必殺技設定
+		m_countTimeDeathblow = 0;
+		m_numDeathblow = NumDeathblow.Dethblow2;
+
+		//キャラクター設定
+		m_playerStateNum = int.MaxValue;
+		m_bossStateNum = int.MaxValue;
+		m_cameraStateNum = int.MaxValue;
 	}
 }

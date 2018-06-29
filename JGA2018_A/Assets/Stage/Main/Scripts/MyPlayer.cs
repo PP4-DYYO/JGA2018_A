@@ -120,6 +120,19 @@ struct PlayerMask
 /// </summary>
 public class MyPlayer : MonoBehaviour
 {
+	#region プレイヤー情報
+	[Header("プレイヤー情報")]
+	/// <summary>
+	/// 身長
+	/// </summary>
+	[SerializeField]
+	float m_height;
+	public float Height
+	{
+		get { return m_height; }
+	}
+	#endregion
+
 	#region 外部のインスタンス
 	[Header("外部のインスタンス")]
 	/// <summary>
@@ -280,8 +293,8 @@ public class MyPlayer : MonoBehaviour
 	MaskAttribute m_maskStatePrev;
 	#endregion
 
-	#region トランスポート
-	[Header("トランスポート")]
+	#region トランスフォーム
+	[Header("トランスフォーム")]
 	/// <summary>
 	/// 回転スピード
 	/// </summary>
@@ -398,16 +411,40 @@ public class MyPlayer : MonoBehaviour
 	int m_powerAttack2;
 
 	/// <summary>
-	/// マジックマスクの攻撃２の威力
-	/// </summary>
-	[SerializeField]
-	int m_powerAttack2MagicMask;
-
-	/// <summary>
 	/// 必殺技攻撃１の１撃当たりの威力
 	/// </summary>
 	[SerializeField]
 	int m_powerAttackDeathblow1PerBlow;
+
+	/// <summary>
+	/// 必殺技２の有効時間
+	/// </summary>
+	[SerializeField]
+	float m_effectiveDethblow2Time;
+
+	/// <summary>
+	/// 必殺技攻撃２の威力
+	/// </summary>
+	[SerializeField]
+	int m_powerAttackDeathblow2;
+
+	/// <summary>
+	/// 必殺技２の拡張時間
+	/// </summary>
+	[SerializeField]
+	float m_extensionTimeDeathblow2;
+
+	/// <summary>
+	/// 必殺技２の拡張距離
+	/// </summary>
+	[SerializeField]
+	float m_extensionDistanceDeathblow2;
+
+	/// <summary>
+	/// マジックマスクの攻撃２の威力
+	/// </summary>
+	[SerializeField]
+	int m_powerAttack2MagicMask;
 
 	/// <summary>
 	/// マジックマスクのカウンター時間
@@ -786,6 +823,11 @@ public class MyPlayer : MonoBehaviour
 	/// 作業用の直方体
 	/// </summary>
 	MyCube m_workMyCube = new MyCube();
+
+	/// <summary>
+	/// 作業用の１２角柱
+	/// </summary>
+	MyPrism12 m_workMyPrism12 = new MyPrism12(0);
 	#endregion
 
 #if DEBUG
@@ -1066,7 +1108,7 @@ public class MyPlayer : MonoBehaviour
 			m_wasUseDeathblow = true;
 
 			//必殺技の発動
-			Debug.Log("毒の必殺技発動");
+			myCharacter.AttackManagerScript.StartDeathblow2();
 		}
 
 		//鏡マスクand十字キー下の押下
@@ -1545,6 +1587,20 @@ public class MyPlayer : MonoBehaviour
 	}
 
 	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// 必殺技２の攻撃のアニメーションスタート
+	/// </summary>
+	public void StartAnimAttackDeathblow2A()
+	{
+		//終了後のアニメーションを反映させるため
+		m_behaviorStatePrev = BehaviorStatus.Attack2;
+
+		//アニメーションと反動
+		Anim.SetTrigger(TRANS_ATTACK_DEATHBLOW2A);
+		m_currentAttackBreakTime = m_attackBreakTime;
+	}
+
+	//----------------------------------------------------------------------------------------------------
 	//アニメーションイベント
 	//----------------------------------------------------------------------------------------------------
 
@@ -1566,7 +1622,7 @@ public class MyPlayer : MonoBehaviour
 
 		//攻撃範囲の直方体の構築
 		m_workMyCube.SetCube(m_workVector3Array[0], m_workVector3Array[1], m_workVector3Array[2], m_workVector3Array[3],
-			m_workVector3Array[4], m_workVector3Array[5], m_workVector3Array[6], m_workVector3Array[6]);
+			m_workVector3Array[4], m_workVector3Array[5], m_workVector3Array[6], m_workVector3Array[7]);
 
 		//攻撃範囲の生成
 		myCharacter.AttackManagerScript.PlayerAttack(m_workMyCube, MaskAttribute.Non, m_powerAttack1, m_effectiveAttackTime);
@@ -1590,7 +1646,7 @@ public class MyPlayer : MonoBehaviour
 
 		//攻撃範囲の直方体の構築
 		m_workMyCube.SetCube(m_workVector3Array[0], m_workVector3Array[1], m_workVector3Array[2], m_workVector3Array[3],
-			m_workVector3Array[4], m_workVector3Array[5], m_workVector3Array[6], m_workVector3Array[6]);
+			m_workVector3Array[4], m_workVector3Array[5], m_workVector3Array[6], m_workVector3Array[7]);
 
 		//攻撃範囲の生成
 		myCharacter.AttackManagerScript.PlayerAttack(m_workMyCube, MaskAttribute.Non, m_powerAttack1, m_effectiveAttackTime);
@@ -1614,7 +1670,7 @@ public class MyPlayer : MonoBehaviour
 
 		//攻撃範囲の直方体の構築
 		m_workMyCube.SetCube(m_workVector3Array[0], m_workVector3Array[1], m_workVector3Array[2], m_workVector3Array[3],
-			m_workVector3Array[4], m_workVector3Array[5], m_workVector3Array[6], m_workVector3Array[6]);
+			m_workVector3Array[4], m_workVector3Array[5], m_workVector3Array[6], m_workVector3Array[7]);
 
 		//攻撃範囲の生成
 		myCharacter.AttackManagerScript.PlayerAttack(m_workMyCube, MaskAttribute.Non, m_powerAttack1, m_effectiveAttackTime);
@@ -1638,7 +1694,7 @@ public class MyPlayer : MonoBehaviour
 
 		//攻撃範囲の直方体の構築
 		m_workMyCube.SetCube(m_workVector3Array[0], m_workVector3Array[1], m_workVector3Array[2], m_workVector3Array[3],
-			m_workVector3Array[4], m_workVector3Array[5], m_workVector3Array[6], m_workVector3Array[6]);
+			m_workVector3Array[4], m_workVector3Array[5], m_workVector3Array[6], m_workVector3Array[7]);
 
 		//攻撃範囲の生成
 		myCharacter.AttackManagerScript.PlayerAttack(m_workMyCube, m_maskState, m_powerAttack2, m_effectiveAttackTime);
@@ -1662,7 +1718,7 @@ public class MyPlayer : MonoBehaviour
 
 		//攻撃範囲の直方体の構築
 		m_workMyCube.SetCube(m_workVector3Array[0], m_workVector3Array[1], m_workVector3Array[2], m_workVector3Array[3],
-			m_workVector3Array[4], m_workVector3Array[5], m_workVector3Array[6], m_workVector3Array[6]);
+			m_workVector3Array[4], m_workVector3Array[5], m_workVector3Array[6], m_workVector3Array[7]);
 
 		//攻撃範囲の生成
 		myCharacter.AttackManagerScript.PlayerAttack(m_workMyCube, m_maskState, m_powerAttack2, m_effectiveAttackTime);
@@ -1686,7 +1742,7 @@ public class MyPlayer : MonoBehaviour
 
 		//攻撃範囲の直方体の構築
 		m_workMyCube.SetCube(m_workVector3Array[0], m_workVector3Array[1], m_workVector3Array[2], m_workVector3Array[3],
-			m_workVector3Array[4], m_workVector3Array[5], m_workVector3Array[6], m_workVector3Array[6]);
+			m_workVector3Array[4], m_workVector3Array[5], m_workVector3Array[6], m_workVector3Array[7]);
 
 		//攻撃範囲の生成
 		myCharacter.AttackManagerScript.PlayerAttack(m_workMyCube, m_maskState, m_powerAttack2, m_effectiveAttackTime);
@@ -1710,7 +1766,7 @@ public class MyPlayer : MonoBehaviour
 
 		//攻撃範囲の直方体の構築
 		m_workMyCube.SetCube(m_workVector3Array[0], m_workVector3Array[1], m_workVector3Array[2], m_workVector3Array[3],
-			m_workVector3Array[4], m_workVector3Array[5], m_workVector3Array[6], m_workVector3Array[6]);
+			m_workVector3Array[4], m_workVector3Array[5], m_workVector3Array[6], m_workVector3Array[7]);
 
 		//攻撃範囲の生成
 		myCharacter.AttackManagerScript.PlayerAttack(m_workMyCube, m_maskState, m_powerAttack2, m_effectiveAttackTime);
@@ -1734,7 +1790,7 @@ public class MyPlayer : MonoBehaviour
 
 		//攻撃範囲の直方体の構築
 		m_workMyCube.SetCube(m_workVector3Array[0], m_workVector3Array[1], m_workVector3Array[2], m_workVector3Array[3],
-			m_workVector3Array[4], m_workVector3Array[5], m_workVector3Array[6], m_workVector3Array[6]);
+			m_workVector3Array[4], m_workVector3Array[5], m_workVector3Array[6], m_workVector3Array[7]);
 
 		//攻撃範囲の生成
 		myCharacter.AttackManagerScript.PlayerAttack(m_workMyCube, m_maskState, m_powerAttack2 / 3, m_effectiveAttackTime);
@@ -1758,7 +1814,7 @@ public class MyPlayer : MonoBehaviour
 
 		//攻撃範囲の直方体の構築
 		m_workMyCube.SetCube(m_workVector3Array[0], m_workVector3Array[1], m_workVector3Array[2], m_workVector3Array[3],
-			m_workVector3Array[4], m_workVector3Array[5], m_workVector3Array[6], m_workVector3Array[6]);
+			m_workVector3Array[4], m_workVector3Array[5], m_workVector3Array[6], m_workVector3Array[7]);
 
 		//攻撃範囲の生成
 		myCharacter.AttackManagerScript.PlayerAttack(m_workMyCube, m_maskState, m_powerAttack2MagicMask, m_effectiveAttackTime);
@@ -1782,7 +1838,7 @@ public class MyPlayer : MonoBehaviour
 
 		//攻撃範囲の直方体の構築
 		m_workMyCube.SetCube(m_workVector3Array[0], m_workVector3Array[1], m_workVector3Array[2], m_workVector3Array[3],
-			m_workVector3Array[4], m_workVector3Array[5], m_workVector3Array[6], m_workVector3Array[6]);
+			m_workVector3Array[4], m_workVector3Array[5], m_workVector3Array[6], m_workVector3Array[7]);
 
 		//攻撃範囲の生成
 		myCharacter.AttackManagerScript.PlayerAttack(m_workMyCube, m_maskState, m_powerAttack2MagicMask, m_effectiveAttackTime);
@@ -1806,7 +1862,7 @@ public class MyPlayer : MonoBehaviour
 
 		//攻撃範囲の直方体の構築
 		m_workMyCube.SetCube(m_workVector3Array[0], m_workVector3Array[1], m_workVector3Array[2], m_workVector3Array[3],
-			m_workVector3Array[4], m_workVector3Array[5], m_workVector3Array[6], m_workVector3Array[6]);
+			m_workVector3Array[4], m_workVector3Array[5], m_workVector3Array[6], m_workVector3Array[7]);
 
 		//攻撃範囲の生成
 		myCharacter.AttackManagerScript.PlayerAttack(m_workMyCube, m_maskState, m_powerAttack2MagicMask, m_effectiveAttackTime);
@@ -1830,10 +1886,23 @@ public class MyPlayer : MonoBehaviour
 
 		//攻撃範囲の直方体の構築
 		m_workMyCube.SetCube(m_workVector3Array[0], m_workVector3Array[1], m_workVector3Array[2], m_workVector3Array[3],
-			m_workVector3Array[4], m_workVector3Array[5], m_workVector3Array[6], m_workVector3Array[6]);
+			m_workVector3Array[4], m_workVector3Array[5], m_workVector3Array[6], m_workVector3Array[7]);
 
 		//攻撃範囲の生成
 		myCharacter.AttackManagerScript.PlayerAttack(m_workMyCube, m_maskState, m_powerAttackDeathblow1PerBlow, m_effectiveAttackTime, true);
+	}
 
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// 必殺技の攻撃２A
+	/// </summary>
+	void AttackDeathblow2Event()
+	{
+		//攻撃範囲の１２角柱の構築
+		m_workMyPrism12.SetMyPrism12(m_height);
+
+		//攻撃範囲の生成
+		myCharacter.AttackManagerScript.PlayerAttack(m_workMyPrism12, transform.position, m_maskState, m_powerAttackDeathblow2, m_effectiveDethblow2Time,
+			false, m_extensionTimeDeathblow2, m_extensionDistanceDeathblow2);
 	}
 }

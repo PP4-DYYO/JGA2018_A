@@ -31,7 +31,7 @@ public class MyAutoDestroyer : MonoBehaviour
     {
         m_time++;
         
-        if (m_time > 180)
+        if (m_time > 120)
         {
             Destroy(this.gameObject);
         }

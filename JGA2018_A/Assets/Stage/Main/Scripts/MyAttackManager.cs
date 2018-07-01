@@ -16,6 +16,28 @@ using UnityEngine;
 
 //----------------------------------------------------------------------------------------------------
 /// <summary>
+/// 攻撃マネージャタグ
+/// </summary>
+public struct AttackManagerTag
+{
+	/// <summary>
+	/// プレイヤー攻撃範囲
+	/// </summary>
+	public const string PLAYER_ATTACK_RANGE_TAG = "PlayerAttackRange";
+
+	/// <summary>
+	/// プレイヤー攻撃必殺技範囲
+	/// </summary>
+	public const string PLAYER_ATTACK_DEATHBLOW_RANGE_TAG = "PlayerAttackDeathblowRange";
+
+	/// <summary>
+	/// 敵攻撃範囲
+	/// </summary>
+	public const string ENEMY_ATTACK_RANGE_TAG = "EnemyAttackRange";
+}
+
+//----------------------------------------------------------------------------------------------------
+/// <summary>
 /// 直方体
 /// </summary>
 public struct MyCube
@@ -744,6 +766,44 @@ public class MyAttackManager : MonoBehaviour
 	GameObject m_shadowWarrior;
 	#endregion
 
+	#region 必殺技４
+	[Header("必殺技４")]
+	/// <summary>
+	/// 必殺技４を当てるカメラ角度
+	/// </summary>
+	[SerializeField]
+	float m_cameraAngleHitDeathblow4;
+	
+	/// <summary>
+	/// 必殺技４の時間
+	/// </summary>
+	[SerializeField]
+	float m_deathblow4Time;
+
+	/// <summary>
+	/// 背後を取る時間
+	/// </summary>
+	[SerializeField]
+	float m_timeTakeBehind;
+
+	/// <summary>
+	/// 必殺技４を当てる時間
+	/// </summary>
+	[SerializeField]
+	float m_timeHitDeathblow4;
+
+	/// <summary>
+	/// 必殺技４で吹き飛ぶ時間
+	/// </summary>
+	[SerializeField]
+	float m_blowingTimeDeathblow4;
+
+	/// <summary>
+	/// プレイヤーの初期位置の保存用
+	/// </summary>
+	Vector3 m_playerInitPos;
+	#endregion
+
 	#region 作業用
 	/// <summary>
 	/// 作業用の攻撃
@@ -805,6 +865,9 @@ public class MyAttackManager : MonoBehaviour
 				break;
 			case NumDeathblow.Dethblow3:
 				Deathblow3();
+				break;
+			case NumDeathblow.Dethblow4:
+				Deathblow4();
 				break;
 		}
 
@@ -1599,6 +1662,221 @@ public class MyAttackManager : MonoBehaviour
 
 	//----------------------------------------------------------------------------------------------------
 	/// <summary>
+	/// 必殺技４
+	/// </summary>
+	void Deathblow4()
+	{
+		m_countTimeDeathblow += Time.deltaTime;
+
+		//終了
+		if (m_countTimeDeathblow >= m_deathblow4Time)
+		{
+			m_numDeathblow = NumDeathblow.Non;
+			SetManipulateObject(false);
+			m_player.StartAnimIdle();
+			return;
+		}
+
+		//必殺技４の状態を取得
+		GetStateDeathblow4();
+
+		//必殺技の実行
+		Deathblow4Player();
+		Deathblow4Boss();
+		Deathblow4Camera();
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// 必殺技４の状態を取得
+	/// </summary>
+	void GetStateDeathblow4()
+	{
+		GetStateDeathblow4Player();
+		GetStateDeathblow4Boss();
+		GetStateDeathblow4Camera();
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// プレイヤーの必殺技４の状態を取得
+	/// </summary>
+	void GetStateDeathblow4Player()
+	{
+		m_playerStateNumPrev = m_playerStateNum;
+
+		//タイムライン
+		if (m_countTimeDeathblow >= m_timeHitDeathblow4)
+			m_playerStateNum = 2;
+		else if (m_countTimeDeathblow >= m_timeTakeBehind)
+			m_playerStateNum = 1;
+		else
+			m_playerStateNum = 0;
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// ボスの必殺技４の状態を取得
+	/// </summary>
+	void GetStateDeathblow4Boss()
+	{
+		m_bossStateNumPrev = m_bossStateNum;
+
+		//タイムライン
+		if (m_countTimeDeathblow >= m_blowingTimeDeathblow4)
+			m_bossStateNum = 2;
+		else if (m_countTimeDeathblow >= m_timeTakeBehind)
+			m_bossStateNum = 1;
+		else
+			m_bossStateNum = 0;
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// カメラの必殺技４の状態を取得
+	/// </summary>
+	void GetStateDeathblow4Camera()
+	{
+		m_cameraStateNumPrev = m_cameraStateNum;
+
+		//タイムライン
+		if (m_countTimeDeathblow >= m_timeHitDeathblow4)
+			m_cameraStateNum = 2;
+		else if (m_countTimeDeathblow >= m_timeTakeBehind)
+			m_cameraStateNum = 1;
+		else
+			m_cameraStateNum = 0;
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// 必殺技４でのプレイヤー
+	/// </summary>
+	void Deathblow4Player()
+	{
+		//ステータスが初めて変わった
+		if (m_playerStateNum != m_playerStateNumPrev)
+		{
+			//状態
+			switch (m_playerStateNum)
+			{
+				case 0:
+					//プレイヤー初期位置の保存と移動アニメーション
+					m_playerInitPos = m_player.transform.position;
+					m_player.StartAnimRun();
+					break;
+				case 1:
+					//指定位置の移動と構えるアニメーション
+					Teleportation(m_player.gameObject, m_stage.GetCenterPosBossRoomCurrentField());
+					ObjectApproaches(m_player.gameObject, m_stage.GetPosDeathblow1CurrentField(0), -m_distancePlayerGivingDeathblow1Attack);
+					m_player.transform.LookAt(m_stage.GetPosDeathblow1CurrentField(0));
+					m_player.StartAnimIdle();
+					break;
+				case 2:
+					//必殺技４アニメーション
+					m_player.StartAnimAttackDethblow4A();
+					break;
+			}
+		}
+
+		//状態
+		switch (m_playerStateNum)
+		{
+			case 0:
+				//ボスの位置へ移動
+				Transposition(m_player.gameObject, m_playerInitPos, m_boss.transform.position, m_countTimeDeathblow, m_timeTakeBehind);
+				m_player.transform.LookAt(m_boss.transform);
+				break;
+			case 1:
+				break;
+			case 2:
+				break;
+		}
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// 必殺技４でのボス
+	/// </summary>
+	void Deathblow4Boss()
+	{
+		//始めてステータスが変わった
+		if (m_bossStateNum != m_bossStateNumPrev)
+		{
+			//状態
+			switch (m_bossStateNum)
+			{
+				case 0:
+					break;
+				case 1:
+					//中心に移動と指定方向を向く
+					Teleportation(m_boss.gameObject, m_stage.GetCenterPosBossRoomCurrentField());
+					m_boss.transform.LookAt(m_stage.GetPosDeathblow1CurrentField(0));
+					break;
+				case 2:
+					break;
+			}
+		}
+
+		//状態
+		switch (m_bossStateNum)
+		{
+			case 0:
+				break;
+			case 1:
+				break;
+			case 2:
+				//対応した位置から指定された位置へ移動
+				Transposition(m_boss.gameObject, m_stage.GetCenterPosBossRoomCurrentField(), m_stage.GetPosDeathblow1CurrentField(0),
+					(m_countTimeDeathblow - m_blowingTimeDeathblow4), (m_deathblow4Time - m_blowingTimeDeathblow4));
+				break;
+		}
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// 必殺技４でのカメラ
+	/// </summary>
+	void Deathblow4Camera()
+	{
+		//初めてステータスが変わった
+		if (m_cameraStateNum != m_cameraStateNumPrev)
+		{
+			//状態
+			switch (m_cameraStateNum)
+			{
+				case 0:
+					//方向
+					m_camera.transform.LookAt(m_boss.transform);
+					break;
+				case 1:
+					//位置と向き
+					Teleportation(m_camera.gameObject, m_stage.GetCenterPosBossRoomCurrentField());
+					ObjectApproaches(m_camera.gameObject, m_stage.GetPosDeathblow1CurrentField(0), -m_cameraDistanceDeathblowHit);
+					m_camera.transform.position += Vector3.up * m_cameraHeightDeathblow;
+					m_camera.transform.RotateAround(m_stage.GetCenterPosBossRoomCurrentField(), Vector3.up, m_cameraAngleHitDeathblow4);
+					m_camera.transform.LookAt(m_stage.GetCenterPosBossRoomCurrentField() + Vector3.up * m_cameraHeightDeathblow);
+					break;
+				case 2:
+					break;
+			}
+		}
+
+		//状態
+		switch (m_cameraStateNum)
+		{
+			case 0:
+				break;
+			case 1:
+				break;
+			case 2:
+				m_camera.transform.LookAt(m_boss.transform.position + Vector3.up * m_cameraHeightDeathblow);
+				break;
+		}
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
 	/// デバッグ処理
 	/// </summary>
 	void DebugProcess()
@@ -1826,7 +2104,13 @@ public class MyAttackManager : MonoBehaviour
 		m_player.GetComponent<Rigidbody>().useGravity = !isManipulate;
 		m_boss.GetComponent<MonoBehaviour>().enabled = !isManipulate;
 		myCharacter.GameScript.CameraScript.enabled = !isManipulate;
+	}
 
+	//----------------------------------------------------------------------------------------------------
+	//インスタンスの再コピー
+	void ReproduceInstance()
+	{
+		m_boss = myCharacter.Boss;
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -1835,7 +2119,8 @@ public class MyAttackManager : MonoBehaviour
 	/// </summary>
 	public void StartDeathblow1()
 	{
-		m_boss = myCharacter.Boss;
+		//インスタンスの再コピー
+		ReproduceInstance();
 
 		//攻撃マネージャが操作する
 		SetManipulateObject(true);
@@ -1856,7 +2141,8 @@ public class MyAttackManager : MonoBehaviour
 	/// </summary>
 	public void StartDeathblow2()
 	{
-		m_boss = myCharacter.Boss;
+		//インスタンスの再コピー
+		ReproduceInstance();
 
 		//攻撃マネージャが操作する
 		SetManipulateObject(true);
@@ -1877,7 +2163,8 @@ public class MyAttackManager : MonoBehaviour
 	/// </summary>
 	public void StartDeathblow3()
 	{
-		m_boss = myCharacter.Boss;
+		//インスタンスの再コピー
+		ReproduceInstance();
 
 		//攻撃マネージャが操作する
 		SetManipulateObject(true);
@@ -1885,6 +2172,28 @@ public class MyAttackManager : MonoBehaviour
 		//必殺技設定
 		m_countTimeDeathblow = 0;
 		m_numDeathblow = NumDeathblow.Dethblow3;
+
+		//キャラクター設定
+		m_playerStateNum = int.MaxValue;
+		m_bossStateNum = int.MaxValue;
+		m_cameraStateNum = int.MaxValue;
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// 必殺技４を開始する
+	/// </summary>
+	public void StartDeathblow4()
+	{
+		//インスタンスの再コピー
+		ReproduceInstance();
+
+		//攻撃マネージャが操作する
+		SetManipulateObject(true);
+
+		//必殺技設定
+		m_countTimeDeathblow = 0;
+		m_numDeathblow = NumDeathblow.Dethblow4;
 
 		//キャラクター設定
 		m_playerStateNum = int.MaxValue;

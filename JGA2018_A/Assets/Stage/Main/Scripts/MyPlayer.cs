@@ -175,6 +175,11 @@ public class MyPlayer : MonoBehaviour
 	const string TRANS_WALK = "Walk";
 
 	/// <summary>
+	/// 走る遷移
+	/// </summary>
+	const string TRANS_RUN = "Run";
+
+	/// <summary>
 	/// 攻撃１のパターンA遷移
 	/// </summary>
 	const string TRANS_ATTACK1A = "Attack1A";
@@ -423,6 +428,39 @@ public class MyPlayer : MonoBehaviour
 	int m_magicMaskCounterTime;
 
 	/// <summary>
+	/// 攻撃の連続回数
+	/// </summary>
+	int m_attackCount;
+
+	/// <summary>
+	/// 連続攻撃の上限数
+	/// </summary>
+	const int CONSECUTIVE_ATTACK_LIMIT_NUM = 3;
+
+	/// <summary>
+	/// 攻撃の時間
+	/// </summary>
+	float m_attackTime;
+
+	/// <summary>
+	/// 攻撃２のコンボ数
+	/// </summary>
+	int m_numAttack2Combo;
+
+	/// <summary>
+	/// 現在の攻撃休憩時間
+	/// </summary>
+	float m_currentAttackBreakTime;
+
+	/// <summary>
+	/// カウンター中
+	/// </summary>
+	bool m_isCounter;
+	#endregion
+
+	#region 必殺技
+	[Header("必殺技")]
+	/// <summary>
 	/// 必殺技攻撃１の１撃当たりの威力
 	/// </summary>
 	[SerializeField]
@@ -457,31 +495,6 @@ public class MyPlayer : MonoBehaviour
 	/// </summary>
 	[SerializeField]
 	int m_powerAttackDeathblow3PerBlow;
-
-	/// <summary>
-	/// 攻撃の連続回数
-	/// </summary>
-	int m_attackCount;
-
-	/// <summary>
-	/// 連続攻撃の上限数
-	/// </summary>
-	const int CONSECUTIVE_ATTACK_LIMIT_NUM = 3;
-
-	/// <summary>
-	/// 攻撃の時間
-	/// </summary>
-	float m_attackTime;
-
-	/// <summary>
-	/// 攻撃２のコンボ数
-	/// </summary>
-	int m_numAttack2Combo;
-
-	/// <summary>
-	/// 現在の攻撃休憩時間
-	/// </summary>
-	float m_currentAttackBreakTime;
 
 	/// <summary>
 	/// 必殺技を使用した
@@ -976,7 +989,10 @@ public class MyPlayer : MonoBehaviour
 
 			//攻撃休憩時間の終了
 			if (m_currentAttackBreakTime <= 0)
+			{
 				m_attackTime = -1;
+				m_isCounter = false;
+			}
 		}
 		else
 		{
@@ -1152,6 +1168,7 @@ public class MyPlayer : MonoBehaviour
 			m_behaviorState = BehaviorStatus.AttackDeathblow4;
 			m_isNotChangeBehaviorState = true;
 			m_currentAttackBreakTime = m_magicMaskCounterTime;
+			m_isCounter = true;
 		}
 	}
 
@@ -1586,16 +1603,13 @@ public class MyPlayer : MonoBehaviour
 	/// <param name="other">重なったもの</param>
 	void OnTriggerEnter(Collider other)
 	{
-		Debug.Log(other.tag);
-	}
-
-	//----------------------------------------------------------------------------------------------------
-	/// <summary>
-	///	必殺技１の攻撃のアニメーションスタート
-	/// </summary>
-	public void StartAnimAttackDeathblow1A()
-	{
-		Anim.SetTrigger(TRANS_ATTACK_DEATHBLOW1A);
+		//敵からの攻撃を受ける
+		if(other.tag.Equals(AttackManagerTag.ENEMY_ATTACK_RANGE_TAG))
+		{
+			//カウンター中
+			if (m_isCounter)
+				myCharacter.AttackManagerScript.StartDeathblow4();
+		}
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -1605,6 +1619,24 @@ public class MyPlayer : MonoBehaviour
 	public void StartAnimIdle()
 	{
 		Anim.SetTrigger(TRANS_IDLE);
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// 走るアニメーションスタート
+	/// </summary>
+	public void StartAnimRun()
+	{
+		Anim.SetTrigger(TRANS_RUN);
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	///	必殺技１の攻撃のアニメーションスタート
+	/// </summary>
+	public void StartAnimAttackDeathblow1A()
+	{
+		Anim.SetTrigger(TRANS_ATTACK_DEATHBLOW1A);
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -1628,6 +1660,15 @@ public class MyPlayer : MonoBehaviour
 	public void StartAnimAttackDethblow3A()
 	{
 		Anim.SetTrigger(TRANS_ATTACK_DEATHBLOW3A);
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// 必殺技４の攻撃のアニメーションスタート
+	/// </summary>
+	public void StartAnimAttackDethblow4A()
+	{
+		Anim.SetTrigger(TRANS_ATTACK_DEATHBLOW4A);
 	}
 
 	//----------------------------------------------------------------------------------------------------

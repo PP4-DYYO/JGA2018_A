@@ -664,6 +664,86 @@ public class MyAttackManager : MonoBehaviour
 	float m_deathblow2Time;
 	#endregion
 
+	#region 必殺技３
+	[Header("必殺技３")]
+	/// <summary>
+	/// 必殺技３のプレイヤー位置
+	/// </summary>
+	[SerializeField]
+	Vector3 m_playerPosDeathblow3;
+
+	/// <summary>
+	/// 一回目の必殺技３時間
+	/// </summary>
+	[SerializeField]
+	float m_firstDeathblow3Time;
+
+	/// <summary>
+	/// 二回目の必殺技３時間
+	/// </summary>
+	[SerializeField]
+	float m_secondDeathblow3Time;
+
+	/// <summary>
+	/// 三回目の必殺技３時間
+	/// </summary>
+	[SerializeField]
+	float m_thirdDeathblow3Time;
+
+	/// <summary>
+	/// 四回目の必殺技３時間
+	/// </summary>
+	[SerializeField]
+	float m_fourthDeathblow3Time;
+
+	/// <summary>
+	/// 五回目の必殺技３時間
+	/// </summary>
+	[SerializeField]
+	float m_fifthDeathblow3Time;
+
+	/// <summary>
+	/// 六回目の必殺技３時間
+	/// </summary>
+	[SerializeField]
+	float m_sixthDeathblow3Time;
+
+	/// <summary>
+	/// 七回目の必殺技３時間
+	/// </summary>
+	[SerializeField]
+	float m_seventhDeathblow3Time;
+
+	/// <summary>
+	/// 八回目の必殺技３時間
+	/// </summary>
+	[SerializeField]
+	float m_eighthDeathblow3Time;
+
+	/// <summary>
+	/// 九回目の必殺技３時間
+	/// </summary>
+	[SerializeField]
+	float m_ninthDeathblow3Time;
+
+	/// <summary>
+	/// 分身する開始時間
+	/// </summary>
+	[SerializeField]
+	float m_startTimeDivide;
+
+	/// <summary>
+	/// 分身する終了時間
+	/// </summary>
+	[SerializeField]
+	float m_endTimeDivide;
+
+	/// <summary>
+	/// 影武者
+	/// </summary>
+	GameObject m_shadowWarrior;
+	#endregion
+
 	#region 作業用
 	/// <summary>
 	/// 作業用の攻撃
@@ -723,9 +803,78 @@ public class MyAttackManager : MonoBehaviour
 			case NumDeathblow.Dethblow2:
 				Deathblow2();
 				break;
+			case NumDeathblow.Dethblow3:
+				Deathblow3();
+				break;
 		}
 
 		DebugProcess();
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// 瞬間移動
+	/// </summary>
+	/// <param name="obj">対象オブジェクト</param>
+	/// <param name="pos">位置</param>
+	void Teleportation(GameObject obj, Vector3 pos)
+	{
+		obj.transform.position = pos;
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// オブジェクトが近づく
+	/// </summary>
+	/// <param name="obj">対象オブジェクト</param>
+	/// <param name="targetPos">ターゲット位置</param>
+	/// <param name="distance">距離</param>
+	void ObjectApproaches(GameObject obj, Vector3 targetPos, float distance)
+	{
+		m_workVector3 = targetPos - obj.transform.position;
+
+		obj.transform.position += m_workVector3.normalized * distance;
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// 転移
+	/// </summary>
+	/// <param name="obj">対象オブジェクト</param>
+	/// <param name="startPos">スタート位置</param>
+	/// <param name="targetPos">目標位置</param>
+	/// <param name="currentTime">現在の時間</param>
+	/// <param name="travelTime">移動時間</param>
+	void Transposition(GameObject obj, Vector3 startPos, Vector3 targetPos, float currentTime, float travelTime)
+	{
+		//必要な情報の取得
+		m_workVector3 = obj.transform.position; //対象オブジェクトの位置
+		m_workFloat = currentTime / travelTime; //移動割合
+
+		m_workVector3 = startPos + (targetPos - startPos) * m_workFloat;
+
+		//反映
+		obj.transform.position = m_workVector3;
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// 分身する
+	/// </summary>
+	/// <param name="target">ターゲット</param>
+	/// <param name="survivalTime">生存時間</param>
+	void Divide(GameObject target, float survivalTime)
+	{
+		//影武者生成
+		m_shadowWarrior = Instantiate(target);
+
+		//親・位置・回転のコピーと当たり判定の無効化
+		m_shadowWarrior.transform.parent = target.transform.parent;
+		m_shadowWarrior.transform.position = target.transform.position;
+		m_shadowWarrior.transform.rotation = target.transform.rotation;
+
+		//影武者の生存時間
+		Destroy(m_shadowWarrior, survivalTime);
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -879,31 +1028,6 @@ public class MyAttackManager : MonoBehaviour
 
 	//----------------------------------------------------------------------------------------------------
 	/// <summary>
-	/// 瞬間移動
-	/// </summary>
-	/// <param name="obj">対象オブジェクト</param>
-	/// <param name="pos">位置</param>
-	void Teleportation(GameObject obj, Vector3 pos)
-	{
-		obj.transform.position = pos;
-	}
-
-	//----------------------------------------------------------------------------------------------------
-	/// <summary>
-	/// オブジェクトが近づく
-	/// </summary>
-	/// <param name="obj">対象オブジェクト</param>
-	/// <param name="targetPos">ターゲット位置</param>
-	/// <param name="distance">距離</param>
-	void ObjectApproaches(GameObject obj, Vector3 targetPos, float distance)
-	{
-		m_workVector3 = targetPos - obj.transform.position;
-
-		obj.transform.position += m_workVector3.normalized * distance;
-	}
-
-	//----------------------------------------------------------------------------------------------------
-	/// <summary>
 	/// 必殺技１でのボス
 	/// </summary>
 	void Deathblow1Boss()
@@ -958,27 +1082,6 @@ public class MyAttackManager : MonoBehaviour
 				(m_countTimeDeathblow - m_blowingTimeDeathblow1Attack4), (m_deathblowTime - m_blowingTimeDeathblow1Attack4));
 				break;
 		}
-	}
-
-	//----------------------------------------------------------------------------------------------------
-	/// <summary>
-	/// 転移
-	/// </summary>
-	/// <param name="obj">対象オブジェクト</param>
-	/// <param name="startPos">スタート位置</param>
-	/// <param name="targetPos">目標位置</param>
-	/// <param name="currentTime">現在の時間</param>
-	/// <param name="travelTime">移動時間</param>
-	void Transposition(GameObject obj, Vector3 startPos, Vector3 targetPos, float currentTime, float travelTime)
-	{
-		//必要な情報の取得
-		m_workVector3 = obj.transform.position; //対象オブジェクトの位置
-		m_workFloat = currentTime / travelTime; //移動割合
-
-		m_workVector3 = startPos + (targetPos - startPos) * m_workFloat;
-
-		//反映
-		obj.transform.position = m_workVector3;
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -1124,7 +1227,7 @@ public class MyAttackManager : MonoBehaviour
 			}
 		}
 	}
-	
+
 	//----------------------------------------------------------------------------------------------------
 	/// <summary>
 	/// 必殺技２でのボス
@@ -1143,7 +1246,7 @@ public class MyAttackManager : MonoBehaviour
 		}
 
 	}
-	
+
 	//----------------------------------------------------------------------------------------------------
 	/// <summary>
 	/// 必殺技２でのカメラ
@@ -1161,6 +1264,334 @@ public class MyAttackManager : MonoBehaviour
 					Teleportation(m_camera.gameObject, m_player.transform.position);
 					m_camera.transform.position += m_player.transform.forward * m_cameraDistanceDeathblowHit + Vector3.up * m_cameraHeightDeathblow;
 					m_camera.transform.LookAt(m_player.transform.position + (Vector3.up * m_cameraHeightDeathblow));
+					break;
+			}
+		}
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// 必殺技３
+	/// </summary>
+	void Deathblow3()
+	{
+		m_countTimeDeathblow += Time.deltaTime;
+
+		//終了
+		if (m_countTimeDeathblow >= m_deathblowTime)
+		{
+			m_numDeathblow = NumDeathblow.Non;
+			SetManipulateObject(false);
+			m_player.StartAnimIdle();
+			return;
+		}
+
+		//必殺技３の状態を取得
+		GetStateDeathblow3();
+
+		//必殺技の実行
+		Deathblow3Player();
+		Deathblow3Boss();
+		Deathblow3Camera();
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// 必殺技３の状態を取得
+	/// </summary>
+	void GetStateDeathblow3()
+	{
+		GetStateDeathblow3Player();
+		GetStateDeathblow3Boss();
+		GetStateDeathblow3Camera();
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// プレイヤーの必殺技３の状態を取得
+	/// </summary>
+	void GetStateDeathblow3Player()
+	{
+		m_playerStateNumPrev = m_playerStateNum;
+
+		//タイムライン
+		if (m_countTimeDeathblow >= m_endTimeDivide)
+			m_playerStateNum = 11;
+		else if (m_countTimeDeathblow >= m_ninthDeathblow3Time)
+			m_playerStateNum = 10;
+		else if (m_countTimeDeathblow >= m_eighthDeathblow3Time)
+			m_playerStateNum = 9;
+		else if (m_countTimeDeathblow >= m_seventhDeathblow3Time)
+			m_playerStateNum = 8;
+		else if (m_countTimeDeathblow >= m_sixthDeathblow3Time)
+			m_playerStateNum = 7;
+		else if (m_countTimeDeathblow >= m_fifthDeathblow3Time)
+			m_playerStateNum = 6;
+		else if (m_countTimeDeathblow >= m_fourthDeathblow3Time)
+			m_playerStateNum = 5;
+		else if (m_countTimeDeathblow >= m_thirdDeathblow3Time)
+			m_playerStateNum = 4;
+		else if (m_countTimeDeathblow >= m_secondDeathblow3Time)
+			m_playerStateNum = 3;
+		else if (m_countTimeDeathblow >= m_firstDeathblow3Time)
+			m_playerStateNum = 2;
+		else if (m_countTimeDeathblow >= m_startTimeDivide)
+			m_playerStateNum = 1;
+		else
+			m_playerStateNum = 0;
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// ボスの必殺技３の状態を取得
+	/// </summary>
+	void GetStateDeathblow3Boss()
+	{
+		m_bossStateNumPrev = m_bossStateNum;
+
+		//タイムライン
+		m_bossStateNum = 0;
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// カメラの必殺技３の状態を取得
+	/// </summary>
+	void GetStateDeathblow3Camera()
+	{
+		m_cameraStateNumPrev = m_cameraStateNum;
+
+		//タイムライン
+		if (m_countTimeDeathblow >= m_startTimeDivide)
+			m_cameraStateNum = 1;
+		else
+			m_cameraStateNum = 0;
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// 必殺技３でのプレイヤー
+	/// </summary>
+	void Deathblow3Player()
+	{
+		//ステータスが初めて変わった
+		if (m_playerStateNum != m_playerStateNumPrev)
+		{
+			//状態
+			switch (m_playerStateNum)
+			{
+				case 0:
+					//初期位置と方向
+					Teleportation(m_player.gameObject, m_stage.GetCenterPosBossRoomCurrentField() + m_playerPosDeathblow3);
+					m_player.transform.LookAt(m_stage.GetCenterPosBossRoomCurrentField());
+					break;
+				case 1:
+					//分身
+					Divide(m_player.gameObject, m_deathblowTime - m_startTimeDivide);
+					break;
+				case 2:
+					//分身の攻撃アニメーション
+					m_shadowWarrior.transform.LookAt(m_stage.GetCenterPosBossRoomCurrentField());
+					m_shadowWarrior.GetComponent<MyPlayer>().StartAnimAttackDethblow3A();
+					break;
+				case 3:
+					//攻撃アニメーション
+					m_player.transform.LookAt(m_stage.GetCenterPosBossRoomCurrentField());
+					m_player.StartAnimAttackDethblow3A();
+					break;
+				case 4:
+					//分身の攻撃アニメーション
+					m_shadowWarrior.transform.LookAt(m_stage.GetCenterPosBossRoomCurrentField());
+					m_shadowWarrior.GetComponent<MyPlayer>().StartAnimAttackDethblow3A();
+					break;
+				case 5:
+					//攻撃アニメーション
+					m_player.transform.LookAt(m_stage.GetCenterPosBossRoomCurrentField());
+					m_player.StartAnimAttackDethblow3A();
+					break;
+				case 6:
+					//分身の攻撃アニメーション
+					m_shadowWarrior.transform.LookAt(m_stage.GetCenterPosBossRoomCurrentField());
+					m_shadowWarrior.GetComponent<MyPlayer>().StartAnimAttackDethblow3A();
+					break;
+				case 7:
+					//攻撃アニメーション
+					m_player.transform.LookAt(m_stage.GetCenterPosBossRoomCurrentField());
+					m_player.StartAnimAttackDethblow3A();
+					break;
+				case 8:
+					//攻撃アニメーション
+					m_player.transform.LookAt(m_stage.GetCenterPosBossRoomCurrentField());
+					m_player.StartAnimAttackDethblow3A();
+					//分身の攻撃アニメーション
+					m_shadowWarrior.transform.LookAt(m_stage.GetCenterPosBossRoomCurrentField());
+					m_shadowWarrior.GetComponent<MyPlayer>().StartAnimAttackDethblow3A();
+					break;
+				case 9:
+					//攻撃アニメーション
+					m_player.transform.LookAt(m_stage.GetCenterPosBossRoomCurrentField());
+					m_player.StartAnimAttackDethblow3A();
+					//分身の攻撃アニメーション
+					m_shadowWarrior.transform.LookAt(m_stage.GetCenterPosBossRoomCurrentField());
+					m_shadowWarrior.GetComponent<MyPlayer>().StartAnimAttackDethblow3A();
+					break;
+				case 10:
+					//攻撃アニメーション
+					m_player.transform.LookAt(m_stage.GetCenterPosBossRoomCurrentField());
+					m_player.StartAnimAttackDethblow3A();
+					//分身の攻撃アニメーション
+					m_shadowWarrior.transform.LookAt(m_stage.GetCenterPosBossRoomCurrentField());
+					m_shadowWarrior.GetComponent<MyPlayer>().StartAnimAttackDethblow3A();
+					break;
+				case 11:
+					break;
+			}
+		}
+
+		//状態
+		switch (m_playerStateNum)
+		{
+			case 0:
+				//移動
+				Transposition(m_player.gameObject, (m_stage.GetCenterPosBossRoomCurrentField() + m_playerPosDeathblow3),
+					(m_stage.GetCenterPosBossRoomCurrentField() + -m_playerPosDeathblow3), m_countTimeDeathblow, m_startTimeDivide);
+				break;
+			case 1:
+				//分身の移動
+				Transposition(m_shadowWarrior,
+					(m_stage.GetCenterPosBossRoomCurrentField() + -m_playerPosDeathblow3),
+					(m_stage.GetCenterPosBossRoomCurrentField() + Vector3.Scale(m_playerPosDeathblow3, (Vector3.back * 2 + Vector3.one))),
+					(m_countTimeDeathblow - m_startTimeDivide), (m_firstDeathblow3Time - m_startTimeDivide));
+				break;
+			case 2:
+				//分身の攻撃のための移動
+				Transposition(m_shadowWarrior,
+					(m_stage.GetCenterPosBossRoomCurrentField() + Vector3.Scale(m_playerPosDeathblow3, (Vector3.back * 2 + Vector3.one))),
+					(m_stage.GetCenterPosBossRoomCurrentField() + Vector3.Scale(m_playerPosDeathblow3, (Vector3.left * 2 + Vector3.one))),
+					(m_countTimeDeathblow - m_firstDeathblow3Time), (m_secondDeathblow3Time - m_firstDeathblow3Time));
+				break;
+			case 3:
+				//攻撃のための移動
+				Transposition(m_player.gameObject,
+					(m_stage.GetCenterPosBossRoomCurrentField() + -m_playerPosDeathblow3),
+					(m_stage.GetCenterPosBossRoomCurrentField() + m_playerPosDeathblow3),
+					(m_countTimeDeathblow - m_secondDeathblow3Time), (m_thirdDeathblow3Time - m_secondDeathblow3Time));
+				break;
+			case 4:
+				//分身の攻撃のための移動
+				Transposition(m_shadowWarrior,
+					(m_stage.GetCenterPosBossRoomCurrentField() + Vector3.Scale(m_playerPosDeathblow3, (Vector3.left * 2 + Vector3.one))),
+					(m_stage.GetCenterPosBossRoomCurrentField() + Vector3.Scale(m_playerPosDeathblow3, (Vector3.back * 2 + Vector3.one))),
+					(m_countTimeDeathblow - m_thirdDeathblow3Time), (m_fourthDeathblow3Time - m_thirdDeathblow3Time));
+				break;
+			case 5:
+				//攻撃のための移動
+				Transposition(m_player.gameObject, (m_stage.GetCenterPosBossRoomCurrentField() + m_playerPosDeathblow3),
+					(m_stage.GetCenterPosBossRoomCurrentField() + -m_playerPosDeathblow3),
+					(m_countTimeDeathblow - m_fourthDeathblow3Time), (m_fifthDeathblow3Time - m_fourthDeathblow3Time));
+				break;
+			case 6:
+				//分身の攻撃のための移動
+				Transposition(m_shadowWarrior,
+					(m_stage.GetCenterPosBossRoomCurrentField() + Vector3.Scale(m_playerPosDeathblow3, (Vector3.back * 2 + Vector3.one))),
+					(m_stage.GetCenterPosBossRoomCurrentField() + Vector3.Scale(m_playerPosDeathblow3, (Vector3.left * 2 + Vector3.one))),
+					(m_countTimeDeathblow - m_fifthDeathblow3Time), (m_sixthDeathblow3Time - m_fifthDeathblow3Time));
+				break;
+			case 7:
+				//攻撃のための移動
+				Transposition(m_player.gameObject,
+					(m_stage.GetCenterPosBossRoomCurrentField() + -m_playerPosDeathblow3),
+					(m_stage.GetCenterPosBossRoomCurrentField() + m_playerPosDeathblow3),
+					(m_countTimeDeathblow - m_sixthDeathblow3Time), (m_seventhDeathblow3Time - m_sixthDeathblow3Time));
+				break;
+			case 8:
+				//攻撃のための移動
+				Transposition(m_player.gameObject, (m_stage.GetCenterPosBossRoomCurrentField() + m_playerPosDeathblow3),
+					(m_stage.GetCenterPosBossRoomCurrentField() + -m_playerPosDeathblow3),
+					(m_countTimeDeathblow - m_seventhDeathblow3Time), (m_eighthDeathblow3Time - m_seventhDeathblow3Time));
+				//分身の攻撃のための移動
+				Transposition(m_shadowWarrior,
+					(m_stage.GetCenterPosBossRoomCurrentField() + Vector3.Scale(m_playerPosDeathblow3, (Vector3.left * 2 + Vector3.one))),
+					(m_stage.GetCenterPosBossRoomCurrentField() + Vector3.Scale(m_playerPosDeathblow3, (Vector3.back * 2 + Vector3.one))),
+					(m_countTimeDeathblow - m_seventhDeathblow3Time), (m_eighthDeathblow3Time - m_seventhDeathblow3Time));
+				break;
+			case 9:
+				//攻撃のための移動
+				Transposition(m_player.gameObject,
+					(m_stage.GetCenterPosBossRoomCurrentField() + -m_playerPosDeathblow3),
+					(m_stage.GetCenterPosBossRoomCurrentField() + m_playerPosDeathblow3),
+					(m_countTimeDeathblow - m_eighthDeathblow3Time), (m_ninthDeathblow3Time - m_eighthDeathblow3Time));
+				//分身の攻撃のための移動
+				Transposition(m_shadowWarrior,
+					(m_stage.GetCenterPosBossRoomCurrentField() + Vector3.Scale(m_playerPosDeathblow3, (Vector3.back * 2 + Vector3.one))),
+					(m_stage.GetCenterPosBossRoomCurrentField() + Vector3.Scale(m_playerPosDeathblow3, (Vector3.left * 2 + Vector3.one))),
+					(m_countTimeDeathblow - m_eighthDeathblow3Time), (m_ninthDeathblow3Time - m_eighthDeathblow3Time));
+				break;
+			case 10:
+				//攻撃のための移動
+				Transposition(m_player.gameObject, (m_stage.GetCenterPosBossRoomCurrentField() + m_playerPosDeathblow3),
+					(m_stage.GetCenterPosBossRoomCurrentField() + -m_playerPosDeathblow3),
+					(m_countTimeDeathblow - m_ninthDeathblow3Time), (m_endTimeDivide - m_ninthDeathblow3Time));
+				//分身の攻撃のための移動
+				Transposition(m_shadowWarrior,
+					(m_stage.GetCenterPosBossRoomCurrentField() + Vector3.Scale(m_playerPosDeathblow3, (Vector3.left * 2 + Vector3.one))),
+					(m_stage.GetCenterPosBossRoomCurrentField() + Vector3.Scale(m_playerPosDeathblow3, (Vector3.back * 2 + Vector3.one))),
+					(m_countTimeDeathblow - m_ninthDeathblow3Time), (m_endTimeDivide - m_ninthDeathblow3Time));
+				break;
+			case 11:
+				//分身の移動と方向
+				Transposition(m_shadowWarrior,
+					(m_stage.GetCenterPosBossRoomCurrentField() + Vector3.Scale(m_playerPosDeathblow3, (Vector3.back * 2 + Vector3.one))),
+					(m_stage.GetCenterPosBossRoomCurrentField() + -m_playerPosDeathblow3),
+					(m_countTimeDeathblow - m_endTimeDivide), (m_deathblowTime - m_endTimeDivide));
+				m_shadowWarrior.transform.LookAt(m_player.transform.position + m_player.transform.forward);
+				break;
+		}
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// 必殺技３でのボス
+	/// </summary>
+	void Deathblow3Boss()
+	{
+		//始めてステータスが変わった
+		if (m_bossStateNum != m_bossStateNumPrev)
+		{
+			//状態
+			switch (m_bossStateNum)
+			{
+				case 0:
+					//ステージ中央に移動
+					Teleportation(m_boss.gameObject, m_stage.GetCenterPosBossRoomCurrentField());
+					break;
+			}
+		}
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// 必殺技３でのカメラ
+	/// </summary>
+	void Deathblow3Camera()
+	{
+		//初めてステータスが変わった
+		if (m_cameraStateNum != m_cameraStateNumPrev)
+		{
+			//状態
+			switch (m_cameraStateNum)
+			{
+				case 0:
+					//初期位置と方向
+					Teleportation(m_camera.gameObject, m_player.transform.position);
+					m_camera.transform.position += m_player.transform.right * m_cameraDistanceDeathblowHit + Vector3.up * m_cameraHeightDeathblow;
+					m_camera.transform.LookAt(m_boss.transform.position + (Vector3.up * m_cameraHeightDeathblow));
+					break;
+				case 1:
+					//分身の位置
+					Teleportation(m_camera.gameObject, m_player.transform.position);
+					m_camera.transform.position += m_player.transform.forward * m_cameraDistanceDeathblowHit + Vector3.up * m_cameraHeightDeathblow;
+					m_camera.transform.LookAt(m_boss.transform.position + (Vector3.up * m_cameraHeightDeathblow));
 					break;
 			}
 		}
@@ -1384,6 +1815,22 @@ public class MyAttackManager : MonoBehaviour
 
 	//----------------------------------------------------------------------------------------------------
 	/// <summary>
+	/// オブジェクトを操る設定
+	/// </summary>
+	/// <param name="isManipulate">操るか</param>
+	void SetManipulateObject(bool isManipulate)
+	{
+		//プレイヤーとボスとカメラを操る設定
+		m_player.enabled = !isManipulate;
+		m_player.GetComponent<Collider>().enabled = !isManipulate;
+		m_player.GetComponent<Rigidbody>().useGravity = !isManipulate;
+		m_boss.GetComponent<MonoBehaviour>().enabled = !isManipulate;
+		myCharacter.GameScript.CameraScript.enabled = !isManipulate;
+
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
 	/// 必殺技１を開始する
 	/// </summary>
 	public void StartDeathblow1()
@@ -1405,19 +1852,6 @@ public class MyAttackManager : MonoBehaviour
 
 	//----------------------------------------------------------------------------------------------------
 	/// <summary>
-	/// オブジェクトを操る設定
-	/// </summary>
-	/// <param name="isManipulate">操るか</param>
-	void SetManipulateObject(bool isManipulate)
-	{
-		//プレイヤーとボスとカメラを操る設定
-		m_player.enabled = !isManipulate;
-		m_boss.GetComponent<MonoBehaviour>().enabled = !isManipulate;
-		myCharacter.GameScript.CameraScript.enabled = !isManipulate;
-	}
-
-	//----------------------------------------------------------------------------------------------------
-	/// <summary>
 	/// 必殺技２を開始する
 	/// </summary>
 	public void StartDeathblow2()
@@ -1430,6 +1864,27 @@ public class MyAttackManager : MonoBehaviour
 		//必殺技設定
 		m_countTimeDeathblow = 0;
 		m_numDeathblow = NumDeathblow.Dethblow2;
+
+		//キャラクター設定
+		m_playerStateNum = int.MaxValue;
+		m_bossStateNum = int.MaxValue;
+		m_cameraStateNum = int.MaxValue;
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// 必殺技３を開始する
+	/// </summary>
+	public void StartDeathblow3()
+	{
+		m_boss = myCharacter.Boss;
+
+		//攻撃マネージャが操作する
+		SetManipulateObject(true);
+
+		//必殺技設定
+		m_countTimeDeathblow = 0;
+		m_numDeathblow = NumDeathblow.Dethblow3;
 
 		//キャラクター設定
 		m_playerStateNum = int.MaxValue;

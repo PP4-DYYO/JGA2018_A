@@ -411,6 +411,18 @@ public class MyPlayer : MonoBehaviour
 	int m_powerAttack2;
 
 	/// <summary>
+	/// マジックマスクの攻撃２の威力
+	/// </summary>
+	[SerializeField]
+	int m_powerAttack2MagicMask;
+
+	/// <summary>
+	/// マジックマスクのカウンター時間
+	/// </summary>
+	[SerializeField]
+	int m_magicMaskCounterTime;
+
+	/// <summary>
 	/// 必殺技攻撃１の１撃当たりの威力
 	/// </summary>
 	[SerializeField]
@@ -441,16 +453,10 @@ public class MyPlayer : MonoBehaviour
 	float m_extensionDistanceDeathblow2;
 
 	/// <summary>
-	/// マジックマスクの攻撃２の威力
+	/// 必殺技攻撃３の１撃当たりの威力
 	/// </summary>
 	[SerializeField]
-	int m_powerAttack2MagicMask;
-
-	/// <summary>
-	/// マジックマスクのカウンター時間
-	/// </summary>
-	[SerializeField]
-	int m_magicMaskCounterTime;
+	int m_powerAttackDeathblow3PerBlow;
 
 	/// <summary>
 	/// 攻撃の連続回数
@@ -648,6 +654,21 @@ public class MyPlayer : MonoBehaviour
 		new Vector3(1.398f,0.733f,1.528f),
 		new Vector3(1.398f,0.733f,1.528f),
 		new Vector3(1.398f,0.733f,1.528f),
+	};
+
+	/// <summary>
+	/// 必殺技の攻撃３の頂点
+	/// </summary>
+	static readonly Vector3[] ATTACK_DEATHBLOW3_VERTECES =
+	{
+		new Vector3(0.2333967f,1.539274f,0.7515599f),
+		new Vector3(0.4046411f,1.45876f,1.996258f),
+		new Vector3(0.4942979f,1.551066f,-0.7345253f),
+		new Vector3(0.3399217f,1.475883f,0.6992293f),
+		new Vector3(0.3399217f,1.475883f,0.6992293f),
+		new Vector3(0.3399217f,1.475883f,0.6992293f),
+		new Vector3(0.3399217f,1.475883f,0.6992293f),
+		new Vector3(0.3399217f,1.475883f,0.6992293f),
 	};
 	#endregion
 
@@ -1601,6 +1622,15 @@ public class MyPlayer : MonoBehaviour
 	}
 
 	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// 必殺技３の攻撃のアニメーションスタート
+	/// </summary>
+	public void StartAnimAttackDethblow3A()
+	{
+		Anim.SetTrigger(TRANS_ATTACK_DEATHBLOW3A);
+	}
+
+	//----------------------------------------------------------------------------------------------------
 	//アニメーションイベント
 	//----------------------------------------------------------------------------------------------------
 
@@ -1904,5 +1934,29 @@ public class MyPlayer : MonoBehaviour
 		//攻撃範囲の生成
 		myCharacter.AttackManagerScript.PlayerAttack(m_workMyPrism12, transform.position, m_maskState, m_powerAttackDeathblow2, m_effectiveDethblow2Time,
 			false, m_extensionTimeDeathblow2, m_extensionDistanceDeathblow2);
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// 必殺技の攻撃３
+	/// </summary>
+	void AttackDeathblow3Event()
+	{
+		//ワールド座標でボスの位置とプレイヤーの方向
+		m_workMatrix.SetTRS(transform.position, transform.rotation, Vector3.one);
+
+		//攻撃範囲頂点の決定
+		for (var i = 0; i < MyCube.NUM_VERTICES; i++)
+		{
+			//絶対的な攻撃範囲の決定
+			m_workVector3Array[i] = m_workMatrix.MultiplyPoint(ATTACK_DEATHBLOW3_VERTECES[i]);
+		}
+
+		//攻撃範囲の直方体の構築
+		m_workMyCube.SetCube(m_workVector3Array[0], m_workVector3Array[1], m_workVector3Array[2], m_workVector3Array[3],
+			m_workVector3Array[4], m_workVector3Array[5], m_workVector3Array[6], m_workVector3Array[7]);
+
+		//攻撃範囲の生成
+		myCharacter.AttackManagerScript.PlayerAttack(m_workMyCube, m_maskState, m_powerAttackDeathblow3PerBlow, m_effectiveAttackTime, true);
 	}
 }

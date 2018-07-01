@@ -29,15 +29,12 @@ public class MyBombShot : MonoBehaviour
     /// </summary>
     const float BOMBSPEED = 500;
 
-    /// <summary>
-    //プレイヤーのオブジェクト//
-    /// </summary>
-    GameObject m_PlayerObjct;
 
     /// <summary>
-    //プレイヤーの名前//
+    // MyAiBossのスクリプト
     /// </summary>
-    const string PLAYER_OBJECT_NAME = "DummyPlayer";
+    MyAiBoss myAiBoss;
+
 
     //----------------------------------------------------------------------------------------------------
     /// <summary>
@@ -45,7 +42,7 @@ public class MyBombShot : MonoBehaviour
     /// </summary>
     void Start ()
     {
-        m_PlayerObjct = GameObject.Find(PLAYER_OBJECT_NAME);
+        myAiBoss = GameObject.Find("VirusMinister").GetComponent<MyAiBoss>();
         m_throwPoint = this.gameObject.transform;
     }
 
@@ -56,12 +53,12 @@ public class MyBombShot : MonoBehaviour
     void Update ()
     {
         //常にプレイヤーの方向を向く//
-        this.transform.LookAt(new Vector3(m_PlayerObjct.transform.position.x, 0, m_PlayerObjct.transform.position.z));
+        this.transform.LookAt(new Vector3(myAiBoss.m_playerObject.transform.position.x, 0, myAiBoss.m_playerObject.transform.position.z));
     }
 
     //----------------------------------------------------------------------------------------------------
     /// <summary>
-    /// MyVirusMinisterAIから実行、爆弾の発射
+    /// 0が近距離、1が遠距離MyVirusMinisterAIから実行、爆弾の発射
     /// </summary>
     public void Shot(int num)
     {
@@ -72,7 +69,6 @@ public class MyBombShot : MonoBehaviour
             //力は斜め上に、ややランダム性あり
             int m_randomX = UnityEngine.Random.Range(0, 500);
             int m_randomY = UnityEngine.Random.Range(0, 100);
-            Debug.Log(m_randomX);
             force = this.gameObject.transform.forward * ((2*BOMBSPEED+m_randomX) / 5) + this.gameObject.transform.up *((BOMBSPEED+m_randomY)/ 2);
             bombs.GetComponent<Rigidbody>().AddForce(force);
             bombs.transform.position = m_throwPoint.position;

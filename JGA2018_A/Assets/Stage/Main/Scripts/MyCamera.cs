@@ -88,4 +88,15 @@ public class MyCamera : MonoBehaviour {
         // カメラを横にずらして中央を開ける
         transform.position = transform.position + transform.right * slideDistanceM;
     }
+    private void Update()
+    {
+        //位置からRayを飛ばす
+        Ray ray = Camera.main.ScreenPointToRay(Target.position);
+        RaycastHit hit;
+
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity)){
+            //Rayが当たるオブジェクトがあった場合はそのオブジェクト名をログに表示
+            Debug.Log(hit.collider.gameObject.name);
+         }  
+    }
 }

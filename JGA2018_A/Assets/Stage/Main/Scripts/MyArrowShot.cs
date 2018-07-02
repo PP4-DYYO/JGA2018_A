@@ -30,7 +30,7 @@ public class MyArrowShot : MonoBehaviour
     const float ARROWSPEED = 500;
 
     /// <summary>
-    // MyAiBossのスクリプト
+    // スクリプト
     /// </summary>
     MyAiBoss myAiBoss;
 

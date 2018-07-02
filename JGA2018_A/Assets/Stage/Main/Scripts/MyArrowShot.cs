@@ -30,14 +30,9 @@ public class MyArrowShot : MonoBehaviour
     const float ARROWSPEED = 500;
 
     /// <summary>
-    //プレイヤーのオブジェクト//
+    // MyAiBossのスクリプト
     /// </summary>
-    GameObject m_PlayerObjct;
-
-    /// <summary>
-    //プレイヤーの名前//
-    /// </summary>
-    const string PLAYER_OBJECT_NAME = "DummyPlayer";
+    MyAiBoss myAiBoss;
 
     //----------------------------------------------------------------------------------------------------
     /// <summary>
@@ -45,7 +40,7 @@ public class MyArrowShot : MonoBehaviour
     /// </summary>
     void Start()
     {
-        m_PlayerObjct = GameObject.Find(PLAYER_OBJECT_NAME);
+        myAiBoss = GameObject.Find("CarryMinister").GetComponent<MyAiBoss>();
         m_throwPoint = this.gameObject.transform;
     }
 
@@ -56,7 +51,7 @@ public class MyArrowShot : MonoBehaviour
     void Update()
     {
         //常にプレイヤーの方向を向く//
-        this.transform.LookAt(new Vector3(m_PlayerObjct.transform.position.x, 0, m_PlayerObjct.transform.position.z));
+        this.transform.LookAt(new Vector3(myAiBoss.PlayerObject.transform.position.x, 0, myAiBoss.PlayerObject.transform.position.z));
     }
 
     //----------------------------------------------------------------------------------------------------
@@ -65,7 +60,6 @@ public class MyArrowShot : MonoBehaviour
     /// </summary>
     public void Shot(int num)
     {
-        //遠投
         if (num == 1)
         {
             GameObject arrows = GameObject.Instantiate(m_arrow) as GameObject;
@@ -77,7 +71,6 @@ public class MyArrowShot : MonoBehaviour
             arrows.transform.position = m_throwPoint.position;
             Debug.Log("矢遠距離!");
         }
-        //転がし
         else
         {
             GameObject arrows = GameObject.Instantiate(m_arrow) as GameObject;

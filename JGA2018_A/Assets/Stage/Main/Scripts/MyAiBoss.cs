@@ -9,17 +9,30 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MyAiBoss : MonoBehaviour {
+public class MyAiBoss : MonoBehaviour
+{
 
     /// <summary>
     /// プレイヤーのオブジェクト
     /// </summary>
-   public GameObject m_playerObject;
+    [SerializeField]
+    protected GameObject m_playerObject;
+
+    public GameObject PlayerObject
+    {
+        get { return m_playerObject; }
+    }
 
     /// <summary>
     /// プレイヤーオブジェクトの名前
     /// </summary>
-   public string m_playerObjectName = "DummyPlayer";
+    [SerializeField]
+    protected string m_playerObjectName = "DummyPlayer";
+
+    public string PlayerObjectName
+    {
+        get { return m_playerObjectName; }
+    }
 
     MyCharacter myCharacter;
     MyBombShot myBombShot;
@@ -29,94 +42,124 @@ public class MyAiBoss : MonoBehaviour {
     /// <summary>
     /// 自分の名前"CarryMinister","VirusMinister","MirrorMinister","MagicMinister"
     /// </summary>
-    public string m_myObjectName;
+    [SerializeField]
+    protected string m_myObjectName;
+
+    /// <summary>
+    /// 自分のゲームオブジェクト
+    /// </summary>
+    [SerializeField]
+    protected GameObject m_myGameObject;
 
     /// <summary>
     /// HP//
     /// </summary>
-    public int m_hitPoint;
+    [SerializeField] 
+     protected int m_hitPoint;
 
     /// <summary>
     /// 攻撃力
     /// </summary>
-    public int m_attack;
+    [SerializeField]
+    protected int m_attack;
+
+    public int Attack
+    {
+        get { return m_attack; }
+    }
 
     /// <summary>
     /// 攻撃番号（近距離、遠距離など）
     /// </summary>
-    public int m_attackNum;
+    [SerializeField]
+    protected int m_attackNum;
 
     /// <summary>
     /// 知覚範囲
-    /// </summary>
-    public int m_perceivedRange;
+    //</summary>
+    [SerializeField]
+    protected int m_perceivedRange;
 
 
     /// <summary>
     /// 攻撃後か
     /// </summary>
-    public bool m_isAttacked;
+    [SerializeField]
+    protected bool m_isAttacked;
 
     /// <summary>
     /// 攻撃間隔//
     /// </summary>
-    public int m_attackInterval;
+    [SerializeField]
+    protected float m_attackInterval;
 
     /// <summary>
     /// 一歩の移動距離//
     /// </summary>
-    public float m_step ;
+    [SerializeField]
+    protected float m_step;
 
     /// <summary>
     /// xへの移動はt:プラス/f:マイナス//
     /// </summary>
-    public bool m_movingX;
+    [SerializeField]
+    protected bool m_movingX;
 
     /// <summary>
     /// zへの移動はt:プラス/f:マイナス//
     /// </summary>
-    public bool m_movingZ;
+    [SerializeField]
+    protected bool m_movingZ;
 
     /// <summary>
     /// xzそれぞれの移動量//
     /// </summary>
-    public float m_moveX;
-    public float m_moveZ;
+    [SerializeField]
+    protected float m_moveX;
+    [SerializeField]
+    protected float m_moveZ;
 
     /// <summary>
     /// 特殊技の使用制限数//
     /// </summary>
-    public int m_specialAttackLimit;
+    [SerializeField]
+    protected int m_specialAttackLimit;
 
     /// <summary>
     /// 特殊技の使用数//
     /// </summary>
-    public int m_specialAttackCount;
+    [SerializeField]
+    protected int m_specialAttackCount;
 
     /// <summary>
     /// プレイヤーが攻撃してきたフラグ
     /// </summary>
-    public bool m_playerAttacked;
+    [SerializeField]
+    protected bool m_playerAttacked;
 
     /// <summary>
     /// プレイヤーとの距離
     /// </summary>
-    public float m_distance;
+    [SerializeField]
+    protected float m_distance;
 
     /// <summary>
     /// 自分の状態//
     /// </summary>
-    public AIMode m_aimode;
+    [SerializeField]
+    protected AIMode m_aimode;
 
     /// <summary>
     /// 行動制御用(時間)
     /// </summary>
-    public int m_gameTime;
+    [SerializeField]
+    protected float m_gameTime;
 
     /// <summary>
     /// AIの行動タイプ
     /// </summary>
-    public enum AIMode
+    [SerializeField]
+    protected enum AIMode
     {
         /// <summary>
         /// AI起動待ち
@@ -148,8 +191,10 @@ public class MyAiBoss : MonoBehaviour {
     /// <summary>
     /// 初期状態
     /// </summary>
-    void Start () {
-        switch (m_myObjectName) {
+    protected virtual void Start()
+    {
+        switch (m_myObjectName)
+        {
             case "VirusMinister":
                 myBombShot = GameObject.Find("BombPoint").GetComponent<MyBombShot>();
                 break;
@@ -162,21 +207,26 @@ public class MyAiBoss : MonoBehaviour {
                 break;
         }
         m_aimode = AIMode.WAIT;
+        m_myGameObject = GameObject.Find(m_myObjectName);
     }
 
     //----------------------------------------------------------------------------------------------------
     /// <summary>
     /// AIの基本行動
     /// </summary>
-    void Update () {
-        Debug.Log("現在["+m_aimode+"]状態");
+    protected virtual void Update()
+    {
         if (m_aimode != AIMode.WAIT)
         {
+            if (m_gameTime < m_attackInterval)
+            {
+                m_gameTime += Time.deltaTime;
+            }
             //プレイヤーとの距離
-            m_distance = (m_playerObject.transform.position - this.gameObject.transform.position).magnitude;
+            m_distance = (m_playerObject.transform.position - m_myGameObject.transform.position).magnitude;
 
             //位置関係を確認して、移動の+-を変更する
-            if (m_playerObject.transform.position.x > this.gameObject.transform.position.x)
+            if (m_playerObject.transform.position.x > m_myGameObject.transform.position.x)
             {
                 m_movingX = true;
             }
@@ -185,7 +235,7 @@ public class MyAiBoss : MonoBehaviour {
                 m_movingX = false;
             }
 
-            if (m_playerObject.transform.position.z > this.gameObject.transform.position.z)
+            if (m_playerObject.transform.position.z > m_myGameObject.transform.position.z)
             {
                 m_movingZ = true;
             }
@@ -209,8 +259,9 @@ public class MyAiBoss : MonoBehaviour {
     /// <summary>
     /// 通常攻撃
     /// </summary>
-   public void NomalAttack()
+    public void NomalAttack()
     {
+         
         switch (m_myObjectName)
         {
             case "CarryMinister":
@@ -219,7 +270,6 @@ public class MyAiBoss : MonoBehaviour {
                 {
                     SpecialAttack();
                 }
-                m_gameTime = 0;
                 myArrowShot.Shot(m_attackNum);
                 m_isAttacked = true;
                 break;
@@ -230,7 +280,6 @@ public class MyAiBoss : MonoBehaviour {
                 {
                     SpecialAttack();
                 }
-                m_gameTime = 0;
                 myBombShot.Shot(m_attackNum);
                 m_isAttacked = true;
                 break;
@@ -240,7 +289,6 @@ public class MyAiBoss : MonoBehaviour {
                 {
                     SpecialAttack();
                 }
-                m_gameTime = 0;
                 m_isAttacked = true;
                 break;
             case "MagicMinister":
@@ -249,17 +297,17 @@ public class MyAiBoss : MonoBehaviour {
                 {
                     SpecialAttack();
                 }
-                m_gameTime = 0;
                 m_isAttacked = true;
                 break;
         }
+        m_gameTime = 0;
     }
 
     //----------------------------------------------------------------------------------------------------
     ///<summary>
     ///特殊攻撃//
     ///</summary>
-  public  void SpecialAttack()
+    public void SpecialAttack()
     {
         switch (m_myObjectName)
         {
@@ -281,6 +329,7 @@ public class MyAiBoss : MonoBehaviour {
                 Debug.Log("特殊技！！！");
                 break;
         }
+        m_gameTime = 0;
     }
 
     //----------------------------------------------------------------------------------------------------

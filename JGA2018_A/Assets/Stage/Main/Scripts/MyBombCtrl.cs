@@ -52,7 +52,7 @@ public class MyBombCtrl : MonoBehaviour
         myAiBoss = GameObject.Find("VirusMinister").GetComponent<MyAiBoss>();
         myBombShot = GameObject.Find(m_BombPoint).GetComponent<MyBombShot>();
         myAttackManager = GameObject.Find("AttackManager").GetComponent<MyAttackManager>();
-        myCharacter = myAiBoss.m_playerObject.GetComponent<MyCharacter>();      
+        myCharacter = myAiBoss.PlayerObject.GetComponent<MyCharacter>();      
     }
 
     //----------------------------------------------------------------------------------------------------
@@ -74,7 +74,7 @@ public class MyBombCtrl : MonoBehaviour
         {
             //なにかするかも
         }
-        else if (other.gameObject.name==myAiBoss.m_playerObjectName)
+        else if (other.gameObject.name==myAiBoss.PlayerObjectName)
         {
             Explosion();
         }
@@ -105,7 +105,7 @@ public class MyBombCtrl : MonoBehaviour
 
         //当たり判定発生
         MyCube explosionRange = new MyCube(vLDB, vRDB, vLDF, vRDF, vLUB, vRUB, vLUF, vRUF);
-        myAttackManager.EnemyAttack(explosionRange, MaskAttribute.Non, myAiBoss.m_attack,1);
+        myAttackManager.EnemyAttack(explosionRange, MaskAttribute.Non, myAiBoss.Attack,1);
 
         //爆弾削除
         Destroy(this.gameObject);

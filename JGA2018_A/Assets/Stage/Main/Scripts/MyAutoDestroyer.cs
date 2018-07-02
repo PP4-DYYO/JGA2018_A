@@ -16,7 +16,7 @@ using UnityEngine;
 public class MyAutoDestroyer : MonoBehaviour
 {
     MyBombCtrl mybombctrl;
-    int m_time;
+    float m_time;
 
     void Start()
     {
@@ -29,17 +29,17 @@ public class MyAutoDestroyer : MonoBehaviour
     /// </summary>
     void Update ()
     {
-        m_time++;
+        m_time += Time.deltaTime;
         
-        if (m_time > 180)
+        if (m_time > 2)
         {
             Destroy(this.gameObject);
         }
 
-        //爆弾は１秒
+        //爆弾は１.5秒
         if (this.gameObject.CompareTag("Bomb"))
         {
-            if (m_time > 90)
+            if (m_time > 1.5)
             {
                 mybombctrl.Explosion();
             }

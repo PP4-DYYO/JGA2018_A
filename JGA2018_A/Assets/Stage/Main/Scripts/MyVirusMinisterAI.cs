@@ -5,295 +5,121 @@
 //
 //////////////////////////////////////////////////////////////////
 
-using System;
+
 using UnityEngine;
 
 ///<summary>
 ///ウイルス大臣のAI
 ///</summary>
-public class MyVirusMinisterAI : MonoBehaviour
+public class MyVirusMinisterAI : MyAiBoss
 {
-
-    /// <summary>
-    /// プレイヤーのオブジェクト
-    /// </summary>
-     GameObject m_playerObjct;
-
-    /// <summary>
-    /// プレイヤーオブジェクトの名前
-    /// </summary>
-    const string PLAYER_OBJECT_NAME = "DummyPlayer";
-
-    /// <summary>
-    /// HP//
-    /// </summary>
-    int VirusMinisterHitPoint = 100;
-
-    /// <summary>
-    /// 攻撃力
-    /// </summary>
-    const int VIRUS_MINISTER_ATTACK = 100;
-
-    /// <summary>
-    /// 知覚範囲
-    /// </summary>
-    const int PERCEIVEDRANGE = 5;
-
-    /// <summary>
-    /// このAIが気づいたか
-    /// </summary>
-    bool isPerceived;
-
-    /// <summary>
-    /// 攻撃後か
-    /// </summary>
-    bool isAttacked;
-
-    /// <summary>
-    /// 攻撃間隔//
-    /// </summary>
-    const int ATTACK_INTERVAL = 120;
-
-    /// <summary>
-    /// 一歩の移動距離//
-    /// </summary>
-    const float step = 0.03f;
-    /// <summary>
-    /// xへの移動はt:プラス/f:マイナス//
-    /// </summary>
-    bool moveX;
-
-    /// <summary>
-    /// zへの移動はt:プラス/f:マイナス//
-    /// </summary>
-    bool moveZ;
-
-    /// <summary>
-    /// xzそれぞれの移動量//
-    /// </summary>
-    float m_moveX;
-    float m_moveZ;
-
-    /// <summary>
-    /// 特殊技の使用制限数//
-    /// </summary>
-    const int SPECIAL_ATTACKLIMIT = 2;
-
-    /// <summary>
-    /// 特殊技の使用数//
-    /// </summary>
-    int m_specialAttackCount;
-
-    /// <summary>
-    /// プレイヤーが攻撃してきたフラグ
-    /// </summary>
-    bool playerAttacked;
-
-    /// <summary>
-    /// 自分の状態//
-    /// </summary>
-    public AIMode aiMode;
-
-    /// <summary>
-    /// 行動制御用(時間)
-    /// </summary>
-    int m_gameTime;
-
-    /// <summary>
-    /// 爆弾近距離遠距離 0:近距離　1:遠距離
-    /// </summary>
-    int m_BombNum;
-
-    //スクリプト参照用//
-    MyBombShot mb;
 
     //----------------------------------------------------------------------------------------------------
     /// <summary>
     /// 初期状態設定
     /// </summary>
-    void Start()
+    protected override void Start()
     {
-        m_playerObjct = GameObject.Find(PLAYER_OBJECT_NAME);
-        aiMode = AIMode.STOP;
-        mb = GameObject.Find("BombPoint").GetComponent<MyBombShot>();
-        m_BombNum = 1;
+        m_attackNum = 1;
+
+        m_myObjectName = this.gameObject.name;
+        m_playerObject = GameObject.Find(m_playerObjectName);
+        m_hitPoint = 310;
+        m_attack = 50;
+        m_perceivedRange = 5;
+        m_distance = 100;
+        m_isAttacked = false;
+        m_attackInterval = 2.0f;
+        m_step = 0.03f;
+        m_moveX = 0;
+        m_moveZ = 0;
+        m_movingX = false;
+        m_movingZ = false;
+        m_specialAttackLimit = 2;
+        m_specialAttackCount = 0;
+        m_playerAttacked = false;
+        m_aimode = AIMode.WAIT;
+
+        m_gameTime = m_attackInterval;
+
+        base.Start();
     }
 
-    /// <summary>
-    /// AIの行動タイプ
-    /// </summary>
-    public enum AIMode
-    {
-        STOP,
-        ATTACK,
-        DEFENSE,
-        APPROACH,
-        LEAVE
-    }
 
     //----------------------------------------------------------------------------------------------------
     /// <summary>
     /// 移動、行動
     /// </summary>
-    void Update()
+    protected override void Update()
     {
-        //////////////////////（仮）プレイヤーをここで操作する//////////////
-        //if (Input.GetKey("right"))
-        //{
-        //    m_playerObjct.transform.Translate(new Vector3(0.2f, 0, 0));
-        //}
-        //if (Input.GetKey("left"))
-        //{
-        //    m_playerObjct.transform.Translate(new Vector3(-0.2f, 0, 0));
-        //}
-        //if (Input.GetKey("up"))
-        //{
-        //    m_playerObjct.transform.Translate(new Vector3(0, 0, 0.2f));
-        //}
-        //if (Input.GetKey("down"))
-        //{
-        //    m_playerObjct.transform.Translate(new Vector3(0, 0, -0.2f));
-        //}
-        ///////////////////////////////////////////////////////////////
-
-        if (Input.GetKeyDown("space"))
-        {
-            if (VirusMinisterHitPoint == 100)
-            {
-                VirusMinisterHitPoint = 90;
-            }
-            else
-            {
-                VirusMinisterHitPoint = 100;
-            }
-        }
-
-        if (m_gameTime < 120)
-        {
-            m_gameTime++;
-        }
-
-        //プレイヤーとの距離
-        float m_distance = (m_playerObjct.transform.position - this.gameObject.transform.position).magnitude;
-
-        //位置関係を確認して、移動の+-を変更する
-        if (m_playerObjct.transform.position.x > this.gameObject.transform.position.x)
-        {
-            moveX = true;
-        }
-        else
-        {
-            moveX = false;
-        }
-
-        if (m_playerObjct.transform.position.z > this.gameObject.transform.position.z)
-        {
-            moveZ = true;
-        }
-        else
-        {
-            moveZ = false;
-        }
-
-        //Debug.Log("距離は"+ m_distance);
-
-        //知覚範囲に入れば気づいた状態に遷移する
-        if (m_distance < PERCEIVEDRANGE)
-        {
-            isPerceived = true;
-        }
-
-        if (isPerceived)
+        base.Update();
+        if (m_aimode != AIMode.WAIT)
         {
             //距離が５より小さければ離れる
             if (m_distance < 5)
             {
-                aiMode = AIMode.LEAVE;
-                
+                m_aimode = AIMode.LEAVE;
+
                 //移動の+-切り替え
-                if (moveX == true)
+                if (m_movingX == true)
                 {
-                    m_moveX = -step;
+                    m_moveX = -m_step;
                 }
                 else
                 {
-                    m_moveX = step;
+                    m_moveX = m_step;
                 }
-                if (moveZ == true)
+                if (m_movingZ == true)
                 {
-                    m_moveZ = -step;
+                    m_moveZ = -m_step;
                 }
                 else
                 {
-                    m_moveZ = step;
+                    m_moveZ = m_step;
                 }
 
             }
-            //距離が8より大きければ近づく
-            else if (m_distance > 8)
+            //距離がかなり離れると見失う
+            else if (m_distance > m_perceivedRange * 3)
             {
-                if (m_distance < PERCEIVEDRANGE * 3)
-                {
-                   // aiMode = AIMode.APPROACH;
-                }
-                //大きく離れるとターゲットから外れる
-                else
-                {
-                    aiMode = AIMode.STOP;
-                    isPerceived = false;
-                }
-
-                ////移動の+-切り替え
-                //if (moveX == true)
-                //{
-                //    m_moveX = step;
-                //}
-                //else
-                //{
-                //    m_moveX = -step;
-                //}
-
-                //if (moveZ == true)
-                //{
-                //    m_moveZ = step;
-                //}
-                //else
-                //{
-                //    m_moveZ = -step;
-                //}
-
+                m_aimode = AIMode.IDLE;
             }
             else
             {
-                aiMode = AIMode.ATTACK;
-            }
-        }
-        if (isAttacked == true)
-        {
-           aiMode = AIMode.LEAVE;
-            if(m_distance > 5)
-            {
-                isAttacked = false;
-                aiMode = AIMode.STOP;
+                m_aimode = AIMode.ATTACK;
             }
         }
 
-        if (aiMode == AIMode.LEAVE)
+        //攻撃後次の攻撃までは離れるまたはその場に留まる
+        if (m_isAttacked == true)
         {
-            m_BombNum = 0;
+            m_aimode = AIMode.LEAVE;
+            if (m_distance > 5)
+            {
+                m_isAttacked = false;
+                m_aimode = AIMode.IDLE;
+            }
+        }
+
+        //距離によって爆弾の投げ方が変わる
+        if (m_aimode == AIMode.LEAVE)
+        {
+            m_attackNum = 0;
+            m_attack = 70;
         }
         else
         {
-            m_BombNum = 1;
+            m_attackNum = 1;
+            m_attack = 50;
         }
         //状態によって行動を切り替える
-        switch (aiMode)
+        switch (m_aimode)
         {
-            case AIMode.STOP:
+            case AIMode.IDLE:
                 break;
             case AIMode.ATTACK:
                 //一定時間毎に攻撃をする
-                if (m_gameTime >= ATTACK_INTERVAL)
+                if (m_gameTime >= m_attackInterval)
                 {
                     NomalAttack();
                 }
@@ -305,7 +131,7 @@ public class MyVirusMinisterAI : MonoBehaviour
                 break;
             case AIMode.LEAVE:
                 //逃げながら投げる
-                if (m_gameTime >= ATTACK_INTERVAL)
+                if (m_gameTime >= m_attackInterval)
                 {
                     NomalAttack();
                 }
@@ -313,31 +139,5 @@ public class MyVirusMinisterAI : MonoBehaviour
                 this.transform.Translate(new Vector3(m_moveX, 0, m_moveZ));
                 break;
         }
-    }
-
-    //----------------------------------------------------------------------------------------------------
-    ///<summary>
-    ///爆弾投げ//通常攻撃
-    ///</summary>
-    void NomalAttack()
-    {
-        //HPが一定で制限に達していないとき
-        if (VirusMinisterHitPoint < VirusMinisterHitPoint / 4 && m_specialAttackCount < SPECIAL_ATTACKLIMIT)
-        {
-            SpecialAttack();
-        }
-        m_gameTime = 0;
-        mb.Shot(m_BombNum);
-       isAttacked = true;
-    }
-
-    //----------------------------------------------------------------------------------------------------
-    ///<summary>
-    ///特殊攻撃//hpが1/4の時など
-    ///</summary>
-    void SpecialAttack()
-    {
-        m_specialAttackCount += 1;
-        Debug.Log("特殊技！！！");
     }
 }

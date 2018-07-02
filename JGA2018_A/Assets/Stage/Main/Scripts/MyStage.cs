@@ -21,15 +21,34 @@ public class MyStage : MonoBehaviour
 	[SerializeField]
 	MyGame myGame;
 
-	// Use this for initialization
-	void Start()
+	/// <summary>
+	/// 現在のフィールド
+	/// </summary>
+	MyField m_currentField;
+	public MyField CurrentField
 	{
-
+		get { return m_currentField; }
+		set { m_currentField = value; }
 	}
 
-	// Update is called once per frame
-	void Update()
+	/// <summary>
+	/// 現在のフィールドのボス部屋の中心位置を取得
+	/// </summary>
+	/// <returns></returns>
+	public Vector3 GetCenterPosBossRoomCurrentField()
 	{
+		return m_currentField.BossRoomCenterPos;
+	}
 
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// 現在のフィールドの必殺技１の位置を取得
+	/// </summary>
+	/// <param name="num"></param>
+	/// <returns></returns>
+	public Vector3 GetPosDeathblow1CurrentField(int num)
+	{
+		num = (num < 0) ? 0 : (num > 4) ? 4 : num;
+		return m_currentField.GetPosDeathblow1()[num];
 	}
 }

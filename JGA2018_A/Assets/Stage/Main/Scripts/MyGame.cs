@@ -39,8 +39,8 @@ public class MyGame : MonoBehaviour
 	/// メインカメラ
 	/// </summary>
 	[SerializeField]
-	Camera MainCamera;
-	public Camera CameraScript
+	MyCamera MainCamera;
+	public MyCamera CameraScript
 	{
 		get { return MainCamera; }
 	}

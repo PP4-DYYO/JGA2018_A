@@ -50,6 +50,8 @@
      <Compile Include="Assets\Dummy\AssetStore\Particle_Dissolve_Shader\Scripts\PDS_GameController.cs" />
      <Compile Include="Assets\Dummy\AssetStore\Particle_Dissolve_Shader\Scripts\ScrollingUVs_PDS.cs" />
      <Compile Include="Assets\Dummy\Checker.cs" />
+     <Compile Include="Assets\Stage\Field\Particle Ribbon\Scripts\ReverseNormals.cs" />
+     <Compile Include="Assets\Stage\Main\Scripts\MyAiBoss.cs" />
      <Compile Include="Assets\Stage\Main\Scripts\MyAiManager.cs" />
      <Compile Include="Assets\Stage\Main\Scripts\MyArrowShot.cs" />
      <Compile Include="Assets\Stage\Main\Scripts\MyAttack.cs" />
@@ -63,6 +65,7 @@
      <Compile Include="Assets\Stage\Main\Scripts\MyCamera.cs" />
      <Compile Include="Assets\Stage\Main\Scripts\MyCarryMinisterAI.cs" />
      <Compile Include="Assets\Stage\Main\Scripts\MyCharacter.cs" />
+     <Compile Include="Assets\Stage\Main\Scripts\MyField.cs" />
      <Compile Include="Assets\Stage\Main\Scripts\MyGame.cs" />
      <Compile Include="Assets\Stage\Main\Scripts\MyMagicMinisterAI.cs" />
      <Compile Include="Assets\Stage\Main\Scripts\MyMenu.cs" />
@@ -72,6 +75,8 @@
      <Compile Include="Assets\Stage\Main\Scripts\MyShadowMagicMinisterAI.cs" />
      <Compile Include="Assets\Stage\Main\Scripts\MyStage.cs" />
      <Compile Include="Assets\Stage\Main\Scripts\MyVirusMinisterAI.cs" />
+     <Compile Include="Assets\Stage\Main\Scripts\MyWarpManager.cs" />
+     <Compile Include="Assets\Stage\Main\Scripts\MyWarpPoint.cs" />
      <None Include="Assets\Dummy\AssetStore\Particle_Dissolve_Shader\Shaders\legacy\Dissolve_Alpha_Additive_Opacity_softrim.shader" />
      <None Include="Assets\Dummy\AssetStore\Particle_Dissolve_Shader\Shaders\legacy\DissolveSoft_Alpha_Additive_Opacity_softrim.shader" />
      <None Include="Assets\Dummy\AssetStore\Particle_Dissolve_Shader\Shaders\legacy\DissolveSoft_Alpha_Additive_softrim.shader" />

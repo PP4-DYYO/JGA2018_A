@@ -29,6 +29,10 @@ enum BehaviorStatus
 	/// </summary>
 	Walk,
 	/// <summary>
+	/// ダメージ
+	/// </summary>
+	Damage,
+	/// <summary>
 	/// 攻撃１のAパターン
 	/// </summary>
 	Attack1A,
@@ -68,6 +72,18 @@ enum BehaviorStatus
 	/// 攻撃２の４種目Cパターン
 	/// </summary>
 	Attack2Kind4C,
+	/// <summary>
+	/// 必殺技の攻撃１
+	/// </summary>
+	AttackDeathblow1,
+	/// <summary>
+	/// 必殺技の攻撃３
+	/// </summary>
+	AttackDeathblow3,
+	/// <summary>
+	/// 必殺技の攻撃４
+	/// </summary>
+	AttackDeathblow4,
 }
 
 //----------------------------------------------------------------------------------------------------
@@ -108,6 +124,41 @@ struct PlayerMask
 /// </summary>
 public class MyPlayer : MonoBehaviour
 {
+	#region プレイヤー情報
+	[Header("プレイヤー情報")]
+	/// <summary>
+	/// 身長
+	/// </summary>
+	[SerializeField]
+	float m_height;
+	public float Height
+	{
+		get { return m_height; }
+	}
+
+	/// <summary>
+	/// 最大HP
+	/// </summary>
+	[SerializeField]
+	int m_maxHp;
+
+	/// <summary>
+	/// ウイルス耐性時間
+	/// </summary>
+	[SerializeField]
+	float m_virusToleranceTime;
+
+	/// <summary>
+	/// HP
+	/// </summary>
+	int m_hp;
+
+	/// <summary>
+	/// ダメージの蓄積時間
+	/// </summary>
+	float m_damageAccumulationTime;
+	#endregion
+
 	#region 外部のインスタンス
 	[Header("外部のインスタンス")]
 	/// <summary>
@@ -119,7 +170,7 @@ public class MyPlayer : MonoBehaviour
 	/// <summary>
 	/// カメラ
 	/// </summary>
-	Camera m_camera;
+	MyCamera m_camera;
 	#endregion
 
 	#region コンポーネント
@@ -148,6 +199,16 @@ public class MyPlayer : MonoBehaviour
 	/// 歩く遷移
 	/// </summary>
 	const string TRANS_WALK = "Walk";
+
+	/// <summary>
+	/// 走る遷移
+	/// </summary>
+	const string TRANS_RUN = "Run";
+
+	/// <summary>
+	/// ダメージを受けるアニメーション
+	/// </summary>
+	const string TRANS_DAMAGE = "Damage";
 
 	/// <summary>
 	/// 攻撃１のパターンA遷移
@@ -203,6 +264,41 @@ public class MyPlayer : MonoBehaviour
 	/// マスクチェンジ遷移
 	/// </summary>
 	const string TRANS_CHANGE_MASK = "ChangeMask";
+
+	/// <summary>
+	/// 必殺技の攻撃１遷移
+	/// </summary>
+	const string TRANS_ATTACK_DEATHBLOW1 = "AttackDeathblow1";
+
+	/// <summary>
+	/// 必殺技の攻撃１のAパターン遷移
+	/// </summary>
+	const string TRANS_ATTACK_DEATHBLOW1A = "AttackDeathblow1A";
+
+	/// <summary>
+	/// 必殺技の攻撃２のAパターン遷移
+	/// </summary>
+	const string TRANS_ATTACK_DEATHBLOW2A = "AttackDeathblow2A";
+
+	/// <summary>
+	/// 必殺技の攻撃３遷移
+	/// </summary>
+	const string TRANS_ATTACK_DEATHBLOW3 = "AttackDeathblow3";
+
+	/// <summary>
+	/// 必殺技の攻撃３のAパターン遷移
+	/// </summary>
+	const string TRANS_ATTACK_DEATHBLOW3A = "AttackDeathblow3A";
+
+	/// <summary>
+	/// 必殺技の攻撃４遷移
+	/// </summary>
+	const string TRANS_ATTACK_DEATHBLOW4 = "AttackDeathblow4";
+
+	/// <summary>
+	/// 必殺技の攻撃４のAパターン遷移
+	/// </summary>
+	const string TRANS_ATTACK_DEATHBLOW4A = "AttackDeathblow4A";
 	#endregion
 
 	#region 状態
@@ -218,6 +314,11 @@ public class MyPlayer : MonoBehaviour
 	BehaviorStatus m_behaviorStatePrev;
 
 	/// <summary>
+	/// 行動状態を変えない
+	/// </summary>
+	bool m_isNotChangeBehaviorState;
+
+	/// <summary>
 	/// 現在のマスク状態
 	/// </summary>
 	MaskAttribute m_maskState;
@@ -228,8 +329,8 @@ public class MyPlayer : MonoBehaviour
 	MaskAttribute m_maskStatePrev;
 	#endregion
 
-	#region トランスポート
-	[Header("トランスポート")]
+	#region トランスフォーム
+	[Header("トランスフォーム")]
 	/// <summary>
 	/// 回転スピード
 	/// </summary>
@@ -352,6 +453,12 @@ public class MyPlayer : MonoBehaviour
 	int m_powerAttack2MagicMask;
 
 	/// <summary>
+	/// マジックマスクのカウンター時間
+	/// </summary>
+	[SerializeField]
+	int m_magicMaskCounterTime;
+
+	/// <summary>
 	/// 攻撃の連続回数
 	/// </summary>
 	int m_attackCount;
@@ -375,6 +482,55 @@ public class MyPlayer : MonoBehaviour
 	/// 現在の攻撃休憩時間
 	/// </summary>
 	float m_currentAttackBreakTime;
+
+	/// <summary>
+	/// カウンター中
+	/// </summary>
+	bool m_isCounter;
+	#endregion
+
+	#region 必殺技
+	[Header("必殺技")]
+	/// <summary>
+	/// 必殺技攻撃１の１撃当たりの威力
+	/// </summary>
+	[SerializeField]
+	int m_powerAttackDeathblow1PerBlow;
+
+	/// <summary>
+	/// 必殺技２の有効時間
+	/// </summary>
+	[SerializeField]
+	float m_effectiveDethblow2Time;
+
+	/// <summary>
+	/// 必殺技攻撃２の威力
+	/// </summary>
+	[SerializeField]
+	int m_powerAttackDeathblow2;
+
+	/// <summary>
+	/// 必殺技２の拡張時間
+	/// </summary>
+	[SerializeField]
+	float m_extensionTimeDeathblow2;
+
+	/// <summary>
+	/// 必殺技２の拡張距離
+	/// </summary>
+	[SerializeField]
+	float m_extensionDistanceDeathblow2;
+
+	/// <summary>
+	/// 必殺技攻撃３の１撃当たりの威力
+	/// </summary>
+	[SerializeField]
+	int m_powerAttackDeathblow3PerBlow;
+
+	/// <summary>
+	/// 必殺技を使用した
+	/// </summary>
+	bool m_wasUseDeathblow;
 	#endregion
 
 	#region 攻撃範囲
@@ -527,6 +683,36 @@ public class MyPlayer : MonoBehaviour
 		new Vector3(0.6111093f,1.063734f,-0.1974359f),
 		new Vector3(0.0841179f,0.4025702f,1.660222f),
 		new Vector3(0.1402777f,1.054813f,0.6047654f),
+	};
+
+	/// <summary>
+	/// 必殺技の攻撃１の頂点
+	/// </summary>
+	static readonly Vector3[] ATTACK_DEATHBLOW1_VERTECES =
+	{
+		new Vector3(-0.1134192f,1.318558f,0.5869702f),
+		new Vector3(-0.411669f,1.815923f,-0.4555861f),
+		new Vector3(0.6366171f,1.201453f,0.6921799f),
+		new Vector3(1.398f,0.733f,1.528f),
+		new Vector3(1.398f,0.733f,1.528f),
+		new Vector3(1.398f,0.733f,1.528f),
+		new Vector3(1.398f,0.733f,1.528f),
+		new Vector3(1.398f,0.733f,1.528f),
+	};
+
+	/// <summary>
+	/// 必殺技の攻撃３の頂点
+	/// </summary>
+	static readonly Vector3[] ATTACK_DEATHBLOW3_VERTECES =
+	{
+		new Vector3(0.2333967f,1.539274f,0.7515599f),
+		new Vector3(0.4046411f,1.45876f,1.996258f),
+		new Vector3(0.4942979f,1.551066f,-0.7345253f),
+		new Vector3(0.3399217f,1.475883f,0.6992293f),
+		new Vector3(0.3399217f,1.475883f,0.6992293f),
+		new Vector3(0.3399217f,1.475883f,0.6992293f),
+		new Vector3(0.3399217f,1.475883f,0.6992293f),
+		new Vector3(0.3399217f,1.475883f,0.6992293f),
 	};
 	#endregion
 
@@ -702,6 +888,16 @@ public class MyPlayer : MonoBehaviour
 	/// 作業用の直方体
 	/// </summary>
 	MyCube m_workMyCube = new MyCube();
+
+	/// <summary>
+	/// 作業用の１２角柱
+	/// </summary>
+	MyPrism12 m_workMyPrism12 = new MyPrism12(0);
+
+	/// <summary>
+	/// 作業用の攻撃
+	/// </summary>
+	MyAttack m_workMyAttack;
 	#endregion
 
 #if DEBUG
@@ -739,12 +935,17 @@ public class MyPlayer : MonoBehaviour
 	/// </summary>
 	void Start()
 	{
+		//プレイヤー情報
+		m_hp = m_maxHp;
+
 		//アクセスしやすいように
 		m_camera = myCharacter.GameScript.CameraScript;
 
+		//各プロパティ
 		m_maskState = MaskAttribute.Non;
 		m_attackCount = 0;
 		m_numAttack2Combo = 1;
+		m_wasUseDeathblow = false;
 
 		//マスク関係
 		m_carryMask.attribute = MaskAttribute.Carry;
@@ -827,7 +1028,10 @@ public class MyPlayer : MonoBehaviour
 
 			//攻撃休憩時間の終了
 			if (m_currentAttackBreakTime <= 0)
+			{
 				m_attackTime = -1;
+				m_isCounter = false;
+			}
 		}
 		else
 		{
@@ -876,6 +1080,10 @@ public class MyPlayer : MonoBehaviour
 			if (Attack2())
 				return;
 		}
+
+		//マスクを装着and必殺技を使っていない（必殺技）
+		if (m_maskState != MaskAttribute.Non && !m_wasUseDeathblow)
+			Deathblow();
 
 		//攻撃中
 		if (m_attackTime >= 0)
@@ -951,6 +1159,56 @@ public class MyPlayer : MonoBehaviour
 		}
 
 		return false;
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// 必殺技
+	/// </summary>
+	void Deathblow()
+	{
+		//配達マスクand十字キー上の押下
+		if (m_maskState == MaskAttribute.Carry && m_isPressedCrossKeyUp)
+		{
+			m_wasUseDeathblow = true;
+
+			//必殺技発動モーションにする
+			m_behaviorState = BehaviorStatus.AttackDeathblow1;
+			m_isNotChangeBehaviorState = true;
+			m_currentAttackBreakTime = m_attackTempoTime + m_attackBreakTime;
+		}
+
+		//毒マスクand十字キー左の押下
+		if (m_maskState == MaskAttribute.Virus && m_isPressedCrossKeyLeft)
+		{
+			m_wasUseDeathblow = true;
+
+			//必殺技の発動
+			myCharacter.AttackManagerScript.StartDeathblow2();
+		}
+
+		//鏡マスクand十字キー下の押下
+		if (m_maskState == MaskAttribute.Mirror && m_isPressedCrossKeyDown)
+		{
+			m_wasUseDeathblow = true;
+
+			//必殺技発動モーションにする
+			m_behaviorState = BehaviorStatus.AttackDeathblow3;
+			m_isNotChangeBehaviorState = true;
+			m_currentAttackBreakTime = m_attackTempoTime + m_attackBreakTime;
+		}
+
+		//マジックマスクand十字キー右の押下
+		if (m_maskState == MaskAttribute.Magic && m_isPressedCrossKeyRight)
+		{
+			m_wasUseDeathblow = true;
+
+			//必殺技発動可能状態にする
+			m_behaviorState = BehaviorStatus.AttackDeathblow4;
+			m_isNotChangeBehaviorState = true;
+			m_currentAttackBreakTime = m_magicMaskCounterTime;
+			m_isCounter = true;
+		}
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -1095,16 +1353,18 @@ public class MyPlayer : MonoBehaviour
 	void CheckState()
 	{
 		//攻撃２のコンボ数
-		if (m_maskState == MaskAttribute.Magic)
-			m_numAttack2Combo = 3;
-		else
-			m_numAttack2Combo = 1;
+		m_numAttack2Combo = (m_maskState == MaskAttribute.Magic) ? 3 : 1;
 
-		//動きがあるか
-		if (m_direction.sqrMagnitude > 0)
-			m_behaviorState = BehaviorStatus.Walk;
-		else
-			m_behaviorState = BehaviorStatus.Idle;
+		//状態を変えない
+		if (m_isNotChangeBehaviorState)
+		{
+			m_isNotChangeBehaviorState = false;
+			return;
+		}
+
+		//動きがあるか、ダメージを受けているか
+		m_behaviorState = (m_direction.sqrMagnitude > 0) ? BehaviorStatus.Walk
+			: (m_behaviorState == BehaviorStatus.Damage) ? BehaviorStatus.Damage : BehaviorStatus.Idle;
 
 		//攻撃が終了しているor攻撃していない
 		if (m_attackTime > m_attackTempoTime || m_attackTime == -1)
@@ -1166,6 +1426,9 @@ public class MyPlayer : MonoBehaviour
 			case BehaviorStatus.Idle:
 				Anim.SetTrigger(TRANS_IDLE);
 				break;
+			case BehaviorStatus.Damage:
+				Anim.SetTrigger(TRANS_DAMAGE);
+				break;
 			case BehaviorStatus.Attack1A:
 				Anim.SetTrigger(TRANS_ATTACK1A);
 				break;
@@ -1195,6 +1458,15 @@ public class MyPlayer : MonoBehaviour
 				break;
 			case BehaviorStatus.Attack2Kind4C:
 				Anim.SetTrigger(TRANS_ATTACK2_KIND4C);
+				break;
+			case BehaviorStatus.AttackDeathblow1:
+				Anim.SetTrigger(TRANS_ATTACK_DEATHBLOW1);
+				break;
+			case BehaviorStatus.AttackDeathblow3:
+				Anim.SetTrigger(TRANS_ATTACK_DEATHBLOW3);
+				break;
+			case BehaviorStatus.AttackDeathblow4:
+				Anim.SetTrigger(TRANS_ATTACK_DEATHBLOW4);
 				break;
 		}
 	}
@@ -1312,24 +1584,28 @@ public class MyPlayer : MonoBehaviour
 				//配達マスク
 				m_maskState = MaskAttribute.Carry;
 				m_carryMask.isUse = true;
+				m_wasUseDeathblow = false;
 			}
 			else if (m_isPressedCrossKeyLeft && m_virusMask.isAvailable)
 			{
 				//ウイルスマスク
 				m_maskState = MaskAttribute.Virus;
 				m_virusMask.isUse = true;
+				m_wasUseDeathblow = false;
 			}
 			else if (m_isPressedCrossKeyDown && m_mirrorMask.isAvailable)
 			{
 				//鏡マスク
 				m_maskState = MaskAttribute.Mirror;
 				m_mirrorMask.isUse = true;
+				m_wasUseDeathblow = false;
 			}
 			else if (m_isPressedCrossKeyRight && m_magicMask.isAvailable)
 			{
 				//マジックマスク
 				m_maskState = MaskAttribute.Magic;
 				m_magicMask.isUse = true;
+				m_wasUseDeathblow = false;
 			}
 		}
 	}
@@ -1370,7 +1646,147 @@ public class MyPlayer : MonoBehaviour
 	/// <param name="other">重なったもの</param>
 	void OnTriggerEnter(Collider other)
 	{
-		Debug.Log(other.tag);
+		//敵からの攻撃を受ける
+		if(other.tag.Equals(AttackManagerTag.ENEMY_ATTACK_RANGE_TAG))
+		{
+			m_workMyAttack = other.GetComponent<MyAttack>();
+			
+			//カウンター中
+			if (m_isCounter)
+				myCharacter.AttackManagerScript.StartDeathblow4();
+			else if(m_workMyAttack)
+				Damage(m_workMyAttack);
+
+			m_workMyAttack = null;
+		}
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// ダメージ
+	/// </summary>
+	/// <param name="attack">攻撃</param>
+	void Damage(MyAttack attack)
+	{
+		//待機状態orダメージ状態だった
+		if (m_behaviorState == BehaviorStatus.Idle || m_behaviorState == BehaviorStatus.Damage)
+		{
+			//アニメーション
+			m_behaviorStatePrev = BehaviorStatus.Idle;
+			m_behaviorState = BehaviorStatus.Damage;
+			m_isNotChangeBehaviorState = true;
+		}
+
+		m_hp -= attack.Power;
+
+		//死亡
+		if(m_hp <= 0)
+		{
+			Debug.Log("死にましたよ");
+		}
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// 継続的重なり判定
+	/// </summary>
+	/// <param name="other">重なり続けているもの</param>
+	void OnTriggerStay(Collider other)
+	{
+		// 敵からの攻撃を受ける
+		if (other.tag.Equals(AttackManagerTag.ENEMY_ATTACK_RANGE_TAG))
+		{
+			m_workMyAttack = other.GetComponent<MyAttack>();
+
+			//ダメージ
+			if (m_workMyAttack)
+				DamageAccumulation(m_workMyAttack);
+
+			m_workMyAttack = null;
+		}
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// ダメージの蓄積
+	/// </summary>
+	/// <param name="attack">攻撃</param>
+	void DamageAccumulation(MyAttack attack)
+	{
+		m_damageAccumulationTime += Time.deltaTime;
+
+		//攻撃属性
+		switch(attack.Attribute)
+		{
+			case MaskAttribute.Virus:
+				//ウイルス耐性時間
+				if (m_damageAccumulationTime >= m_virusToleranceTime)
+				{
+					//ダメージ
+					m_damageAccumulationTime = 0;
+					Damage(attack);
+				}
+				break;
+		}
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// アイドルアニメーションスタート
+	/// </summary>
+	public void StartAnimIdle()
+	{
+		Anim.SetTrigger(TRANS_IDLE);
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// 走るアニメーションスタート
+	/// </summary>
+	public void StartAnimRun()
+	{
+		Anim.SetTrigger(TRANS_RUN);
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	///	必殺技１の攻撃のアニメーションスタート
+	/// </summary>
+	public void StartAnimAttackDeathblow1A()
+	{
+		Anim.SetTrigger(TRANS_ATTACK_DEATHBLOW1A);
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// 必殺技２の攻撃のアニメーションスタート
+	/// </summary>
+	public void StartAnimAttackDeathblow2A()
+	{
+		//終了後のアニメーションを反映させるため
+		m_behaviorStatePrev = BehaviorStatus.Attack2;
+
+		//アニメーションと反動
+		Anim.SetTrigger(TRANS_ATTACK_DEATHBLOW2A);
+		m_currentAttackBreakTime = m_attackBreakTime;
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// 必殺技３の攻撃のアニメーションスタート
+	/// </summary>
+	public void StartAnimAttackDethblow3A()
+	{
+		Anim.SetTrigger(TRANS_ATTACK_DEATHBLOW3A);
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// 必殺技４の攻撃のアニメーションスタート
+	/// </summary>
+	public void StartAnimAttackDethblow4A()
+	{
+		Anim.SetTrigger(TRANS_ATTACK_DEATHBLOW4A);
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -1395,7 +1811,7 @@ public class MyPlayer : MonoBehaviour
 
 		//攻撃範囲の直方体の構築
 		m_workMyCube.SetCube(m_workVector3Array[0], m_workVector3Array[1], m_workVector3Array[2], m_workVector3Array[3],
-			m_workVector3Array[4], m_workVector3Array[5], m_workVector3Array[6], m_workVector3Array[6]);
+			m_workVector3Array[4], m_workVector3Array[5], m_workVector3Array[6], m_workVector3Array[7]);
 
 		//攻撃範囲の生成
 		myCharacter.AttackManagerScript.PlayerAttack(m_workMyCube, MaskAttribute.Non, m_powerAttack1, m_effectiveAttackTime);
@@ -1419,7 +1835,7 @@ public class MyPlayer : MonoBehaviour
 
 		//攻撃範囲の直方体の構築
 		m_workMyCube.SetCube(m_workVector3Array[0], m_workVector3Array[1], m_workVector3Array[2], m_workVector3Array[3],
-			m_workVector3Array[4], m_workVector3Array[5], m_workVector3Array[6], m_workVector3Array[6]);
+			m_workVector3Array[4], m_workVector3Array[5], m_workVector3Array[6], m_workVector3Array[7]);
 
 		//攻撃範囲の生成
 		myCharacter.AttackManagerScript.PlayerAttack(m_workMyCube, MaskAttribute.Non, m_powerAttack1, m_effectiveAttackTime);
@@ -1443,7 +1859,7 @@ public class MyPlayer : MonoBehaviour
 
 		//攻撃範囲の直方体の構築
 		m_workMyCube.SetCube(m_workVector3Array[0], m_workVector3Array[1], m_workVector3Array[2], m_workVector3Array[3],
-			m_workVector3Array[4], m_workVector3Array[5], m_workVector3Array[6], m_workVector3Array[6]);
+			m_workVector3Array[4], m_workVector3Array[5], m_workVector3Array[6], m_workVector3Array[7]);
 
 		//攻撃範囲の生成
 		myCharacter.AttackManagerScript.PlayerAttack(m_workMyCube, MaskAttribute.Non, m_powerAttack1, m_effectiveAttackTime);
@@ -1467,7 +1883,7 @@ public class MyPlayer : MonoBehaviour
 
 		//攻撃範囲の直方体の構築
 		m_workMyCube.SetCube(m_workVector3Array[0], m_workVector3Array[1], m_workVector3Array[2], m_workVector3Array[3],
-			m_workVector3Array[4], m_workVector3Array[5], m_workVector3Array[6], m_workVector3Array[6]);
+			m_workVector3Array[4], m_workVector3Array[5], m_workVector3Array[6], m_workVector3Array[7]);
 
 		//攻撃範囲の生成
 		myCharacter.AttackManagerScript.PlayerAttack(m_workMyCube, m_maskState, m_powerAttack2, m_effectiveAttackTime);
@@ -1491,7 +1907,7 @@ public class MyPlayer : MonoBehaviour
 
 		//攻撃範囲の直方体の構築
 		m_workMyCube.SetCube(m_workVector3Array[0], m_workVector3Array[1], m_workVector3Array[2], m_workVector3Array[3],
-			m_workVector3Array[4], m_workVector3Array[5], m_workVector3Array[6], m_workVector3Array[6]);
+			m_workVector3Array[4], m_workVector3Array[5], m_workVector3Array[6], m_workVector3Array[7]);
 
 		//攻撃範囲の生成
 		myCharacter.AttackManagerScript.PlayerAttack(m_workMyCube, m_maskState, m_powerAttack2, m_effectiveAttackTime);
@@ -1515,7 +1931,7 @@ public class MyPlayer : MonoBehaviour
 
 		//攻撃範囲の直方体の構築
 		m_workMyCube.SetCube(m_workVector3Array[0], m_workVector3Array[1], m_workVector3Array[2], m_workVector3Array[3],
-			m_workVector3Array[4], m_workVector3Array[5], m_workVector3Array[6], m_workVector3Array[6]);
+			m_workVector3Array[4], m_workVector3Array[5], m_workVector3Array[6], m_workVector3Array[7]);
 
 		//攻撃範囲の生成
 		myCharacter.AttackManagerScript.PlayerAttack(m_workMyCube, m_maskState, m_powerAttack2, m_effectiveAttackTime);
@@ -1539,7 +1955,7 @@ public class MyPlayer : MonoBehaviour
 
 		//攻撃範囲の直方体の構築
 		m_workMyCube.SetCube(m_workVector3Array[0], m_workVector3Array[1], m_workVector3Array[2], m_workVector3Array[3],
-			m_workVector3Array[4], m_workVector3Array[5], m_workVector3Array[6], m_workVector3Array[6]);
+			m_workVector3Array[4], m_workVector3Array[5], m_workVector3Array[6], m_workVector3Array[7]);
 
 		//攻撃範囲の生成
 		myCharacter.AttackManagerScript.PlayerAttack(m_workMyCube, m_maskState, m_powerAttack2, m_effectiveAttackTime);
@@ -1563,7 +1979,7 @@ public class MyPlayer : MonoBehaviour
 
 		//攻撃範囲の直方体の構築
 		m_workMyCube.SetCube(m_workVector3Array[0], m_workVector3Array[1], m_workVector3Array[2], m_workVector3Array[3],
-			m_workVector3Array[4], m_workVector3Array[5], m_workVector3Array[6], m_workVector3Array[6]);
+			m_workVector3Array[4], m_workVector3Array[5], m_workVector3Array[6], m_workVector3Array[7]);
 
 		//攻撃範囲の生成
 		myCharacter.AttackManagerScript.PlayerAttack(m_workMyCube, m_maskState, m_powerAttack2 / 3, m_effectiveAttackTime);
@@ -1587,7 +2003,7 @@ public class MyPlayer : MonoBehaviour
 
 		//攻撃範囲の直方体の構築
 		m_workMyCube.SetCube(m_workVector3Array[0], m_workVector3Array[1], m_workVector3Array[2], m_workVector3Array[3],
-			m_workVector3Array[4], m_workVector3Array[5], m_workVector3Array[6], m_workVector3Array[6]);
+			m_workVector3Array[4], m_workVector3Array[5], m_workVector3Array[6], m_workVector3Array[7]);
 
 		//攻撃範囲の生成
 		myCharacter.AttackManagerScript.PlayerAttack(m_workMyCube, m_maskState, m_powerAttack2MagicMask, m_effectiveAttackTime);
@@ -1611,7 +2027,7 @@ public class MyPlayer : MonoBehaviour
 
 		//攻撃範囲の直方体の構築
 		m_workMyCube.SetCube(m_workVector3Array[0], m_workVector3Array[1], m_workVector3Array[2], m_workVector3Array[3],
-			m_workVector3Array[4], m_workVector3Array[5], m_workVector3Array[6], m_workVector3Array[6]);
+			m_workVector3Array[4], m_workVector3Array[5], m_workVector3Array[6], m_workVector3Array[7]);
 
 		//攻撃範囲の生成
 		myCharacter.AttackManagerScript.PlayerAttack(m_workMyCube, m_maskState, m_powerAttack2MagicMask, m_effectiveAttackTime);
@@ -1635,9 +2051,71 @@ public class MyPlayer : MonoBehaviour
 
 		//攻撃範囲の直方体の構築
 		m_workMyCube.SetCube(m_workVector3Array[0], m_workVector3Array[1], m_workVector3Array[2], m_workVector3Array[3],
-			m_workVector3Array[4], m_workVector3Array[5], m_workVector3Array[6], m_workVector3Array[6]);
+			m_workVector3Array[4], m_workVector3Array[5], m_workVector3Array[6], m_workVector3Array[7]);
 
 		//攻撃範囲の生成
 		myCharacter.AttackManagerScript.PlayerAttack(m_workMyCube, m_maskState, m_powerAttack2MagicMask, m_effectiveAttackTime);
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// 必殺技の攻撃１
+	/// </summary>
+	void AttackDeathblow1Event()
+	{
+		//ワールド座標でボスの位置とプレイヤーの方向
+		m_workMatrix.SetTRS(transform.position, transform.rotation, Vector3.one);
+
+		//攻撃範囲頂点の決定
+		for (var i = 0; i < MyCube.NUM_VERTICES; i++)
+		{
+			//絶対的な攻撃範囲の決定
+			m_workVector3Array[i] = m_workMatrix.MultiplyPoint(ATTACK_DEATHBLOW1_VERTECES[i]);
+		}
+
+		//攻撃範囲の直方体の構築
+		m_workMyCube.SetCube(m_workVector3Array[0], m_workVector3Array[1], m_workVector3Array[2], m_workVector3Array[3],
+			m_workVector3Array[4], m_workVector3Array[5], m_workVector3Array[6], m_workVector3Array[7]);
+
+		//攻撃範囲の生成
+		myCharacter.AttackManagerScript.PlayerAttack(m_workMyCube, m_maskState, m_powerAttackDeathblow1PerBlow, m_effectiveAttackTime, true);
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// 必殺技の攻撃２A
+	/// </summary>
+	void AttackDeathblow2Event()
+	{
+		//攻撃範囲の１２角柱の構築
+		m_workMyPrism12.SetMyPrism12(m_height);
+
+		//攻撃範囲の生成
+		myCharacter.AttackManagerScript.PlayerAttack(m_workMyPrism12, transform.position, m_maskState, m_powerAttackDeathblow2, m_effectiveDethblow2Time,
+			false, m_extensionTimeDeathblow2, m_extensionDistanceDeathblow2);
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// 必殺技の攻撃３
+	/// </summary>
+	void AttackDeathblow3Event()
+	{
+		//ワールド座標でボスの位置とプレイヤーの方向
+		m_workMatrix.SetTRS(transform.position, transform.rotation, Vector3.one);
+
+		//攻撃範囲頂点の決定
+		for (var i = 0; i < MyCube.NUM_VERTICES; i++)
+		{
+			//絶対的な攻撃範囲の決定
+			m_workVector3Array[i] = m_workMatrix.MultiplyPoint(ATTACK_DEATHBLOW3_VERTECES[i]);
+		}
+
+		//攻撃範囲の直方体の構築
+		m_workMyCube.SetCube(m_workVector3Array[0], m_workVector3Array[1], m_workVector3Array[2], m_workVector3Array[3],
+			m_workVector3Array[4], m_workVector3Array[5], m_workVector3Array[6], m_workVector3Array[7]);
+
+		//攻撃範囲の生成
+		myCharacter.AttackManagerScript.PlayerAttack(m_workMyCube, m_maskState, m_powerAttackDeathblow3PerBlow, m_effectiveAttackTime, true);
 	}
 }

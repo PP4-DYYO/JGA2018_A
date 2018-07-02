@@ -29,6 +29,10 @@ enum BehaviorStatus
 	/// </summary>
 	Walk,
 	/// <summary>
+	/// ダメージ
+	/// </summary>
+	Damage,
+	/// <summary>
 	/// 攻撃１のAパターン
 	/// </summary>
 	Attack1A,
@@ -178,6 +182,11 @@ public class MyPlayer : MonoBehaviour
 	/// 走る遷移
 	/// </summary>
 	const string TRANS_RUN = "Run";
+
+	/// <summary>
+	/// ダメージを受けるアニメーション
+	/// </summary>
+	const string TRANS_DAMAGE = "Damage";
 
 	/// <summary>
 	/// 攻撃１のパターンA遷移
@@ -1323,8 +1332,9 @@ public class MyPlayer : MonoBehaviour
 			return;
 		}
 
-		//動きがあるか
-		m_behaviorState = (m_direction.sqrMagnitude > 0) ? BehaviorStatus.Walk : BehaviorStatus.Idle;
+		//動きがあるか、ダメージを受けているか
+		m_behaviorState = (m_direction.sqrMagnitude > 0) ? BehaviorStatus.Walk
+			: (m_behaviorState == BehaviorStatus.Damage) ? BehaviorStatus.Damage : BehaviorStatus.Idle;
 
 		//攻撃が終了しているor攻撃していない
 		if (m_attackTime > m_attackTempoTime || m_attackTime == -1)
@@ -1385,6 +1395,9 @@ public class MyPlayer : MonoBehaviour
 				break;
 			case BehaviorStatus.Idle:
 				Anim.SetTrigger(TRANS_IDLE);
+				break;
+			case BehaviorStatus.Damage:
+				Anim.SetTrigger(TRANS_DAMAGE);
 				break;
 			case BehaviorStatus.Attack1A:
 				Anim.SetTrigger(TRANS_ATTACK1A);
@@ -1603,12 +1616,33 @@ public class MyPlayer : MonoBehaviour
 	/// <param name="other">重なったもの</param>
 	void OnTriggerEnter(Collider other)
 	{
+		if (other.GetComponent<MyAttack>())
+			Damage(other.GetComponent<MyAttack>());
 		//敵からの攻撃を受ける
 		if(other.tag.Equals(AttackManagerTag.ENEMY_ATTACK_RANGE_TAG))
 		{
 			//カウンター中
 			if (m_isCounter)
 				myCharacter.AttackManagerScript.StartDeathblow4();
+			else
+				Damage(other.GetComponent<MyAttack>());
+		}
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// ダメージ
+	/// </summary>
+	/// <param name="attack">攻撃</param>
+	void Damage(MyAttack attack)
+	{
+		//待機状態orダメージ状態だった
+		if (m_behaviorState == BehaviorStatus.Idle || m_behaviorState == BehaviorStatus.Damage)
+		{
+			//アニメーション
+			m_behaviorStatePrev = BehaviorStatus.Idle;
+			m_behaviorState = BehaviorStatus.Damage;
+			m_isNotChangeBehaviorState = true;
 		}
 	}
 

@@ -135,6 +135,28 @@ public class MyPlayer : MonoBehaviour
 	{
 		get { return m_height; }
 	}
+
+	/// <summary>
+	/// 最大HP
+	/// </summary>
+	[SerializeField]
+	int m_maxHp;
+
+	/// <summary>
+	/// ウイルス耐性時間
+	/// </summary>
+	[SerializeField]
+	float m_virusToleranceTime;
+
+	/// <summary>
+	/// HP
+	/// </summary>
+	int m_hp;
+
+	/// <summary>
+	/// ダメージの蓄積時間
+	/// </summary>
+	float m_damageAccumulationTime;
 	#endregion
 
 	#region 外部のインスタンス
@@ -871,6 +893,11 @@ public class MyPlayer : MonoBehaviour
 	/// 作業用の１２角柱
 	/// </summary>
 	MyPrism12 m_workMyPrism12 = new MyPrism12(0);
+
+	/// <summary>
+	/// 作業用の攻撃
+	/// </summary>
+	MyAttack m_workMyAttack;
 	#endregion
 
 #if DEBUG
@@ -908,6 +935,9 @@ public class MyPlayer : MonoBehaviour
 	/// </summary>
 	void Start()
 	{
+		//プレイヤー情報
+		m_hp = m_maxHp;
+
 		//アクセスしやすいように
 		m_camera = myCharacter.GameScript.CameraScript;
 
@@ -1616,16 +1646,18 @@ public class MyPlayer : MonoBehaviour
 	/// <param name="other">重なったもの</param>
 	void OnTriggerEnter(Collider other)
 	{
-		if (other.GetComponent<MyAttack>())
-			Damage(other.GetComponent<MyAttack>());
 		//敵からの攻撃を受ける
 		if(other.tag.Equals(AttackManagerTag.ENEMY_ATTACK_RANGE_TAG))
 		{
+			m_workMyAttack = other.GetComponent<MyAttack>();
+			
 			//カウンター中
 			if (m_isCounter)
 				myCharacter.AttackManagerScript.StartDeathblow4();
-			else
-				Damage(other.GetComponent<MyAttack>());
+			else if(m_workMyAttack)
+				Damage(m_workMyAttack);
+
+			m_workMyAttack = null;
 		}
 	}
 
@@ -1643,6 +1675,58 @@ public class MyPlayer : MonoBehaviour
 			m_behaviorStatePrev = BehaviorStatus.Idle;
 			m_behaviorState = BehaviorStatus.Damage;
 			m_isNotChangeBehaviorState = true;
+		}
+
+		m_hp -= attack.Power;
+
+		//死亡
+		if(m_hp <= 0)
+		{
+			Debug.Log("死にましたよ");
+		}
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// 継続的重なり判定
+	/// </summary>
+	/// <param name="other">重なり続けているもの</param>
+	void OnTriggerStay(Collider other)
+	{
+		// 敵からの攻撃を受ける
+		if (other.tag.Equals(AttackManagerTag.ENEMY_ATTACK_RANGE_TAG))
+		{
+			m_workMyAttack = other.GetComponent<MyAttack>();
+
+			//ダメージ
+			if (m_workMyAttack)
+				DamageAccumulation(m_workMyAttack);
+
+			m_workMyAttack = null;
+		}
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// ダメージの蓄積
+	/// </summary>
+	/// <param name="attack">攻撃</param>
+	void DamageAccumulation(MyAttack attack)
+	{
+		m_damageAccumulationTime += Time.deltaTime;
+
+		//攻撃属性
+		switch(attack.Attribute)
+		{
+			case MaskAttribute.Virus:
+				//ウイルス耐性時間
+				if (m_damageAccumulationTime >= m_virusToleranceTime)
+				{
+					//ダメージ
+					m_damageAccumulationTime = 0;
+					Damage(attack);
+				}
+				break;
 		}
 	}
 

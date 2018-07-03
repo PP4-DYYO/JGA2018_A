@@ -10,38 +10,71 @@ using UnityEngine;
 public class MyWarpManager : MonoBehaviour
 {
     /// <summary>
-    /// ワープのオブジェクト「unity上で設定すること」
+    /// ワープのゲームオブジェクト
     /// </summary>
-    public GameObject warpA;
-    public GameObject warpA_;
-    public GameObject warpB;
-    public GameObject warpB_;
-    public GameObject warpC;
-    public GameObject warpC_;
-    public GameObject warpD;
-    public GameObject warpD_;
-    public GameObject warpE1;
-    public GameObject warpE2;
-    public GameObject warpE3;
-    public GameObject warpF;
-    public GameObject warpF_;
-    public GameObject warpG1;
-    public GameObject warpG2;
-    public GameObject warpG3;
-    public GameObject warpH1;
-    public GameObject warpH2;
+    GameObject warpA;
+    GameObject warpA_;
+    GameObject warpB;
+    GameObject warpB_;
+    GameObject warpC;
+    GameObject warpC_;
+    GameObject warpD;
+    GameObject warpD_;
+    GameObject warpE1;
+    GameObject warpE2;
+    GameObject warpE3;
+    GameObject warpF;
+    GameObject warpF_;
+    GameObject warpG1;
+    GameObject warpG2;
+    GameObject warpG3;
+    GameObject warpH1;
+    GameObject warpH2;
 
     /// <summary>
     /// 時間計測用
     /// </summary>
-    float m_time =0;
+    float m_time = 0;
 
 
     /// <summary>
-    /// ワープしよう可能状態
+    /// ワープ使用可能状態
     /// </summary>
     bool m_canUseWarp;
 
+
+    /// <summary>
+    /// スクリプト
+    /// </summary>
+    MyTransition myTransition;
+
+    //----------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// 最初に代入
+    /// </summary>
+    void Start()
+    {
+        myTransition = GameObject.Find("TransitionPanel").GetComponent<MyTransition>();
+        warpA = GameObject.Find("WarpA");
+        warpA_ = GameObject.Find("WarpA_");
+        warpB = GameObject.Find("WarpB");
+        warpB_ = GameObject.Find("WarpB_");
+        warpC = GameObject.Find("WarpC");
+        warpC_ = GameObject.Find("WarpC_");
+        warpD = GameObject.Find("WarpD");
+        warpD_ = GameObject.Find("WarpD_");
+        warpF = GameObject.Find("WarpF");
+        warpF_ = GameObject.Find("WarpF_");
+
+        warpE1 = GameObject.Find("WarpE1");
+        warpE2 = GameObject.Find("WarpE2");
+        warpE3 = GameObject.Find("WarpE3");
+        warpG1 = GameObject.Find("WarpG1");
+        warpG2 = GameObject.Find("WarpG2");
+        warpG3 = GameObject.Find("WarpG3");
+        warpH1 = GameObject.Find("WarpH1");
+        warpH2 = GameObject.Find("WarpH2");
+    }
 
     //----------------------------------------------------------------------------------------------------
     /// <summary>
@@ -64,7 +97,7 @@ public class MyWarpManager : MonoBehaviour
     /// <summary>
     /// ワープ処理
     /// </summary>
-    public void Warp(string warppointName,GameObject player)
+    public void Warp(string warppointName, GameObject player)
     {
         if (m_canUseWarp == true)
         {
@@ -144,6 +177,7 @@ public class MyWarpManager : MonoBehaviour
                 player.transform.position = warpH1.transform.position;
             }
             m_canUseWarp = false;
+            myTransition.StartTransition();
         }
     }
 }

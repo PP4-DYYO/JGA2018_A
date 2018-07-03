@@ -5,22 +5,17 @@ using UnityEngine;
 public class MyBombPointCtrl : MonoBehaviour
 {
     /// <summary>
-    //プレイヤーのオブジェクト//
+    // スクリプト
     /// </summary>
-    GameObject m_PlayerObjct;
-
-    /// <summary>
-    //プレイヤーの名前//
-    /// </summary>
-    const string PLAYER_OBJECT_NAME = "DummyPlayer";
+    MyAiBoss myAiBoss;
 
     //----------------------------------------------------------------------------------------------------
     /// <summary>
-    /// 初期状態
+    /// 設定
     /// </summary>
     void Start()
     {
-        m_PlayerObjct = GameObject.Find(PLAYER_OBJECT_NAME);
+        myAiBoss = GameObject.Find("VirusMinister").GetComponent<MyAiBoss>();
     }
 
     //----------------------------------------------------------------------------------------------------
@@ -30,6 +25,6 @@ public class MyBombPointCtrl : MonoBehaviour
     void Update()
     {
         //常にプレイヤーの方向を向く//
-        this.transform.LookAt(new Vector3(m_PlayerObjct.transform.position.x, 0, m_PlayerObjct.transform.position.z));
+        this.transform.LookAt(new Vector3(myAiBoss.PlayerObject.transform.position.x, 0, myAiBoss.PlayerObject.transform.position.z));
     }
 }

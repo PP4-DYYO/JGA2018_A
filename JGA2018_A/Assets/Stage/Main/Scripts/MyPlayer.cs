@@ -29,6 +29,10 @@ enum BehaviorStatus
 	/// </summary>
 	Walk,
 	/// <summary>
+	/// 走る
+	/// </summary>
+	Run,
+	/// <summary>
 	/// ジャンプ
 	/// </summary>
 	Jump,
@@ -396,6 +400,12 @@ public class MyPlayer : MonoBehaviour
 	float m_walkSpeed;
 
 	/// <summary>
+	/// 走る速度
+	/// </summary>
+	[SerializeField]
+	float m_runSpeed;
+
+	/// <summary>
 	/// 速度
 	/// </summary>
 	float m_speed;
@@ -428,7 +438,7 @@ public class MyPlayer : MonoBehaviour
 	/// </summary>
 	[SerializeField]
 	int m_numAttackDivisionsGuard;
-	
+
 	/// <summary>
 	/// ガードで加わる力
 	/// </summary>
@@ -440,6 +450,7 @@ public class MyPlayer : MonoBehaviour
 	/// </summary>
 	bool m_isGuard;
 	#endregion
+
 	#region 攻撃
 	[Header("攻撃")]
 	/// <summary>
@@ -820,9 +831,14 @@ public class MyPlayer : MonoBehaviour
 	const string VERTICAL = "Vertical";
 
 	/// <summary>
-	/// ジャンプ軸
+	/// ジャンプ
 	/// </summary>
 	const string JUMP = "Jump";
+
+	/// <summary>
+	/// ダッシュ
+	/// </summary>
+	const string DASH = "Dash";
 
 	/// <summary>
 	/// 攻撃１
@@ -1323,7 +1339,7 @@ public class MyPlayer : MonoBehaviour
 			return;
 
 		//ガードできる状態でない
-		if (m_behaviorState != BehaviorStatus.Guard && 
+		if (m_behaviorState != BehaviorStatus.Guard &&
 			m_behaviorState != BehaviorStatus.Idle && m_behaviorState != BehaviorStatus.Walk && m_behaviorState != BehaviorStatus.Damage)
 			return;
 
@@ -1336,8 +1352,12 @@ public class MyPlayer : MonoBehaviour
 	/// </summary>
 	void Speed()
 	{
+		//走る
+		m_speed = Input.GetKey(KeyCode.LeftShift) ? m_runSpeed : m_walkSpeed;
+		//Debug.Log(Input.GetKey(DASH));
+
 		//ガード中は速度なし
-		m_speed = m_isGuard ? 0 : m_walkSpeed;
+		m_speed = m_isGuard ? 0 : m_speed;
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -1438,16 +1458,8 @@ public class MyPlayer : MonoBehaviour
 			return;
 		}
 
-		//動きがあるか、ダメージを受けているか
-		m_behaviorState = (m_direction.sqrMagnitude > 0) ? BehaviorStatus.Walk
-			: (m_behaviorState == BehaviorStatus.Damage) ? BehaviorStatus.Damage : BehaviorStatus.Idle;
-
-		//静止か歩いている時にジャンプ
-		m_behaviorState = (m_jumpForceCountTime != -1 && (m_behaviorState == BehaviorStatus.Walk || m_behaviorState == BehaviorStatus.Idle)) ?
-			BehaviorStatus.Jump : m_behaviorState;
-
-		//ガード可能ならガード
-		m_behaviorState = m_isGuard ? BehaviorStatus.Guard : m_behaviorState;
+		//アクション状態を調べる
+		CheckActionState();
 
 		//攻撃が終了しているor攻撃していない
 		if (m_attackTime > m_attackTempoTime || m_attackTime == -1)
@@ -1455,6 +1467,36 @@ public class MyPlayer : MonoBehaviour
 
 		//攻撃
 		CheckStateAttack();
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// アクション状態を調べる
+	/// </summary>
+	void CheckActionState()
+	{
+		//動きがある
+		if(m_direction.sqrMagnitude > 0)
+		{
+			//歩いている
+			if (m_speed == m_walkSpeed)
+				m_behaviorState = BehaviorStatus.Walk;
+			else
+				m_behaviorState = BehaviorStatus.Run;
+		}
+		else if(m_behaviorState != BehaviorStatus.Damage)
+		{
+			//ダメージ状態でなかった
+			m_behaviorState = BehaviorStatus.Idle;
+		}
+
+		//ジャンプ中andジャンプ状態にしてよい状態
+		if (m_jumpForceCountTime != -1 &&
+			(m_behaviorState == BehaviorStatus.Walk || m_behaviorState == BehaviorStatus.Idle || m_behaviorState == BehaviorStatus.Run))
+			m_behaviorState = BehaviorStatus.Jump;
+
+		//ガード可能ならガード
+		m_behaviorState = m_isGuard ? BehaviorStatus.Guard : m_behaviorState;
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -1505,6 +1547,9 @@ public class MyPlayer : MonoBehaviour
 		{
 			case BehaviorStatus.Walk:
 				Anim.SetTrigger(TRANS_WALK);
+				break;
+			case BehaviorStatus.Run:
+				Anim.SetTrigger(TRANS_RUN);
 				break;
 			case BehaviorStatus.Idle:
 				Anim.SetTrigger(TRANS_IDLE);
@@ -1769,7 +1814,7 @@ public class MyPlayer : MonoBehaviour
 		m_hp -= m_isGuard ? (attack.Power / m_numAttackDivisionsGuard) : attack.Power;
 
 		//ガード中
-		if(m_isGuard)
+		if (m_isGuard)
 		{
 			//弾かれる
 			transform.LookAt(attack.CenterPosVertices);

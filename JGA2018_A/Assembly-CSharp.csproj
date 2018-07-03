@@ -75,6 +75,7 @@
      <Compile Include="Assets\Stage\Main\Scripts\MyPositionRotate.cs" />
      <Compile Include="Assets\Stage\Main\Scripts\MyShadowMagicMinisterAI.cs" />
      <Compile Include="Assets\Stage\Main\Scripts\MyStage.cs" />
+     <Compile Include="Assets\Stage\Main\Scripts\MyTransition.cs" />
      <Compile Include="Assets\Stage\Main\Scripts\MyVirusMinisterAI.cs" />
      <Compile Include="Assets\Stage\Main\Scripts\MyWarpManager.cs" />
      <Compile Include="Assets\Stage\Main\Scripts\MyWarpPoint.cs" />

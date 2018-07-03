@@ -11,46 +11,38 @@ using UnityEngine;
 ///<summary>
 ///ウイルス大臣のAI
 ///</summary>
-public class MyVirusMinisterAI : MonoBehaviour
+public class MyVirusMinisterAI : MyAiBoss
 {
-    /// <summary>
-    /// 行動制御用(時間)
-    /// </summary>
-    int m_gameTime;
-
-    /// <summary>
-    //スクリプト参照用//
-    /// </summary>
-    MyAiBoss m_MyAiBoss;
 
     //----------------------------------------------------------------------------------------------------
     /// <summary>
     /// 初期状態設定
     /// </summary>
-    void Start()
+    protected override void Start()
     {
-        m_MyAiBoss = this.GetComponent<MyAiBoss>();
-        m_MyAiBoss.m_attackNum = 1;
+        m_attackNum = 1;
 
-        m_MyAiBoss.m_myObjectName = this.gameObject.name;
-        m_MyAiBoss.m_playerObject = GameObject.Find(m_MyAiBoss.m_playerObjectName);
-        m_MyAiBoss.m_hitPoint = 310;
-        m_MyAiBoss.m_attack = 50;
-        m_MyAiBoss.m_perceivedRange = 5;
-        m_MyAiBoss.m_distance = 100;
-        m_MyAiBoss.m_isAttacked = false;
-        m_MyAiBoss.m_attackInterval = 120;
-        m_MyAiBoss.m_step = 0.03f;
-        m_MyAiBoss.m_moveX = 0;
-        m_MyAiBoss.m_moveZ = 0;
-        m_MyAiBoss.m_movingX = false;
-        m_MyAiBoss.m_movingZ = false;
-        m_MyAiBoss.m_specialAttackLimit = 2;
-        m_MyAiBoss.m_specialAttackCount = 0;
-        m_MyAiBoss.m_playerAttacked = false;
-        m_MyAiBoss.m_aimode = MyAiBoss.AIMode.WAIT;
+        m_myObjectName = this.gameObject.name;
+        m_playerObject = GameObject.Find(m_playerObjectName);
+        m_hitPoint = 310;
+        m_attack = 50;
+        m_perceivedRange = 5;
+        m_distance = 100;
+        m_isAttacked = false;
+        m_attackInterval = 2.0f;
+        m_step = 0.03f;
+        m_moveX = 0;
+        m_moveZ = 0;
+        m_movingX = false;
+        m_movingZ = false;
+        m_specialAttackLimit = 2;
+        m_specialAttackCount = 0;
+        m_playerAttacked = false;
+        m_aimode = AIMode.WAIT;
 
-        m_gameTime = m_MyAiBoss.m_attackInterval;
+        m_gameTime = m_attackInterval;
+
+        base.Start();
     }
 
 
@@ -58,97 +50,93 @@ public class MyVirusMinisterAI : MonoBehaviour
     /// <summary>
     /// 移動、行動
     /// </summary>
-    void Update()
+    protected override void Update()
     {
-        if (m_gameTime < m_MyAiBoss.m_attackInterval)
-        {
-            m_gameTime++;
-        }
-
-        if (m_MyAiBoss.m_aimode != MyAiBoss.AIMode.WAIT)
+        base.Update();
+        if (m_aimode != AIMode.WAIT)
         {
             //距離が５より小さければ離れる
-            if (m_MyAiBoss.m_distance < 5)
+            if (m_distance < 5)
             {
-                m_MyAiBoss.m_aimode = MyAiBoss.AIMode.LEAVE;
+                m_aimode = AIMode.LEAVE;
 
                 //移動の+-切り替え
-                if (m_MyAiBoss.m_movingX == true)
+                if (m_movingX == true)
                 {
-                    m_MyAiBoss.m_moveX = -m_MyAiBoss.m_step;
+                    m_moveX = -m_step;
                 }
                 else
                 {
-                    m_MyAiBoss.m_moveX = m_MyAiBoss.m_step;
+                    m_moveX = m_step;
                 }
-                if (m_MyAiBoss.m_movingZ == true)
+                if (m_movingZ == true)
                 {
-                    m_MyAiBoss.m_moveZ = -m_MyAiBoss.m_step;
+                    m_moveZ = -m_step;
                 }
                 else
                 {
-                    m_MyAiBoss.m_moveZ = m_MyAiBoss.m_step;
+                    m_moveZ = m_step;
                 }
 
             }
             //距離がかなり離れると見失う
-            else if (m_MyAiBoss.m_distance > m_MyAiBoss.m_perceivedRange * 3)
+            else if (m_distance > m_perceivedRange * 3)
             {
-                m_MyAiBoss.m_aimode = MyAiBoss.AIMode.IDLE;
+                m_aimode = AIMode.IDLE;
             }
             else
             {
-                m_MyAiBoss.m_aimode = MyAiBoss.AIMode.ATTACK;
+                m_aimode = AIMode.ATTACK;
             }
         }
 
         //攻撃後次の攻撃までは離れるまたはその場に留まる
-        if (m_MyAiBoss.m_isAttacked == true)
+        if (m_isAttacked == true)
         {
-            m_MyAiBoss.m_aimode = MyAiBoss.AIMode.LEAVE;
-            if (m_MyAiBoss.m_distance > 5)
+            m_aimode = AIMode.LEAVE;
+            if (m_distance > 5)
             {
-                m_MyAiBoss.m_isAttacked = false;
-                m_MyAiBoss.m_aimode = MyAiBoss.AIMode.IDLE;
+                m_isAttacked = false;
+                m_aimode = AIMode.IDLE;
             }
         }
 
         //距離によって爆弾の投げ方が変わる
-        if (m_MyAiBoss.m_aimode == MyAiBoss.AIMode.LEAVE)
+        if (m_aimode == AIMode.LEAVE)
         {
-            m_MyAiBoss.m_attackNum = 0;
-            m_MyAiBoss.m_attack = 70;
+            m_attackNum = 0;
+            m_attack = 70;
         }
         else
         {
-            m_MyAiBoss.m_attackNum = 1;
-            m_MyAiBoss.m_attack = 50;
+            m_attackNum = 1;
+            m_attack = 50;
         }
         //状態によって行動を切り替える
-        switch (m_MyAiBoss.m_aimode)
+        switch (m_aimode)
         {
-            case MyAiBoss.AIMode.IDLE:
+            case AIMode.IDLE:
                 break;
-            case MyAiBoss.AIMode.ATTACK:
+            case AIMode.ATTACK:
                 //一定時間毎に攻撃をする
-                if (m_gameTime >= m_MyAiBoss.m_attackInterval)
+                if (m_gameTime >= m_attackInterval)
                 {
-                    m_MyAiBoss.NomalAttack();
+                    NomalAttack();
                 }
                 break;
-            case MyAiBoss.AIMode.DEFENSE:
+            case AIMode.DEFENSE:
                 break;
-            case MyAiBoss.AIMode.APPROACH:
+            case AIMode.APPROACH:
                 //近づいてこない
                 break;
-            case MyAiBoss.AIMode.LEAVE:
+            case AIMode.LEAVE:
                 //逃げながら投げる
-                if (m_gameTime >= m_MyAiBoss.m_attackInterval)
+                if (m_gameTime >= m_attackInterval)
                 {
-                    m_MyAiBoss.NomalAttack();
+                    NomalAttack();
                 }
                 //離れるまたは近づく(ここは同じ)            
-                this.transform.Translate(new Vector3(m_MyAiBoss.m_moveX, 0, m_MyAiBoss.m_moveZ));
+                this.transform.Translate(new Vector3(m_moveX, 0, m_moveZ));
                 break;
         }
     }

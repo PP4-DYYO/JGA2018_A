@@ -53,7 +53,7 @@ public class MyBombShot : MonoBehaviour
     void Update ()
     {
         //常にプレイヤーの方向を向く//
-        this.transform.LookAt(new Vector3(myAiBoss.m_playerObject.transform.position.x, 0, myAiBoss.m_playerObject.transform.position.z));
+        this.transform.LookAt(new Vector3(myAiBoss.PlayerObject.transform.position.x, 0, myAiBoss.PlayerObject.transform.position.z));
     }
 
     //----------------------------------------------------------------------------------------------------
@@ -62,6 +62,9 @@ public class MyBombShot : MonoBehaviour
     /// </summary>
     public void Shot(int num)
     {
+        //発射点を少しプレイヤー側へ前に出る
+        transform.Translate(new Vector3(0,0,0.5f));
+
         if (num == 1)
         {
             GameObject bombs = GameObject.Instantiate(m_bomb) as GameObject;
@@ -85,5 +88,7 @@ public class MyBombShot : MonoBehaviour
             bombs.transform.position = m_throwPoint.position;
             Debug.Log("爆弾転がし!");
         }
+        //発射点を戻す
+        this.transform.Translate(new Vector3(0, 0, -0.5f));
     }
 }

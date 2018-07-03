@@ -34,7 +34,7 @@ public class MyWarpManager : MonoBehaviour
     /// <summary>
     /// 時間計測用
     /// </summary>
-    int m_time =0;
+    float m_time =0;
 
 
     /// <summary>
@@ -51,8 +51,8 @@ public class MyWarpManager : MonoBehaviour
     {
         if (m_canUseWarp == false)
         {
-            m_time++;
-            if (m_time > 120)
+            m_time += Time.deltaTime;
+            if (m_time > 2)
             {
                 m_time = 0;
                 m_canUseWarp = true;

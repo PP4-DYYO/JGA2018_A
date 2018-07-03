@@ -63,6 +63,16 @@ public class MyAttack : MonoBehaviour
 	}
 
 	/// <summary>
+	/// 頂点の中心位置
+	/// </summary>
+	Vector3 m_centerPosVertices;
+	public Vector3 CenterPosVertices
+	{
+		get { return m_centerPosVertices; }
+		set { m_centerPosVertices = value; }
+	}
+
+	/// <summary>
 	/// 属性
 	/// </summary>
 	MaskAttribute m_attribute;
@@ -124,7 +134,10 @@ public class MyAttack : MonoBehaviour
 		m_mc = GetComponent<MeshCollider>();
 
 		if (m_pos != Vector3.zero)
+		{
 			transform.position = m_pos;
+			m_centerPosVertices += m_pos;
+		}
 	}
 
 	//----------------------------------------------------------------------------------------------------

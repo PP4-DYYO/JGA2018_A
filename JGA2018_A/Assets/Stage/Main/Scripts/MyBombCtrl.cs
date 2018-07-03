@@ -52,7 +52,8 @@ public class MyBombCtrl : MonoBehaviour
         myAiBoss = GameObject.Find("VirusMinister").GetComponent<MyAiBoss>();
         myBombShot = GameObject.Find(m_BombPoint).GetComponent<MyBombShot>();
         myAttackManager = GameObject.Find("AttackManager").GetComponent<MyAttackManager>();
-        myCharacter = myAiBoss.PlayerObject.GetComponent<MyCharacter>();      
+        myCharacter = myAiBoss.PlayerObject.GetComponent<MyCharacter>();
+        m_effectPoint = this.gameObject.transform;
     }
 
     //----------------------------------------------------------------------------------------------------
@@ -88,6 +89,7 @@ public class MyBombCtrl : MonoBehaviour
     {
         //エフェクトプレファブ
         GameObject bombEffect = GameObject.Instantiate(m_bombEffect) as GameObject;
+        Debug.Log(m_effectPoint);
         bombEffect.transform.position = m_effectPoint.position;
 
         //当たり判定Cube

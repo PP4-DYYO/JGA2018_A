@@ -1327,6 +1327,7 @@ public class MyPlayer : MonoBehaviour
 			m_behaviorState != BehaviorStatus.Idle && m_behaviorState != BehaviorStatus.Walk && m_behaviorState != BehaviorStatus.Damage)
 			return;
 
+		Debug.Log(Input.GetButton(GUARD));
 		//m_isGuard = Input.GetKey(GUARD);debug.
 		m_isGuard = Input.GetKey(KeyCode.G);
 	}

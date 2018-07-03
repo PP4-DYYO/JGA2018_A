@@ -32,7 +32,7 @@ public class MyCamera : MonoBehaviour {
 
     //カメラの対象
     [SerializeField]
-    Transform Target;
+    Transform player;
     // カメラとプレイヤーとの距離[m]
     [SerializeField]
     float DistanceToPlayerM = 2f;
@@ -49,11 +49,10 @@ public class MyCamera : MonoBehaviour {
     float rotY = 0.0f;
 
     float duration = 3;
-    Transform rayPosition;
 
     void Start()
     {
-        if (Target == null)
+        if (player == null)
         {
             Debug.LogError("ターゲットが設定されていない");
             Application.Quit();
@@ -66,7 +65,7 @@ public class MyCamera : MonoBehaviour {
         rotY = Input.GetAxis("VerticalR") * Time.deltaTime * rotationSensitivity;
 
 
-        var lookAt = Target.position + Vector3.up * HeightM;
+        var lookAt = player.position + Vector3.up * HeightM;
 
         // 回転
         transform.RotateAround(lookAt, Vector3.up, rotX);
@@ -90,25 +89,29 @@ public class MyCamera : MonoBehaviour {
 
         // カメラを横にずらして中央を開ける
         transform.position = transform.position + transform.right * slideDistanceM;
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-
-        Debug.DrawRay(ray.origin, ray.direction * DistanceToPlayerM, Color.red, duration, false);
-
-        RaycastHit hit = new RaycastHit();
-
-
     }
-    private void Update()
-    {
-        //位置からRayを飛ばす
-        Ray ray = Camera.main.ScreenPointToRay(Target.position);
-        RaycastHit hit;
 
-        if (Physics.Raycast(transform.position,Vector3.back, out hit)){
-            //Rayが当たるオブジェクトがあった場合はそのオブジェクト名をログに表示
+        // 敵とプレイヤーとの間に壁があるかを確認する
+        void update()
+        {
+            //Rayの長さ
+            float maxDistance = 8.0f;
+            // Rayの作成
+            // 自分の位置とプレイヤーの位置から向きベクトルを作成しRayに渡す
+            Vector3 direction = (player.transform.position - transform.position).normalized;
+            Ray ray = new Ray(transform.position, direction);
+            // Rayが衝突したコライダーの情報を得る
+            RaycastHit hit;
 
-            Debug.Log(hit.collider.gameObject.name);
-         }  
+            // Rayの可視化
+            Debug.DrawRay(ray.origin, ray.direction * maxDistance, Color.red);
+            // Rayが衝突したかどうか
+            if (Physics.Raycast(ray, out hit, maxDistance))
+            {
+                if (hit.collider.tag == "Player")
+                {
+                   
+                }
+            }
+        }
     }
-}

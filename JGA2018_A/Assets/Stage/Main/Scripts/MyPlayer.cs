@@ -45,6 +45,10 @@ enum BehaviorStatus
 	/// </summary>
 	Guard,
 	/// <summary>
+	/// 拾う
+	/// </summary>
+	Pickup,
+	/// <summary>
 	/// 攻撃１のAパターン
 	/// </summary>
 	Attack1A,
@@ -231,6 +235,11 @@ public class MyPlayer : MonoBehaviour
 	/// ガード遷移
 	/// </summary>
 	const string TRANS_GUARD = "Guard";
+
+	/// <summary>
+	/// 拾う遷移
+	/// </summary>
+	const string TRANS_PICKUP = "Pickup";
 
 	/// <summary>
 	/// 攻撃１のパターンA遷移
@@ -1483,15 +1492,17 @@ public class MyPlayer : MonoBehaviour
 			else
 				m_behaviorState = BehaviorStatus.Run;
 		}
-		else if(m_behaviorState != BehaviorStatus.Damage)
+		else if(m_behaviorState != BehaviorStatus.Damage) //ダメージ状態でなかった
 		{
-			//ダメージ状態でなかった
-			m_behaviorState = BehaviorStatus.Idle;
+			//拾う状態でない
+			if(m_behaviorState != BehaviorStatus.Pickup)
+				m_behaviorState = BehaviorStatus.Idle;
 		}
 
 		//ジャンプ中andジャンプ状態にしてよい状態
 		if (m_jumpForceCountTime != -1 &&
-			(m_behaviorState == BehaviorStatus.Walk || m_behaviorState == BehaviorStatus.Idle || m_behaviorState == BehaviorStatus.Run))
+			(m_behaviorState == BehaviorStatus.Walk || m_behaviorState == BehaviorStatus.Idle
+			|| m_behaviorState == BehaviorStatus.Run || m_behaviorState == BehaviorStatus.Pickup))
 			m_behaviorState = BehaviorStatus.Jump;
 
 		//ガード可能ならガード
@@ -1561,6 +1572,9 @@ public class MyPlayer : MonoBehaviour
 				break;
 			case BehaviorStatus.Guard:
 				Anim.SetTrigger(TRANS_GUARD);
+				break;
+			case BehaviorStatus.Pickup:
+				Anim.SetTrigger(TRANS_PICKUP);
 				break;
 			case BehaviorStatus.Attack1A:
 				Anim.SetTrigger(TRANS_ATTACK1A);
@@ -1928,6 +1942,17 @@ public class MyPlayer : MonoBehaviour
 	public void StartAnimAttackDethblow4A()
 	{
 		Anim.SetTrigger(TRANS_ATTACK_DEATHBLOW4A);
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// 物を拾う状態にする
+	/// </summary>
+	/// <param name="pickupObj">拾うオブジェクト</param>
+	public void PickupObject(GameObject pickupObj)
+	{
+		m_behaviorState = BehaviorStatus.Pickup;
+		m_isNotChangeBehaviorState = true;
 	}
 
 	//----------------------------------------------------------------------------------------------------

@@ -1353,8 +1353,7 @@ public class MyPlayer : MonoBehaviour
 	void Speed()
 	{
 		//走る
-		m_speed = Input.GetKey(KeyCode.LeftShift) ? m_runSpeed : m_walkSpeed;
-		Debug.Log(Input.GetButton(DASH));
+		m_speed = Input.GetButton(DASH) ? m_runSpeed : m_walkSpeed;
 
 		//ガード中は速度なし
 		m_speed = m_isGuard ? 0 : m_speed;

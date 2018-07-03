@@ -37,6 +37,10 @@ enum BehaviorStatus
 	/// </summary>
 	Damage,
 	/// <summary>
+	///	ガード
+	/// </summary>
+	Guard,
+	/// <summary>
 	/// 攻撃１のAパターン
 	/// </summary>
 	Attack1A,
@@ -215,9 +219,14 @@ public class MyPlayer : MonoBehaviour
 	const string TRANS_JUMP = "Jump";
 
 	/// <summary>
-	/// ダメージを受けるアニメーション
+	/// ダメージ遷移
 	/// </summary>
 	const string TRANS_DAMAGE = "Damage";
+
+	/// <summary>
+	/// ガード遷移
+	/// </summary>
+	const string TRANS_GUARD = "Guard";
 
 	/// <summary>
 	/// 攻撃１のパターンA遷移
@@ -412,6 +421,25 @@ public class MyPlayer : MonoBehaviour
 	float m_jumpForceCountTime;
 	#endregion
 
+	#region アクション
+	[Header("アクション")]
+	/// <summary>
+	/// ガードでの攻撃分割数
+	/// </summary>
+	[SerializeField]
+	int m_numAttackDivisionsGuard;
+	
+	/// <summary>
+	/// ガードで加わる力
+	/// </summary>
+	[SerializeField]
+	float m_powerAddGuard;
+
+	/// <summary>
+	/// ガードしているか
+	/// </summary>
+	bool m_isGuard;
+	#endregion
 	#region 攻撃
 	[Header("攻撃")]
 	/// <summary>
@@ -807,6 +835,11 @@ public class MyPlayer : MonoBehaviour
 	const string ATTACK2 = "Attack2";
 
 	/// <summary>
+	/// ガード
+	/// </summary>
+	const string GUARD = "Guard";
+
+	/// <summary>
 	/// 十字キー上
 	/// </summary>
 	const string CROSS_KEY_UP = "CrossKeyUp";
@@ -1043,14 +1076,17 @@ public class MyPlayer : MonoBehaviour
 			//攻撃
 			Attack();
 
+			//ジャンプ
+			Jump();
+
+			//アクション
+			Action();
+
 			//速度の決定
 			Speed();
 
 			//移動
 			Move();
-
-			//ジャンプ
-			Jump();
 
 			//アニメーション
 			Animation();
@@ -1218,11 +1254,91 @@ public class MyPlayer : MonoBehaviour
 
 	//----------------------------------------------------------------------------------------------------
 	/// <summary>
+	/// ジャンプ
+	/// </summary>
+	void Jump()
+	{
+		//スペースキーを押したandジャンプしていない
+		if (m_isPressedSpace && m_jumpForceCountTime == -1)
+			m_jumpForceCountTime = 0;
+
+		//ジャンプしない
+		if (m_jumpForceCountTime == -1)
+			return;
+
+		//スペースキーを押しているandジャンプする力を入れている間
+		if (Input.GetButton(JUMP) && m_jumpForceCountTime < m_jumpForceTime)
+			RB.AddForce(m_jumpingPower * Vector3.up * (1.0f - m_jumpForceCountTime / m_jumpForceTime));
+
+		//ジャンプ中
+		if (m_jumpForceCountTime >= 0)
+		{
+			m_jumpForceCountTime += Time.deltaTime;
+			RB.AddForce(Vector3.up * m_jumpingPower * Time.deltaTime);
+		}
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// 当たり判定（くっついている）
+	/// </summary>
+	/// <param name="other">当たっているもの</param>
+	void OnCollisionStay(Collision other)
+	{
+		//ジャンプしていない
+		if (m_jumpForceCountTime == -1)
+			return;
+
+		//当たった位置
+		foreach (var point in other.contacts)
+		{
+			//足で乗っている
+			if (point.point.y <= transform.position.y)
+			{
+				//ジャンプしきった時、ジャンプ終了を許可
+				if (m_jumpForceCountTime >= m_jumpForceTime)
+					m_jumpForceCountTime = -1;
+				return;
+			}
+		}
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// アクション
+	/// </summary>
+	void Action()
+	{
+		Guard();
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// ガード
+	/// </summary>
+	void Guard()
+	{
+		//攻撃中orジャンプ中
+		if (m_attackTime != -1 || m_jumpForceCountTime != -1)
+			return;
+
+		//ガードできる状態でない
+		if (m_behaviorState != BehaviorStatus.Guard && 
+			m_behaviorState != BehaviorStatus.Idle && m_behaviorState != BehaviorStatus.Walk && m_behaviorState != BehaviorStatus.Damage)
+			return;
+
+		//m_isGuard = Input.GetKey(GUARD);debug.
+		m_isGuard = Input.GetKey(KeyCode.G);
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
 	/// 速度
 	/// </summary>
 	void Speed()
 	{
-		m_speed = m_walkSpeed;
+		//ガード中は速度なし
+		m_speed = m_isGuard ? 0 : m_walkSpeed;
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -1285,57 +1401,6 @@ public class MyPlayer : MonoBehaviour
 
 	//----------------------------------------------------------------------------------------------------
 	/// <summary>
-	/// ジャンプ
-	/// </summary>
-	void Jump()
-	{
-		//スペースキーを押したandジャンプしていない
-		if (m_isPressedSpace && m_jumpForceCountTime == -1)
-			m_jumpForceCountTime = 0;
-
-		//ジャンプしない
-		if (m_jumpForceCountTime == -1)
-			return;
-
-		//スペースキーを押しているandジャンプする力を入れている間
-		if (Input.GetButton(JUMP) && m_jumpForceCountTime < m_jumpForceTime)
-			RB.AddForce(m_jumpingPower * Vector3.up * (1.0f - m_jumpForceCountTime / m_jumpForceTime));
-
-		//ジャンプ中
-		if (m_jumpForceCountTime >= 0)
-		{
-			m_jumpForceCountTime += Time.deltaTime;
-			RB.AddForce(Vector3.up * m_jumpingPower * Time.deltaTime);
-		}
-	}
-
-	//----------------------------------------------------------------------------------------------------
-	/// <summary>
-	/// 当たり判定（くっついている）
-	/// </summary>
-	/// <param name="other">当たっているもの</param>
-	void OnCollisionStay(Collision other)
-	{
-		//ジャンプしていない
-		if (m_jumpForceCountTime == -1)
-			return;
-
-		//当たった位置
-		foreach (var point in other.contacts)
-		{
-			//足で乗っている
-			if (point.point.y <= transform.position.y)
-			{
-				//ジャンプしきった時、ジャンプ終了を許可
-				if (m_jumpForceCountTime >= m_jumpForceTime)
-					m_jumpForceCountTime = -1;
-				return;
-			}
-		}
-	}
-
-	//----------------------------------------------------------------------------------------------------
-	/// <summary>
 	/// アニメーション関係
 	/// </summary>
 	void Animation()
@@ -1381,6 +1446,9 @@ public class MyPlayer : MonoBehaviour
 		//静止か歩いている時にジャンプ
 		m_behaviorState = (m_jumpForceCountTime != -1 && (m_behaviorState == BehaviorStatus.Walk || m_behaviorState == BehaviorStatus.Idle)) ?
 			BehaviorStatus.Jump : m_behaviorState;
+
+		//ガード可能ならガード
+		m_behaviorState = m_isGuard ? BehaviorStatus.Guard : m_behaviorState;
 
 		//攻撃が終了しているor攻撃していない
 		if (m_attackTime > m_attackTempoTime || m_attackTime == -1)
@@ -1447,6 +1515,9 @@ public class MyPlayer : MonoBehaviour
 				break;
 			case BehaviorStatus.Damage:
 				Anim.SetTrigger(TRANS_DAMAGE);
+				break;
+			case BehaviorStatus.Guard:
+				Anim.SetTrigger(TRANS_GUARD);
 				break;
 			case BehaviorStatus.Attack1A:
 				Anim.SetTrigger(TRANS_ATTACK1A);
@@ -1666,14 +1737,14 @@ public class MyPlayer : MonoBehaviour
 	void OnTriggerEnter(Collider other)
 	{
 		//敵からの攻撃を受ける
-		if(other.tag.Equals(AttackManagerTag.ENEMY_ATTACK_RANGE_TAG))
+		if (other.tag.Equals(AttackManagerTag.ENEMY_ATTACK_RANGE_TAG))
 		{
 			m_workMyAttack = other.GetComponent<MyAttack>();
-			
+
 			//カウンター中
 			if (m_isCounter)
 				myCharacter.AttackManagerScript.StartDeathblow4();
-			else if(m_workMyAttack)
+			else if (m_workMyAttack)
 				Damage(m_workMyAttack);
 
 			m_workMyAttack = null;
@@ -1690,16 +1761,24 @@ public class MyPlayer : MonoBehaviour
 		//待機状態orダメージ状態だった
 		if (m_behaviorState == BehaviorStatus.Idle || m_behaviorState == BehaviorStatus.Damage)
 		{
-			//アニメーション
+			//ダメージアニメーション
 			m_behaviorStatePrev = BehaviorStatus.Idle;
 			m_behaviorState = BehaviorStatus.Damage;
 			m_isNotChangeBehaviorState = true;
 		}
 
-		m_hp -= attack.Power;
+		m_hp -= m_isGuard ? (attack.Power / m_numAttackDivisionsGuard) : attack.Power;
+
+		//ガード中
+		if(m_isGuard)
+		{
+			//弾かれる
+			transform.LookAt(attack.CenterPosVertices);
+			RB.AddForce(-transform.forward * m_powerAddGuard);
+		}
 
 		//死亡
-		if(m_hp <= 0)
+		if (m_hp <= 0)
 		{
 			Debug.Log("死にましたよ");
 		}
@@ -1735,7 +1814,7 @@ public class MyPlayer : MonoBehaviour
 		m_damageAccumulationTime += Time.deltaTime;
 
 		//攻撃属性
-		switch(attack.Attribute)
+		switch (attack.Attribute)
 		{
 			case MaskAttribute.Virus:
 				//ウイルス耐性時間

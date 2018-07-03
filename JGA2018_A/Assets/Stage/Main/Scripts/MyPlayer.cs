@@ -29,6 +29,10 @@ enum BehaviorStatus
 	/// </summary>
 	Walk,
 	/// <summary>
+	/// ジャンプ
+	/// </summary>
+	Jump,
+	/// <summary>
 	/// ダメージ
 	/// </summary>
 	Damage,
@@ -204,6 +208,11 @@ public class MyPlayer : MonoBehaviour
 	/// 走る遷移
 	/// </summary>
 	const string TRANS_RUN = "Run";
+
+	/// <summary>
+	/// 跳ぶ遷移
+	/// </summary>
+	const string TRANS_JUMP = "Jump";
 
 	/// <summary>
 	/// ダメージを受けるアニメーション
@@ -396,11 +405,6 @@ public class MyPlayer : MonoBehaviour
 	/// </summary>
 	[SerializeField]
 	float m_jumpForceTime;
-
-	/// <summary>
-	/// ジャンプしている
-	/// </summary>
-	bool m_isJump;
 
 	/// <summary>
 	/// ジャンプで力を入れている時間
@@ -942,6 +946,7 @@ public class MyPlayer : MonoBehaviour
 		m_camera = myCharacter.GameScript.CameraScript;
 
 		//各プロパティ
+		m_jumpForceCountTime = -1;
 		m_maskState = MaskAttribute.Non;
 		m_attackCount = 0;
 		m_numAttack2Combo = 1;
@@ -1298,7 +1303,10 @@ public class MyPlayer : MonoBehaviour
 
 		//ジャンプ中
 		if (m_jumpForceCountTime >= 0)
+		{
 			m_jumpForceCountTime += Time.deltaTime;
+			RB.AddForce(Vector3.up * m_jumpingPower * Time.deltaTime);
+		}
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -1308,6 +1316,10 @@ public class MyPlayer : MonoBehaviour
 	/// <param name="other">当たっているもの</param>
 	void OnCollisionStay(Collision other)
 	{
+		//ジャンプしていない
+		if (m_jumpForceCountTime == -1)
+			return;
+
 		//当たった位置
 		foreach (var point in other.contacts)
 		{
@@ -1365,6 +1377,10 @@ public class MyPlayer : MonoBehaviour
 		//動きがあるか、ダメージを受けているか
 		m_behaviorState = (m_direction.sqrMagnitude > 0) ? BehaviorStatus.Walk
 			: (m_behaviorState == BehaviorStatus.Damage) ? BehaviorStatus.Damage : BehaviorStatus.Idle;
+
+		//静止か歩いている時にジャンプ
+		m_behaviorState = (m_jumpForceCountTime != -1 && (m_behaviorState == BehaviorStatus.Walk || m_behaviorState == BehaviorStatus.Idle)) ?
+			BehaviorStatus.Jump : m_behaviorState;
 
 		//攻撃が終了しているor攻撃していない
 		if (m_attackTime > m_attackTempoTime || m_attackTime == -1)
@@ -1425,6 +1441,9 @@ public class MyPlayer : MonoBehaviour
 				break;
 			case BehaviorStatus.Idle:
 				Anim.SetTrigger(TRANS_IDLE);
+				break;
+			case BehaviorStatus.Jump:
+				Anim.SetTrigger(TRANS_JUMP);
 				break;
 			case BehaviorStatus.Damage:
 				Anim.SetTrigger(TRANS_DAMAGE);

@@ -15,11 +15,41 @@ using UnityEngine;
 /// </summary>
 public class MyStage : MonoBehaviour
 {
+	#region 外部のインスタンス
+	[Header("外部のインスタンス")]
 	/// <summary>
 	/// ゲーム
 	/// </summary>
 	[SerializeField]
 	MyGame myGame;
+	#endregion
+
+	#region 生成されるプレファブ
+	[Header("生成されるプレファブ")]
+	/// <summary>
+	/// フィールド１
+	/// </summary>
+	[SerializeField]
+	MyField myField1;
+
+	/// <summary>
+	/// フィールド２
+	/// </summary>
+	[SerializeField]
+	MyField myField2;
+
+	/// <summary>
+	/// フィールド３
+	/// </summary>
+	[SerializeField]
+	MyField myField3;
+
+	/// <summary>
+	/// フィールド４
+	/// </summary>
+	[SerializeField]
+	MyField myField4;
+	#endregion
 
 	/// <summary>
 	/// 現在のフィールド
@@ -31,6 +61,46 @@ public class MyStage : MonoBehaviour
 		set { m_currentField = value; }
 	}
 
+	/// <summary>
+	/// ステージ番号
+	/// </summary>
+	int m_stageNum;
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// ステージを変更
+	/// </summary>
+	/// <param name="stageNum">ステージ番号</param>
+	public void ChangeStage(int stageNum)
+	{
+		//現在のフィールドの削除
+		if (m_currentField)
+			Destroy(m_currentField.gameObject);
+
+		//ステージ番号
+		switch(stageNum)
+		{
+			case 0:
+				m_currentField = Instantiate(myField1.gameObject, transform).GetComponent<MyField>();
+				break;
+			case 1:
+				m_currentField = Instantiate(myField2.gameObject, transform).GetComponent<MyField>();
+				break;
+			case 2:
+				m_currentField = Instantiate(myField3.gameObject, transform).GetComponent<MyField>();
+				break;
+			case 3:
+				m_currentField = Instantiate(myField4.gameObject, transform).GetComponent<MyField>();
+				break;
+		}
+
+		//プレイヤーの位置
+		myGame.CharacterScript.PlayerScript.transform.position = m_currentField.StartPos;
+
+		m_stageNum = stageNum;
+	}
+
+	//----------------------------------------------------------------------------------------------------
 	/// <summary>
 	/// 現在のフィールドのボス部屋の中心位置を取得
 	/// </summary>

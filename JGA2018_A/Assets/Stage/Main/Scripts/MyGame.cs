@@ -15,6 +15,8 @@ using UnityEngine;
 /// </summary>
 public class MyGame : MonoBehaviour
 {
+	#region 外部のインスタンス
+	[Header("外部のインスタンス")]
 	/// <summary>
 	/// キャラクター
 	/// </summary>
@@ -44,16 +46,35 @@ public class MyGame : MonoBehaviour
 	{
 		get { return MainCamera; }
 	}
+	#endregion
 
-	// Use this for initialization
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// 初期
+	/// </summary>
 	void Start()
 	{
-
+		myStage.ChangeStage(0);
 	}
 
-	// Update is called once per frame
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// フレーム
+	/// </summary>
 	void Update()
 	{
+		//ボスイベント発生管理
+		BossEventOccurrenceManagement();
+	}
 
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// ボスイベント発生管理
+	/// </summary>
+	void BossEventOccurrenceManagement()
+	{
+		//現在のフィールドで、ボスイベントの位置にプレイヤーがいる
+		if (myStage.CurrentField.WallOccurrenceBossEventCollider.bounds.Contains(myCharacter.PlayerScript.transform.position))
+			Debug.Log("ボス部屋に到着しました");
 	}
 }

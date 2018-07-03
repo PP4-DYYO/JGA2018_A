@@ -16,6 +16,16 @@ using UnityEngine;
 public class MyField : MonoBehaviour
 {
 	/// <summary>
+	/// スタートする位置
+	/// </summary>
+	[SerializeField]
+	Vector3 m_startPos;
+	public Vector3 StartPos
+	{
+		get { return m_startPos; }
+	}
+
+	/// <summary>
 	/// ボス部屋の中心位置
 	/// </summary>
 	[SerializeField]
@@ -50,10 +60,20 @@ public class MyField : MonoBehaviour
 	Vector3 Pos4Deathblow1;
 
 	/// <summary>
-	/// 必殺技１の位置５月
+	/// 必殺技１の位置５
 	/// </summary>
 	[SerializeField]
 	Vector3 Pos5Deathblow1;
+
+	/// <summary>
+	/// ボスイベント発生の壁
+	/// </summary>
+	[SerializeField]
+	Collider WallOccurrenceBossEvent;
+	public Collider WallOccurrenceBossEventCollider
+	{
+		get { return WallOccurrenceBossEvent; }
+	}
 
 	/// <summary>
 	/// 作業用Vector３配列

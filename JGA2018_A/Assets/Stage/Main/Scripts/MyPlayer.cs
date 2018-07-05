@@ -1403,23 +1403,39 @@ public class MyPlayer : MonoBehaviour
 		if (m_direction.z < 0)
 			m_angle = HALF_CIRCUMFERENCE_ANGLE - m_angle;
 
-		//マイナス角度の修正
-		if (m_angle < 0)
-			m_angle += ONE_TURNING_ANGLE;
-
 		m_workVector3 = transform.eulerAngles;
 
-		//回転したい角度が小さい
-		if (Mathf.Abs(m_workVector3.y - m_angle) <= m_correctionAngle)
+		//マイナス角度の修正
+		m_angle += (m_angle < 0) ? ONE_TURNING_ANGLE : 0;
+		m_workVector3.y += (m_workVector3.y < 0) ? ONE_TURNING_ANGLE : 0;
+
+		//回転したい角度
+		var m_workFloat = Mathf.Abs(m_workVector3.y - m_angle);
+
+		//回転角度が小さい
+		if (m_workFloat <= m_correctionAngle)
 		{
 			//向きたい方向に向く
 			m_workVector3.y = m_angle;
 		}
-		else
+		else if(m_workFloat < HALF_CIRCUMFERENCE_ANGLE) //向きたい角度が想定範囲
 		{
 			//徐々に向きたい方向に向く
 			m_angle -= m_workVector3.y;
-			m_angle *= (Mathf.Abs(m_angle) < HALF_CIRCUMFERENCE_ANGLE) ? Time.deltaTime * m_rotationSpeed : -Time.deltaTime * m_rotationSpeed;
+			m_angle *= Time.deltaTime * m_rotationSpeed;
+			m_workVector3.y += m_angle;
+		}
+		else
+		{
+			//大きい角度をマイナスにする
+			if (m_angle < m_workVector3.y)
+				m_workVector3.y -= ONE_TURNING_ANGLE;
+			else
+				m_angle -= ONE_TURNING_ANGLE;
+
+			//徐々に向きたい方向に向く
+			m_angle -= m_workVector3.y;
+			m_angle *= Time.deltaTime * m_rotationSpeed;
 			m_workVector3.y += m_angle;
 		}
 

@@ -522,9 +522,14 @@ public class MyAttackManager : MonoBehaviour
 	MyCharacter myCharacter;
 
 	/// <summary>
+	/// ゲーム
+	/// </summary>
+	MyGame m_game;
+
+	/// <summary>
 	/// ボス
 	/// </summary>
-	GameObject m_boss;
+	MyAiBoss m_boss;
 
 	/// <summary>
 	/// プレイヤー
@@ -849,10 +854,11 @@ public class MyAttackManager : MonoBehaviour
 	void Start()
 	{
 		//インスタンスの取得
+		m_game = myCharacter.GameScript;
 		m_player = myCharacter.PlayerScript;
-		m_boss = myCharacter.Boss;
-		m_stage = myCharacter.GameScript.StageScript;
-		m_camera = myCharacter.GameScript.CameraScript;
+		m_boss = myCharacter.BossScript;
+		m_stage = m_game.StageScript;
+		m_camera = m_game.CameraScript;
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -962,7 +968,7 @@ public class MyAttackManager : MonoBehaviour
 		if (m_countTimeDeathblow >= m_deathblowTime)
 		{
 			m_numDeathblow = NumDeathblow.Non;
-			SetManipulateObject(false);
+			m_game.SetManipulateMainObject(false);
 			m_player.StartAnimIdle();
 			return;
 		}
@@ -1221,7 +1227,7 @@ public class MyAttackManager : MonoBehaviour
 		if (m_countTimeDeathblow >= m_deathblow2Time)
 		{
 			m_numDeathblow = NumDeathblow.Non;
-			SetManipulateObject(false);
+			m_game.SetManipulateMainObject(false);
 			return;
 		}
 
@@ -1354,7 +1360,7 @@ public class MyAttackManager : MonoBehaviour
 		if (m_countTimeDeathblow >= m_deathblowTime)
 		{
 			m_numDeathblow = NumDeathblow.Non;
-			SetManipulateObject(false);
+			m_game.SetManipulateMainObject(false);
 			m_player.StartAnimIdle();
 			return;
 		}
@@ -1682,7 +1688,7 @@ public class MyAttackManager : MonoBehaviour
 		if (m_countTimeDeathblow >= m_deathblow4Time)
 		{
 			m_numDeathblow = NumDeathblow.Non;
-			SetManipulateObject(false);
+			m_game.SetManipulateMainObject(false);
 			m_player.StartAnimIdle();
 			return;
 		}
@@ -2103,25 +2109,10 @@ public class MyAttackManager : MonoBehaviour
 	}
 
 	//----------------------------------------------------------------------------------------------------
-	/// <summary>
-	/// オブジェクトを操る設定
-	/// </summary>
-	/// <param name="isManipulate">操るか</param>
-	void SetManipulateObject(bool isManipulate)
-	{
-		//プレイヤーとボスとカメラを操る設定
-		m_player.enabled = !isManipulate;
-		m_player.GetComponent<Collider>().enabled = !isManipulate;
-		m_player.GetComponent<Rigidbody>().useGravity = !isManipulate;
-		m_boss.GetComponent<MonoBehaviour>().enabled = !isManipulate;
-		myCharacter.GameScript.CameraScript.enabled = !isManipulate;
-	}
-
-	//----------------------------------------------------------------------------------------------------
 	//インスタンスの再コピー
 	void ReproduceInstance()
 	{
-		m_boss = myCharacter.Boss;
+		m_boss = myCharacter.BossScript;
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -2134,7 +2125,7 @@ public class MyAttackManager : MonoBehaviour
 		ReproduceInstance();
 
 		//攻撃マネージャが操作する
-		SetManipulateObject(true);
+		m_game.SetManipulateMainObject(true);
 
 		//必殺技設定
 		m_countTimeDeathblow = 0;
@@ -2156,7 +2147,7 @@ public class MyAttackManager : MonoBehaviour
 		ReproduceInstance();
 
 		//攻撃マネージャが操作する
-		SetManipulateObject(true);
+		m_game.SetManipulateMainObject(true);
 
 		//必殺技設定
 		m_countTimeDeathblow = 0;
@@ -2178,7 +2169,7 @@ public class MyAttackManager : MonoBehaviour
 		ReproduceInstance();
 
 		//攻撃マネージャが操作する
-		SetManipulateObject(true);
+		m_game.SetManipulateMainObject(true);
 
 		//必殺技設定
 		m_countTimeDeathblow = 0;
@@ -2200,7 +2191,7 @@ public class MyAttackManager : MonoBehaviour
 		ReproduceInstance();
 
 		//攻撃マネージャが操作する
-		SetManipulateObject(true);
+		m_game.SetManipulateMainObject(true);
 
 		//必殺技設定
 		m_countTimeDeathblow = 0;

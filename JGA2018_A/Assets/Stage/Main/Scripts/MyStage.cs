@@ -71,7 +71,8 @@ public class MyStage : MonoBehaviour
 	/// ステージを変更
 	/// </summary>
 	/// <param name="stageNum">ステージ番号</param>
-	public void ChangeStage(int stageNum)
+	/// <returns>成功か</returns>
+	public bool ChangeStage(int stageNum)
 	{
 		//現在のフィールドの削除
 		if (m_currentField)
@@ -92,12 +93,16 @@ public class MyStage : MonoBehaviour
 			case 3:
 				m_currentField = Instantiate(myField4.gameObject, transform).GetComponent<MyField>();
 				break;
+			default:
+				return false;
 		}
 
 		//プレイヤーの位置
 		myGame.CharacterScript.PlayerScript.transform.position = m_currentField.StartPos;
 
 		m_stageNum = stageNum;
+
+		return true;
 	}
 
 	//----------------------------------------------------------------------------------------------------

@@ -95,8 +95,8 @@ public class MyCharacter : MonoBehaviour
 	/// <summary>
 	/// ボス
 	/// </summary>
-	GameObject m_boss;
-	public GameObject Boss
+	MyAiBoss m_boss;
+	public MyAiBoss BossScript
 	{
 		get { return m_boss; }
 		set { m_boss = value; }

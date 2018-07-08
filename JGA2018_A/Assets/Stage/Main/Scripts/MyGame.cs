@@ -81,6 +81,16 @@ public class MyGame : MonoBehaviour
 	}
 
 	/// <summary>
+	/// メインUI
+	/// </summary>
+	[SerializeField]
+	MyMainUI myMainUi;
+	public MyMainUI MainUiScript
+	{
+		get { return myMainUi; }
+	}
+
+	/// <summary>
 	/// プレイヤー
 	/// </summary>
 	MyPlayer m_player;
@@ -91,6 +101,8 @@ public class MyGame : MonoBehaviour
 	MyAiBoss m_boss;
 	#endregion
 
+	#region ステージ
+	[Header("ステージ")]
 	/// <summary>
 	/// ステージ状態
 	/// </summary>
@@ -105,6 +117,7 @@ public class MyGame : MonoBehaviour
 	/// ステージ番号
 	/// </summary>
 	int m_stageNum;
+	#endregion
 
 	#region オブジェクトの操り
 	[Header("オブジェクトの操り")]

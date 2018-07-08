@@ -74,10 +74,10 @@ public class MyGame : MonoBehaviour
 	/// メインカメラ
 	/// </summary>
 	[SerializeField]
-	MyCamera MainCamera;
+	MyCamera myCamera;
 	public MyCamera CameraScript
 	{
-		get { return MainCamera; }
+		get { return myCamera; }
 	}
 
 	/// <summary>
@@ -179,12 +179,6 @@ public class MyGame : MonoBehaviour
 	/// </summary>
 	void Start()
 	{
-		//仮なので必ず消すこと
-		{
-			Debug.Log("仮なので必ず消すこと");
-			myCharacter.BossScript = GameObject.Find("FakeBoss").GetComponent<MyAiBoss>();
-		}
-
 		//インスタンス
 		m_player = myCharacter.PlayerScript;
 		m_boss = myCharacter.BossScript;
@@ -271,9 +265,11 @@ public class MyGame : MonoBehaviour
 		//初めてこの状態になった
 		if (m_stageState != m_stageStatePrev)
 		{
+			//ボスの生成とその他の設定
+			myCharacter.AiManagerScript.GenerateBoss(m_stageNum);
+			ReproduceInstance();
 			SetManipulateMainObject(false);
 			m_countTimeState = 0;
-			ReproduceInstance();
 			Debug.Log("UIに「ダンジョン先のボスを倒せ」と表示");
 
 			m_stageStatePrev = m_stageState;
@@ -307,8 +303,9 @@ public class MyGame : MonoBehaviour
 			SetManipulateMainObject(true);
 			m_countTimeState = 0;
 
-			//カメラの設定とボスのアニメーション
+			//カメラの設定とプレイヤー&ボスのアニメーション
 			m_initPosCameraState = CameraScript.transform.position;
+			m_player.StartAnimIdle();
 			Debug.Log("ボスの威嚇アニメーションスタート");
 
 			m_stageStatePrev = m_stageState;
@@ -401,7 +398,7 @@ public class MyGame : MonoBehaviour
 		m_player.GetComponent<Collider>().enabled = !isManipulate;
 		m_player.GetComponent<Rigidbody>().useGravity = !isManipulate;
 		m_boss.enabled = !isManipulate;
-		MainCamera.enabled = !isManipulate;
+		myCamera.enabled = !isManipulate;
 	}
 
 	//----------------------------------------------------------------------------------------------------

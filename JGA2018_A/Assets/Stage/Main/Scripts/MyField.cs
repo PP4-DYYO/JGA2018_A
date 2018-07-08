@@ -26,6 +26,26 @@ public class MyField : MonoBehaviour
 	}
 
 	/// <summary>
+	/// ボスのスタート位置
+	/// </summary>
+	[SerializeField]
+	Vector3 m_bossStartPos;
+	public Vector3 BossStartPos
+	{
+		get { return m_bossStartPos; }
+	}
+
+	/// <summary>
+	/// ボスのスタート向き
+	/// </summary>
+	[SerializeField]
+	Vector3 m_bossStartDirection;
+	public Vector3 BossStartDirection
+	{
+		get { return m_bossStartDirection; }
+	}
+
+	/// <summary>
 	/// ボス部屋の中心位置
 	/// </summary>
 	[SerializeField]

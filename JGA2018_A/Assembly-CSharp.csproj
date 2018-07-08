@@ -68,7 +68,9 @@
      <Compile Include="Assets\Stage\Main\Scripts\MyCharacter.cs" />
      <Compile Include="Assets\Stage\Main\Scripts\MyField.cs" />
      <Compile Include="Assets\Stage\Main\Scripts\MyGame.cs" />
+     <Compile Include="Assets\Stage\Main\Scripts\MyGameScreen.cs" />
      <Compile Include="Assets\Stage\Main\Scripts\MyMagicMinisterAI.cs" />
+     <Compile Include="Assets\Stage\Main\Scripts\MyMainUI.cs" />
      <Compile Include="Assets\Stage\Main\Scripts\MyMenu.cs" />
      <Compile Include="Assets\Stage\Main\Scripts\MyMirrorMinisterAI.cs" />
      <Compile Include="Assets\Stage\Main\Scripts\MyPlayer.cs" />

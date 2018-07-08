@@ -20,6 +20,10 @@ public class MyMainUI : MonoBehaviour
 	/// </summary>
 	[SerializeField]
 	MyGame myGame;
+	public MyGame GameScript
+	{
+		get { return myGame; }
+	}
 
 	// Use this for initialization
 	void Start()

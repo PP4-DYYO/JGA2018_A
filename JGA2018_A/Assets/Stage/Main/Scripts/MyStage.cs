@@ -60,12 +60,7 @@ public class MyStage : MonoBehaviour
 		get { return m_currentField; }
 		set { m_currentField = value; }
 	}
-
-	/// <summary>
-	/// ステージ番号
-	/// </summary>
-	int m_stageNum;
-
+	
 	//----------------------------------------------------------------------------------------------------
 	/// <summary>
 	/// ステージを変更
@@ -99,8 +94,6 @@ public class MyStage : MonoBehaviour
 
 		//プレイヤーの位置
 		myGame.CharacterScript.PlayerScript.transform.position = m_currentField.StartPos;
-
-		m_stageNum = stageNum;
 
 		return true;
 	}

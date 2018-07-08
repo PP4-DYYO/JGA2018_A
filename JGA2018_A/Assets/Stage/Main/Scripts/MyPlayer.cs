@@ -106,7 +106,7 @@ enum BehaviorStatus
 /// <summary>
 /// プレイヤーのマスク
 /// </summary>
-struct PlayerMask
+public struct PlayerMask
 {
 	/// <summary>
 	/// 属性
@@ -157,6 +157,10 @@ public class MyPlayer : MonoBehaviour
 	/// </summary>
 	[SerializeField]
 	int m_maxHp;
+	public int MaxHp
+	{
+		get { return m_maxHp; }
+	}
 
 	/// <summary>
 	/// ウイルス耐性時間
@@ -168,6 +172,10 @@ public class MyPlayer : MonoBehaviour
 	/// HP
 	/// </summary>
 	int m_hp;
+	public int Hp
+	{
+		get { return m_hp; }
+	}
 
 	/// <summary>
 	/// ダメージの蓄積時間
@@ -583,6 +591,10 @@ public class MyPlayer : MonoBehaviour
 	/// 必殺技を使用した
 	/// </summary>
 	bool m_wasUseDeathblow;
+	public bool WasUseDeathblow
+	{
+		get { return m_wasUseDeathblow; }
+	}
 	#endregion
 
 	#region 攻撃範囲
@@ -781,24 +793,40 @@ public class MyPlayer : MonoBehaviour
 	/// </summary>
 	[SerializeField]
 	float m_maxCarryMaskGauge;
+	public float MaxCarryMaskGauge
+	{
+		get { return m_maxCarryMaskGauge; }
+	}
 
 	/// <summary>
 	/// ウイルスマスクゲージの最大値
 	/// </summary>
 	[SerializeField]
 	float m_maxVirusMaskGauge;
+	public float MaxVirusMaskGauge
+	{
+		get { return m_maxVirusMaskGauge; }
+	}
 
 	/// <summary>
 	/// 鏡マスクゲージの最大値
 	/// </summary>
 	[SerializeField]
 	float m_maxMirrorMaskGauge;
+	public float MaxMirrorMaskGauge
+	{
+		get { return m_maxMirrorMaskGauge; }
+	}
 
 	/// <summary>
 	/// マジックマスクゲージの最大値
 	/// </summary>
 	[SerializeField]
 	float m_maxMagicMaskGauge;
+	public float MaxMagicMaskGauge
+	{
+		get { return m_maxMagicMaskGauge; }
+	}
 
 	/// <summary>
 	/// 能力使用時間の最大値
@@ -810,21 +838,37 @@ public class MyPlayer : MonoBehaviour
 	/// 配達マスク
 	/// </summary>
 	PlayerMask m_carryMask;
+	public PlayerMask CarryMask
+	{
+		get { return m_carryMask; }
+	}
 
 	/// <summary>
 	/// ウイルスマスク
 	/// </summary>
 	PlayerMask m_virusMask;
+	public PlayerMask VirusMask
+	{
+		get { return m_virusMask; }
+	}
 
 	/// <summary>
 	/// 鏡マスク
 	/// </summary>
 	PlayerMask m_mirrorMask;
+	public PlayerMask MirrorMask
+	{
+		get { return m_mirrorMask; }
+	}
 
 	/// <summary>
 	/// マジックマスク
 	/// </summary>
 	PlayerMask m_magicMask;
+	public PlayerMask MagicMask
+	{
+		get { return m_magicMask; }
+	}
 	#endregion
 
 	#region キーボード関係
@@ -1233,8 +1277,8 @@ public class MyPlayer : MonoBehaviour
 	/// </summary>
 	void Deathblow()
 	{
-		//配達マスクand十字キー上の押下
-		if (m_maskState == MaskAttribute.Carry && m_isPressedCrossKeyUp)
+		//配達マスクand十字キー左の押下
+		if (m_maskState == MaskAttribute.Carry && m_isPressedCrossKeyLeft)
 		{
 			m_wasUseDeathblow = true;
 
@@ -1244,8 +1288,8 @@ public class MyPlayer : MonoBehaviour
 			m_currentAttackBreakTime = m_attackTempoTime + m_attackBreakTime;
 		}
 
-		//毒マスクand十字キー左の押下
-		if (m_maskState == MaskAttribute.Virus && m_isPressedCrossKeyLeft)
+		//毒マスクand十字キー上の押下
+		if (m_maskState == MaskAttribute.Virus && m_isPressedCrossKeyUp)
 		{
 			m_wasUseDeathblow = true;
 
@@ -1742,14 +1786,14 @@ public class MyPlayer : MonoBehaviour
 		if (m_maskState == MaskAttribute.Non)
 		{
 			//十字キーの押下and仮面の使用可能か
-			if (m_isPressedCrossKeyUp && m_carryMask.isAvailable)
+			if (m_isPressedCrossKeyLeft && m_carryMask.isAvailable)
 			{
 				//配達マスク
 				m_maskState = MaskAttribute.Carry;
 				m_carryMask.isUse = true;
 				m_wasUseDeathblow = false;
 			}
-			else if (m_isPressedCrossKeyLeft && m_virusMask.isAvailable)
+			else if (m_isPressedCrossKeyUp && m_virusMask.isAvailable)
 			{
 				//ウイルスマスク
 				m_maskState = MaskAttribute.Virus;

@@ -107,6 +107,10 @@ public class MyGame : MonoBehaviour
 	/// ステージ状態
 	/// </summary>
 	StageStatus m_stageState;
+	public StageStatus StageState
+	{
+		get { return m_stageState; }
+	}
 
 	/// <summary>
 	/// フレーム前のステージ状態

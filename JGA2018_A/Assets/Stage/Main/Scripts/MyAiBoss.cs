@@ -38,6 +38,10 @@ public class MyAiBoss : MonoBehaviour
     MyBombShot myBombShot;
     MyArrowShot myArrowShot;
 
+	/// <summary>
+	/// 自分のタグ名
+	/// </summary>
+	public const string TAG_NAME = "Boss";
 
     /// <summary>
     /// 自分の名前"CarryMinister","VirusMinister","MirrorMinister","MagicMinister"

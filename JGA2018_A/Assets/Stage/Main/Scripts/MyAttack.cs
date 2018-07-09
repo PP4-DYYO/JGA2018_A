@@ -75,6 +75,7 @@ public class MyAttack : MonoBehaviour
 	/// <summary>
 	/// 属性
 	/// </summary>
+	[SerializeField]
 	MaskAttribute m_attribute;
 	public MaskAttribute Attribute
 	{
@@ -189,5 +190,33 @@ public class MyAttack : MonoBehaviour
 		m_mf.mesh.RecalculateBounds(); //メッシュコンポーネントのプロパティboundsを再計算する
 		m_mf.mesh.RecalculateNormals();
 		m_mc.sharedMesh = m_mf.mesh;
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// 重なり始め判定
+	/// </summary>
+	/// <param name="other">重なったもの</param>
+	void OnTriggerEnter(Collider other)
+	{
+		//必殺技がボスにヒット
+		if (tag == AttackManagerTag.PLAYER_ATTACK_DEATHBLOW_RANGE_TAG && other.tag == MyAiBoss.TAG_NAME)
+		{
+			var attackManager = transform.parent.GetComponent<MyAttackManager>();
+
+			switch(m_attribute)
+			{
+				case MaskAttribute.Carry:
+					attackManager.StartDeathblow1();
+					break;
+				case MaskAttribute.Virus:
+					break;
+				case MaskAttribute.Mirror:
+					attackManager.StartDeathblow3();
+					break;
+				case MaskAttribute.Magic:
+					break;
+			}
+		}
 	}
 }

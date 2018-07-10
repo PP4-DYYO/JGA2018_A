@@ -787,47 +787,53 @@ public class MyAttackManager : MonoBehaviour
 	[SerializeField]
 	float m_timeToGetDamageOfFirstDeathblow3;
 
-	///// <summary>
-	///// 必殺技３、1回目のダメージを受ける時間
-	///// </summary>
-	//[SerializeField]
-	//float m_timeToGetDamageOfFirstDeathblow3;
+	/// <summary>
+	/// 必殺技３、2回目のダメージを受ける時間
+	/// </summary>
+	[SerializeField]
+	float m_timeToGetDamageOfSecondDeathblow3;
 
-	///// <summary>
-	///// 必殺技３、1回目のダメージを受ける時間
-	///// </summary>
-	//[SerializeField]
-	//float m_timeToGetDamageOfFirstDeathblow3;
+	/// <summary>
+	/// 必殺技３、3回目のダメージを受ける時間
+	/// </summary>
+	[SerializeField]
+	float m_timeToGetDamageOfThirdDeathblow3;
 
-	///// <summary>
-	///// 必殺技３、1回目のダメージを受ける時間
-	///// </summary>
-	//[SerializeField]
-	//float m_timeToGetDamageOfFirstDeathblow3;
+	/// <summary>
+	/// 必殺技３、4回目のダメージを受ける時間
+	/// </summary>
+	[SerializeField]
+	float m_timeToGetDamageOfFourthDeathblow3;
 
-	///// <summary>
-	///// 必殺技３、1回目のダメージを受ける時間
-	///// </summary>
-	//[SerializeField]
-	//float m_timeToGetDamageOfFirstDeathblow3;
+	/// <summary>
+	/// 必殺技３、5回目のダメージを受ける時間
+	/// </summary>
+	[SerializeField]
+	float m_timeToGetDamageOfFifthDeathblow3;
 
-	///// <summary>
-	///// 必殺技３、1回目のダメージを受ける時間
-	///// </summary>
-	//[SerializeField]
-	//float m_timeToGetDamageOfFirstDeathblow3;
+	/// <summary>
+	/// 必殺技３、6回目のダメージを受ける時間
+	/// </summary>
+	[SerializeField]
+	float m_timeToGetDamageOfSixthDeathblow3;
 
-	///// <summary>
-	///// 必殺技３、1回目のダメージを受ける時間
-	///// </summary>
-	//[SerializeField]
-	//float m_timeToGetDamageOfFirstDeathblow3;
+	/// <summary>
+	/// 必殺技３、7回目のダメージを受ける時間
+	/// </summary>
+	[SerializeField]
+	float m_timeToGetDamageOfSeventhDeathblow3;
 
-	///// <summary>
-	///// 必殺技３、1回目のダメージを受ける時間
-	///// </summary>
-	//[SerializeField]
-	//float m_timeToGetDamageOfFirstDeathblow3;
+	/// <summary>
+	/// 必殺技３、8回目のダメージを受ける時間
+	/// </summary>
+	[SerializeField]
+	float m_timeToGetDamageOfEighthDeathblow3;
+
+	/// <summary>
+	/// 必殺技３、9回目のダメージを受ける時間
+	/// </summary>
+	[SerializeField]
+	float m_timeToGetDamageOfNinthDeathblow3;
 
 	/// <summary>
 	/// 影武者
@@ -1503,7 +1509,26 @@ public class MyAttackManager : MonoBehaviour
 		m_bossStateNumPrev = m_bossStateNum;
 
 		//タイムライン
-		m_bossStateNum = 0;
+		if (m_countTimeDeathblow >= m_timeToGetDamageOfNinthDeathblow3)
+			m_bossStateNum = 9;
+		else if (m_countTimeDeathblow >= m_timeToGetDamageOfEighthDeathblow3)
+			m_bossStateNum = 8;
+		else if (m_countTimeDeathblow >= m_timeToGetDamageOfSeventhDeathblow3)
+			m_bossStateNum = 7;
+		else if (m_countTimeDeathblow >= m_timeToGetDamageOfFifthDeathblow3)
+			m_bossStateNum = 6;
+		else if (m_countTimeDeathblow >= m_timeToGetDamageOfFifthDeathblow3)
+			m_bossStateNum = 5;
+		else if (m_countTimeDeathblow >= m_timeToGetDamageOfFourthDeathblow3)
+			m_bossStateNum = 4;
+		else if (m_countTimeDeathblow >= m_timeToGetDamageOfThirdDeathblow3)
+			m_bossStateNum = 3;
+		else if (m_countTimeDeathblow >= m_timeToGetDamageOfSecondDeathblow3)
+			m_bossStateNum = 2;
+		else if (m_countTimeDeathblow >= m_timeToGetDamageOfFirstDeathblow3)
+			m_bossStateNum = 1;
+		else
+			m_bossStateNum = 0;
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -1718,6 +1743,42 @@ public class MyAttackManager : MonoBehaviour
 					//ステージ中央に移動
 					Teleportation(m_boss.gameObject, m_stage.GetCenterPosBossRoomCurrentField());
 					break;
+				case 1:
+					//ダメージアニメーション
+					m_boss.ReceiveDamageAnimation();
+					break;
+				case 2:
+					//ダメージアニメーション
+					m_boss.ReceiveDamageAnimation();
+					break;
+				case 3:
+					//ダメージアニメーション
+					m_boss.ReceiveDamageAnimation();
+					break;
+				case 4:
+					//ダメージアニメーション
+					m_boss.ReceiveDamageAnimation();
+					break;
+				case 5:
+					//ダメージアニメーション
+					m_boss.ReceiveDamageAnimation();
+					break;
+				case 6:
+					//ダメージアニメーション
+					m_boss.ReceiveDamageAnimation();
+					break;
+				case 7:
+					//ダメージアニメーション
+					m_boss.ReceiveDamageAnimation();
+					break;
+				case 8:
+					//ダメージアニメーション
+					m_boss.ReceiveDamageAnimation();
+					break;
+				case 9:
+					//ダメージアニメーション
+					m_boss.ReceiveDamageAnimation();
+					break;
 			}
 		}
 	}
@@ -1904,6 +1965,8 @@ public class MyAttackManager : MonoBehaviour
 					m_boss.transform.LookAt(m_stage.GetPosDeathblow1CurrentField(0));
 					break;
 				case 2:
+					//ダメージアニメーション
+					m_boss.ReceiveDamageAnimation();
 					break;
 			}
 		}

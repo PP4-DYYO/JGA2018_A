@@ -588,6 +588,12 @@ public class MyPlayer : MonoBehaviour
 	int m_powerAttackDeathblow3PerBlow;
 
 	/// <summary>
+	/// 必殺技４の攻撃威力
+	/// </summary>
+	[SerializeField]
+	int m_powerAttackDeathblow4;
+
+	/// <summary>
 	/// 必殺技を使用した
 	/// </summary>
 	bool m_wasUseDeathblow;
@@ -2309,9 +2315,18 @@ public class MyPlayer : MonoBehaviour
 
 	//----------------------------------------------------------------------------------------------------
 	/// <summary>
+	/// 必殺技の攻撃１A
+	/// </summary>
+	void AttackDeathblow1AEvent()
+	{
+		myCharacter.BossScript.ReceiveDamage(m_powerAttackDeathblow1PerBlow);
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
 	/// 必殺技の攻撃２A
 	/// </summary>
-	void AttackDeathblow2Event()
+	void AttackDeathblow2AEvent()
 	{
 		//攻撃範囲の１２角柱の構築
 		m_workMyPrism12.SetMyPrism12(m_height);
@@ -2343,5 +2358,23 @@ public class MyPlayer : MonoBehaviour
 
 		//攻撃範囲の生成
 		myCharacter.AttackManagerScript.PlayerAttack(m_workMyCube, m_maskState, m_powerAttackDeathblow3PerBlow, m_effectiveAttackTime, true);
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// 必殺技の攻撃３A
+	/// </summary>
+	void AttackDeathblow3AEvent()
+	{
+		myCharacter.BossScript.ReceiveDamage(m_powerAttackDeathblow3PerBlow);
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// 必殺技の攻撃４A
+	/// </summary>
+	void AttackDeathblow4AEvent()
+	{
+		myCharacter.BossScript.ReceiveDamage(m_powerAttackDeathblow4);
 	}
 }

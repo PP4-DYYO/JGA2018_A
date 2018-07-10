@@ -782,6 +782,54 @@ public class MyAttackManager : MonoBehaviour
 	float m_endTimeDivide;
 
 	/// <summary>
+	/// 必殺技３、1回目のダメージを受ける時間
+	/// </summary>
+	[SerializeField]
+	float m_timeToGetDamageOfFirstDeathblow3;
+
+	///// <summary>
+	///// 必殺技３、1回目のダメージを受ける時間
+	///// </summary>
+	//[SerializeField]
+	//float m_timeToGetDamageOfFirstDeathblow3;
+
+	///// <summary>
+	///// 必殺技３、1回目のダメージを受ける時間
+	///// </summary>
+	//[SerializeField]
+	//float m_timeToGetDamageOfFirstDeathblow3;
+
+	///// <summary>
+	///// 必殺技３、1回目のダメージを受ける時間
+	///// </summary>
+	//[SerializeField]
+	//float m_timeToGetDamageOfFirstDeathblow3;
+
+	///// <summary>
+	///// 必殺技３、1回目のダメージを受ける時間
+	///// </summary>
+	//[SerializeField]
+	//float m_timeToGetDamageOfFirstDeathblow3;
+
+	///// <summary>
+	///// 必殺技３、1回目のダメージを受ける時間
+	///// </summary>
+	//[SerializeField]
+	//float m_timeToGetDamageOfFirstDeathblow3;
+
+	///// <summary>
+	///// 必殺技３、1回目のダメージを受ける時間
+	///// </summary>
+	//[SerializeField]
+	//float m_timeToGetDamageOfFirstDeathblow3;
+
+	///// <summary>
+	///// 必殺技３、1回目のダメージを受ける時間
+	///// </summary>
+	//[SerializeField]
+	//float m_timeToGetDamageOfFirstDeathblow3;
+
+	/// <summary>
 	/// 影武者
 	/// </summary>
 	GameObject m_shadowWarrior;
@@ -1136,14 +1184,19 @@ public class MyAttackManager : MonoBehaviour
 				case 0:
 					//中心に移動
 					Teleportation(m_boss.gameObject, m_stage.GetCenterPosBossRoomCurrentField());
+					m_boss.ReceiveDamageAnimation();
 					break;
 				case 1:
+					m_boss.ReceiveDamageAnimation();
 					break;
 				case 2:
+					m_boss.ReceiveDamageAnimation();
 					break;
 				case 3:
+					m_boss.ReceiveDamageAnimation();
 					break;
 				case 4:
+					m_boss.ReceiveDamageAnimation();
 					break;
 			}
 		}
@@ -1339,7 +1392,6 @@ public class MyAttackManager : MonoBehaviour
 					break;
 			}
 		}
-
 	}
 
 	//----------------------------------------------------------------------------------------------------

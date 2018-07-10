@@ -31,6 +31,11 @@ public class MyArrow : MonoBehaviour {
         myAiBoss = GameObject.Find("CarryMinister").GetComponent<MyAiBoss>();
     }
 
+    void Update()
+    {
+        Debug.Log(this.transform.position);
+    }
+
     //----------------------------------------------------------------------------------------------------
     /// <summary>
     /// 当たり判定
@@ -53,7 +58,7 @@ public class MyArrow : MonoBehaviour {
             MyCube explosionRange = new MyCube(vLDB, vRDB, vLDF, vRDF, vLUB, vRUB, vLUF, vRUF);
             myAttackManager.EnemyAttack(explosionRange, MaskAttribute.Non, myAiBoss.Attack, 0.1f);
 
-            //爆弾削除
+            //削除
             Destroy(this.gameObject);
         }
     }

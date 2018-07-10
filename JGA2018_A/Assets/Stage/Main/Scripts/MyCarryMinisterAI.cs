@@ -14,6 +14,10 @@ using UnityEngine;
 ///</summary>
 public class MyCarryMinisterAI : MyAiBoss
 {
+    /// <summary>
+    /// スクリプト
+    /// </summary>
+    MyArrowShot myArrowShot;
 
     //----------------------------------------------------------------------------------------------------
     /// <summary>
@@ -23,6 +27,7 @@ public class MyCarryMinisterAI : MyAiBoss
     {
         m_myObjectName = this.gameObject.name;
         m_playerObject = GameObject.Find(m_playerObjectName);
+        m_myGameObject = this.gameObject;
         m_hitPoint = 230;
         m_attack = 60;
         m_perceivedRange = 30;
@@ -40,6 +45,7 @@ public class MyCarryMinisterAI : MyAiBoss
         m_aimode = AIMode.WAIT;
 
         m_gameTime = m_attackInterval;
+        myArrowShot = GameObject.Find("ArrowPositionObject").GetComponent<MyArrowShot>();
 
         base.Start();
     }

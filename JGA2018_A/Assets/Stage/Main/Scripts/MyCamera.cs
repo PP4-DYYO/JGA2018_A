@@ -16,58 +16,102 @@ using UnityEngine;
 /// <summary>
 /// カメラを制御するクラス（仮）
 /// </summary>
-public class MyCamera : MonoBehaviour {
-    [SerializeField]
-    Transform m_player;//対象のプレイヤー
-    [SerializeField]
-    float distance = 1.2f;//対象プレイヤーからカメラを離す距離
-    [SerializeField]
-    Quaternion vRotation;//カメラの垂直回転
-    [SerializeField]
-    Quaternion hRotation;//カメラの平行回転
-    [SerializeField]
-    float m_ypos=1.0f;//高さ
-    [SerializeField]
-    Vector3 velocity;
 
+//カメラ属性を付ける
+[RequireComponent(typeof(Camera))]
+public class MyCamera : MonoBehaviour {
+    /// <summary>
+    /// ゲーム
+    /// </summary>
     [SerializeField]
-    float turnSpeed = 10.0f;
+    MyGame myGame;
+    public MyGame GameScript
+    {
+        get { return myGame; }
+    }
+
+    //カメラの対象
+    [SerializeField]
+    Transform player;
+    // カメラとプレイヤーとの距離[m]
+    [SerializeField]
+    float DistanceToPlayerM = 2f;
+    // カメラを横にスライドさせる；プラスの時右へ，マイナスの時左へ[m]
+    [SerializeField]
+    float slideDistanceM = 0f;  
+    // 注視点の高さ[m]
+    [SerializeField]
+    float HeightM = 1.2f;  
+    // 感度
+    [SerializeField]
+    float rotationSensitivity = 100f;
+    float rotX = 0.0f;
+    float rotY = 0.0f;
+
+    float duration = 3;
 
     void Start()
     {
-        //回転の初期化
-        vRotation = Quaternion.Euler(0, 0, 0);//垂直回転(x軸を軸とする回転)
-        hRotation = Quaternion.identity;//水平回転(y軸を軸とする回転)は、無回転
-        transform.rotation = hRotation * vRotation;//最終的なカメラの回転は垂直回転してから水平回転する合成回転
-
-        //位置の初期化
-        //player位置から距離distanceだけ手前に引いた位置を設定する
-        transform.position = m_player.position - transform.rotation * Vector3.forward * distance;
-
-    }
-    void LateUpdate()
-    {
-        //水平カメラの更新
-        hRotation *= Quaternion.Euler(0, Input.GetAxis("Mouse X") * turnSpeed, 0);
-        //カメラの回転(transform.rotation)の更新
-        //方法１：垂直回転してから水平回転する合成回転とする
-        transform.rotation = vRotation * hRotation;
-
-            //カメラの位置(transform.position)の更新
-            //player位置から距離distanceだけ手前に引いた位置を設定
-            transform.position = m_player.position - transform.rotation * Vector3.forward * distance;
-        transform.position = new Vector3(transform.position.x, m_player.transform.position.y + m_ypos, transform.position.z);
-
-        if (velocity.magnitude > 0)
+        if (player == null)
         {
-            //プレイヤーの回転の更新(transform.rotation)の更新
-            //無回転状態ののプレイヤーのZ+方向(後頭部)を、移動の反対方向(-velocity)に回す回転とします
-            transform.rotation = Quaternion.LookRotation(-velocity);
-
-            // プレイヤーの位置(transform.position)の更新
-            // 移動方向ベクトル(velocity)を足し込みます
-            transform.position += velocity;
+            Debug.LogError("ターゲットが設定されていない");
+            Application.Quit();
         }
     }
 
-}
+    void FixedUpdate()
+    {
+        rotX = Input.GetAxis("HorizontalR") * Time.deltaTime * rotationSensitivity;
+        rotY = Input.GetAxis("VerticalR") * Time.deltaTime * rotationSensitivity;
+
+
+        var lookAt = player.position + Vector3.up * HeightM;
+
+        // 回転
+        transform.RotateAround(lookAt, Vector3.up, rotX);
+        // カメラがプレイヤーの真上や真下にあるときにそれ以上回転させないようにする
+        if (transform.forward.y > 0.9f && rotY < 0)
+        {
+            rotY = 0;
+        }
+        if (transform.forward.y < -0.9f && rotY > 0)
+        {
+            rotY = 0;
+        }
+        transform.RotateAround(lookAt, transform.right, rotY);
+
+
+        // カメラとプレイヤーとの間の距離を調整
+        transform.position = lookAt - transform.forward * DistanceToPlayerM;
+
+        // 視点の設定
+        transform.LookAt(lookAt);
+
+        // カメラを横にずらして中央を開ける
+        transform.position = transform.position + transform.right * slideDistanceM;
+    }
+
+        // 敵とプレイヤーとの間に壁があるかを確認する
+        void update()
+        {
+            //Rayの長さ
+            float maxDistance = 8.0f;
+            // Rayの作成
+            // 自分の位置とプレイヤーの位置から向きベクトルを作成しRayに渡す
+            Vector3 direction = (player.transform.position - transform.position).normalized;
+            Ray ray = new Ray(transform.position, direction);
+            // Rayが衝突したコライダーの情報を得る
+            RaycastHit hit;
+
+            // Rayの可視化
+            Debug.DrawRay(ray.origin, ray.direction * maxDistance, Color.red);
+            // Rayが衝突したかどうか
+            if (Physics.Raycast(ray, out hit, maxDistance))
+            {
+                if (hit.collider.tag == "Player")
+                {
+                   
+                }
+            }
+        }
+    }

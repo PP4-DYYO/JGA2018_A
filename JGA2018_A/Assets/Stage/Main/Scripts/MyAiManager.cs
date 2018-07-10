@@ -19,17 +19,42 @@ public class MyAiManager : MonoBehaviour
 	/// キャラクター
 	/// </summary>
 	[SerializeField]
-	MyCharactor myCharactor;
-
-	// Use this for initialization
-	void Start()
+	MyCharacter myCharacter;
+	public MyCharacter CharacterScript
 	{
-
+		get { return myCharacter; }
 	}
 
-	// Update is called once per frame
-	void Update()
-	{
+	#region 生成されるプレファブ
+	[Header("生成されるプレファブ")]
+	/// <summary>
+	/// ステージのボス配列
+	/// </summary>
+	[SerializeField]
+	MyAiBoss[] m_stagesBoss;
+	#endregion
 
+	/// <summary>
+	/// ボス
+	/// </summary>
+	MyAiBoss m_boss;
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// ボスを生成する
+	/// </summary>
+	/// <param name="stageNum">ステージ番号</param>
+	public void GenerateBoss(int stageNum)
+	{
+		//ステージ番号チェック
+		stageNum = (stageNum < 0) ? 0 : (stageNum >= m_stagesBoss.Length) ? m_stagesBoss.Length - 1 : stageNum;
+
+		//破棄と生成と登録
+		if (m_boss)
+			Destroy(m_boss.gameObject);
+		m_boss = Instantiate(m_stagesBoss[stageNum].gameObject, transform).GetComponent<MyAiBoss>();
+		m_boss.transform.position = myCharacter.GameScript.StageScript.CurrentField.BossStartPos;
+		m_boss.transform.LookAt(m_boss.transform.position + myCharacter.GameScript.StageScript.CurrentField.BossStartDirection);
+		myCharacter.BossScript = m_boss;
 	}
 }

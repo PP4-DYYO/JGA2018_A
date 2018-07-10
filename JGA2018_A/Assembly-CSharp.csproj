@@ -46,11 +46,64 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\Dummy\AssetStore\Particle_Dissolve_Shader\Scripts\HUDFPS.cs" />
+     <Compile Include="Assets\Dummy\AssetStore\Particle_Dissolve_Shader\Scripts\PDS_GameController.cs" />
+     <Compile Include="Assets\Dummy\AssetStore\Particle_Dissolve_Shader\Scripts\ScrollingUVs_PDS.cs" />
+     <Compile Include="Assets\Dummy\Checker.cs" />
+     <Compile Include="Assets\Stage\Field\Particle Ribbon\Scripts\ReverseNormals.cs" />
+     <Compile Include="Assets\Stage\Main\Scripts\MyAiBoss.cs" />
      <Compile Include="Assets\Stage\Main\Scripts\MyAiManager.cs" />
-     <Compile Include="Assets\Stage\Main\Scripts\MyCharactor.cs" />
+     <Compile Include="Assets\Stage\Main\Scripts\MyArrow.cs" />
+     <Compile Include="Assets\Stage\Main\Scripts\MyArrowShot.cs" />
+     <Compile Include="Assets\Stage\Main\Scripts\MyAttack.cs" />
+     <Compile Include="Assets\Stage\Main\Scripts\MyAttackManager.cs" />
+     <Compile Include="Assets\Stage\Main\Scripts\MyAutoDestroyer.cs" />
+     <Compile Include="Assets\Stage\Main\Scripts\MyBaseButtonCtrl.cs" />
+     <Compile Include="Assets\Stage\Main\Scripts\MyBombCtrl.cs" />
+     <Compile Include="Assets\Stage\Main\Scripts\MyBombPointCtrl.cs" />
+     <Compile Include="Assets\Stage\Main\Scripts\MyBombShot.cs" />
+     <Compile Include="Assets\Stage\Main\Scripts\MyButtonCtrl.cs" />
+     <Compile Include="Assets\Stage\Main\Scripts\MyCamera.cs" />
+     <Compile Include="Assets\Stage\Main\Scripts\MyCarryMinisterAI.cs" />
+     <Compile Include="Assets\Stage\Main\Scripts\MyCharacter.cs" />
+     <Compile Include="Assets\Stage\Main\Scripts\MyField.cs" />
      <Compile Include="Assets\Stage\Main\Scripts\MyGame.cs" />
+     <Compile Include="Assets\Stage\Main\Scripts\MyGameScreen.cs" />
+     <Compile Include="Assets\Stage\Main\Scripts\MyMagicMinisterAI.cs" />
+     <Compile Include="Assets\Stage\Main\Scripts\MyMainUI.cs" />
+     <Compile Include="Assets\Stage\Main\Scripts\MyMenu.cs" />
+     <Compile Include="Assets\Stage\Main\Scripts\MyMirrorMinisterAI.cs" />
      <Compile Include="Assets\Stage\Main\Scripts\MyPlayer.cs" />
+     <Compile Include="Assets\Stage\Main\Scripts\MyPositionRotate.cs" />
+     <Compile Include="Assets\Stage\Main\Scripts\MyShadowMagicMinisterAI.cs" />
      <Compile Include="Assets\Stage\Main\Scripts\MyStage.cs" />
+     <Compile Include="Assets\Stage\Main\Scripts\MyTransition.cs" />
+     <Compile Include="Assets\Stage\Main\Scripts\MyVirusMinisterAI.cs" />
+     <Compile Include="Assets\Stage\Main\Scripts\MyWarpManager.cs" />
+     <Compile Include="Assets\Stage\Main\Scripts\MyWarpPoint.cs" />
+     <None Include="Assets\Dummy\AssetStore\Particle_Dissolve_Shader\Shaders\legacy\Dissolve_Alpha_Additive_Opacity_softrim.shader" />
+     <None Include="Assets\Dummy\AssetStore\Particle_Dissolve_Shader\Shaders\legacy\DissolveSoft_Alpha_Additive_Opacity_softrim.shader" />
+     <None Include="Assets\Dummy\AssetStore\Particle_Dissolve_Shader\Shaders\legacy\DissolveSoft_Alpha_Additive_softrim.shader" />
+     <None Include="Assets\Dummy\AssetStore\Particle_Dissolve_Shader\Shaders\legacy\DissolveSoft_Alpha_Unlit.shader" />
+     <None Include="Assets\Dummy\AssetStore\Particle_Dissolve_Shader\Shaders\softrim\Particle_softrim_alpha.shader" />
+     <None Include="Assets\Dummy\AssetStore\Particle_Dissolve_Shader\Shaders\unity5\Particle_Softrim_Dissolve_alpha.shader" />
+     <None Include="Assets\Dummy\AssetStore\Particle_Dissolve_Shader\Shaders\legacy\Dissolve_Alpha_Unlit_Opacity.shader" />
+     <None Include="Assets\Dummy\AssetStore\Particle_Dissolve_Shader\Shaders\legacy\Dissolve_Alpha_Unlit.shader" />
+     <None Include="Assets\Dummy\AssetStore\Particle_Dissolve_Shader\Shaders\legacy\DissolveSoft_Alpha_Additive.shader" />
+     <None Include="Assets\Dummy\AssetStore\Particle_Dissolve_Shader\Shaders\legacy\Dissolve_Alpha_Additive_softrim.shader" />
+     <None Include="Assets\Dummy\AssetStore\Particle_Dissolve_Shader\Shaders\legacy\Dissolve_Alpha_Unlit_softrim.shader" />
+     <None Include="Assets\Dummy\AssetStore\Particle_Dissolve_Shader\Shaders\softrim\Particle_softrim_add_stretch.shader" />
+     <None Include="Assets\Dummy\AssetStore\Particle_Dissolve_Shader\Shaders\legacy\DissolveSoft_Alpha_Unlit_Opacity_softrim.shader" />
+     <None Include="Assets\Dummy\AssetStore\Particle_Dissolve_Shader\Shaders\legacy\DissolveSoft_Alpha_Unlit_softrim.shader" />
+     <None Include="Assets\Dummy\AssetStore\Particle_Dissolve_Shader\Shaders\unity5\Particle_Softrim_Dissolve_additive.shader" />
+     <None Include="Assets\Dummy\AssetStore\Particle_Dissolve_Shader\Shaders\legacy\Dissolve_Alpha_Additive_Opacity.shader" />
+     <None Include="Assets\Dummy\AssetStore\Particle_Dissolve_Shader\ReadMe.txt" />
+     <None Include="Assets\Dummy\AssetStore\Particle_Dissolve_Shader\Shaders\legacy\Dissolve_Alpha_Unlit_Opacity_softrim.shader" />
+     <None Include="Assets\Dummy\AssetStore\Particle_Dissolve_Shader\Shaders\softrim\Particle_softrim_alpha_stretch.shader" />
+     <None Include="Assets\Dummy\AssetStore\Particle_Dissolve_Shader\Shaders\legacy\DissolveSoft_Alpha_Unlit_Opacity.shader" />
+     <None Include="Assets\Dummy\AssetStore\Particle_Dissolve_Shader\Shaders\softrim\Particle_softrim_add.shader" />
+     <None Include="Assets\Dummy\AssetStore\Particle_Dissolve_Shader\Shaders\legacy\Dissolve_Alpha_Additive.shader" />
+     <None Include="Assets\Dummy\AssetStore\Particle_Dissolve_Shader\Shaders\legacy\DissolveSoft_Alpha_Additive_Opacity.shader" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>

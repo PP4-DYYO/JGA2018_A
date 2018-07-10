@@ -88,13 +88,14 @@ public class MyCamera : MonoBehaviour
     /// </summary>
     void Start()
     {
+        //対象の設定
+        m_player = myGame.CharacterScript.PlayerScript;
         if (m_player == null)
         {
             Debug.LogError("ターゲットが設定されていない");
             Application.Quit();
         }
 
-        m_player = myGame.CharacterScript.PlayerScript;
     }
 
     //----------------------------------------------------------------------------------------------------

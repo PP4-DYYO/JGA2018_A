@@ -75,13 +75,18 @@ public class MyAttack : MonoBehaviour
 	/// <summary>
 	/// 属性
 	/// </summary>
-	[SerializeField]
 	MaskAttribute m_attribute;
 	public MaskAttribute Attribute
 	{
 		get { return m_attribute; }
 		set { m_attribute = value; }
 	}
+
+	/// <summary>
+	/// 指定属性
+	/// </summary>
+	[SerializeField]
+	MaskAttribute m_specifiedAttribute;
 
 	/// <summary>
 	/// 威力
@@ -133,6 +138,8 @@ public class MyAttack : MonoBehaviour
 	{
 		m_mf = GetComponent<MeshFilter>();
 		m_mc = GetComponent<MeshCollider>();
+
+		m_attribute = (m_specifiedAttribute != MaskAttribute.Non) ? m_specifiedAttribute : m_attribute;
 
 		if (m_pos != Vector3.zero)
 		{

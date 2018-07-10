@@ -79,7 +79,10 @@
     <Compile Include="Assets\Dummy\AssetStore\Particle_Dissolve_Shader\Scripts\PDS_GameController.cs" />
     <Compile Include="Assets\Dummy\AssetStore\Particle_Dissolve_Shader\Scripts\ScrollingUVs_PDS.cs" />
     <Compile Include="Assets\Dummy\Checker.cs" />
+    <Compile Include="Assets\Stage\Field\Particle Ribbon\Scripts\ReverseNormals.cs" />
+    <Compile Include="Assets\Stage\Main\Scripts\MyAiBoss.cs" />
     <Compile Include="Assets\Stage\Main\Scripts\MyAiManager.cs" />
+    <Compile Include="Assets\Stage\Main\Scripts\MyArrow.cs" />
     <Compile Include="Assets\Stage\Main\Scripts\MyArrowShot.cs" />
     <Compile Include="Assets\Stage\Main\Scripts\MyAttack.cs" />
     <Compile Include="Assets\Stage\Main\Scripts\MyAttackManager.cs" />
@@ -94,14 +97,19 @@
     <Compile Include="Assets\Stage\Main\Scripts\MyCharacter.cs" />
     <Compile Include="Assets\Stage\Main\Scripts\MyField.cs" />
     <Compile Include="Assets\Stage\Main\Scripts\MyGame.cs" />
+    <Compile Include="Assets\Stage\Main\Scripts\MyGameScreen.cs" />
     <Compile Include="Assets\Stage\Main\Scripts\MyMagicMinisterAI.cs" />
+    <Compile Include="Assets\Stage\Main\Scripts\MyMainUI.cs" />
     <Compile Include="Assets\Stage\Main\Scripts\MyMenu.cs" />
     <Compile Include="Assets\Stage\Main\Scripts\MyMirrorMinisterAI.cs" />
     <Compile Include="Assets\Stage\Main\Scripts\MyPlayer.cs" />
     <Compile Include="Assets\Stage\Main\Scripts\MyPositionRotate.cs" />
     <Compile Include="Assets\Stage\Main\Scripts\MyShadowMagicMinisterAI.cs" />
     <Compile Include="Assets\Stage\Main\Scripts\MyStage.cs" />
+    <Compile Include="Assets\Stage\Main\Scripts\MyTransition.cs" />
     <Compile Include="Assets\Stage\Main\Scripts\MyVirusMinisterAI.cs" />
+    <Compile Include="Assets\Stage\Main\Scripts\MyWarpManager.cs" />
+    <Compile Include="Assets\Stage\Main\Scripts\MyWarpPoint.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Dummy\AssetStore\Particle_Dissolve_Shader\ReadMe.txt" />

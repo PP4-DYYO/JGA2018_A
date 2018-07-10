@@ -64,9 +64,18 @@ public class MyAiBoss : MonoBehaviour
     protected GameObject m_myGameObject;
 
     /// <summary>
+    /// MAXHP//
+    /// </summary>
+    [SerializeField]
+    protected int m_maxHitPoint;
+    public int MaxHitPoint
+    {
+        get { return m_maxHitPoint; }
+    }
+
+    /// <summary>
     /// HP//
     /// </summary>
-    [SerializeField] 
     protected int m_hitPoint;
     public int HitPoint
     {
@@ -208,20 +217,8 @@ public class MyAiBoss : MonoBehaviour
     /// </summary>
     protected virtual void Start()
     {
-        switch (m_myObjectName)
-        {
-            case "VirusMinister":
-                myBombShot = GameObject.Find("BombPoint").GetComponent<MyBombShot>();
-                break;
-            case "CarryMinister":
-                myArrowShot = GameObject.Find("ArrowPosition").GetComponent<MyArrowShot>();
-                break;
-            case "MirrorMinister":
-                break;
-            case "MagicMinister":
-                break;
-        }
         m_aimode = AIMode.WAIT;
+        m_hitPoint= m_maxHitPoint;
     }
 
     //----------------------------------------------------------------------------------------------------
@@ -274,8 +271,7 @@ public class MyAiBoss : MonoBehaviour
     /// 通常攻撃
     /// </summary>
     public void NomalAttack()
-    {
-         
+    {       
         switch (m_myObjectName)
         {
             case "CarryMinister":
@@ -284,7 +280,7 @@ public class MyAiBoss : MonoBehaviour
                 {
                     SpecialAttack();
                 }
-                myArrowShot.Shot(m_attackNum);
+               GameObject.Find("ArrowPoint").GetComponent<MyArrowShot>().Shot(m_attackNum);
                 m_isAttacked = true;
                 break;
 
@@ -294,7 +290,7 @@ public class MyAiBoss : MonoBehaviour
                 {
                     SpecialAttack();
                 }
-                myBombShot.Shot(m_attackNum);
+                GameObject.Find("BombPoint").GetComponent<MyBombShot>().Shot(m_attackNum);
                 m_isAttacked = true;
                 break;
             case "MirrorMinister":

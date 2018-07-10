@@ -32,6 +32,12 @@ public class MyWarpManager : MonoBehaviour
     GameObject warpH2;
 
     /// <summary>
+    /// プレイヤーのゲームオブジェクト
+    /// </summary>
+    GameObject m_playerObject;
+
+
+    /// <summary>
     /// 時間計測用
     /// </summary>
     float m_time = 0;
@@ -74,6 +80,8 @@ public class MyWarpManager : MonoBehaviour
         warpG3 = GameObject.Find("WarpG3");
         warpH1 = GameObject.Find("WarpH1");
         warpH2 = GameObject.Find("WarpH2");
+
+        m_playerObject = GameObject.Find("DummyPlayer");
     }
 
     //----------------------------------------------------------------------------------------------------
@@ -89,6 +97,7 @@ public class MyWarpManager : MonoBehaviour
             {
                 m_time = 0;
                 m_canUseWarp = true;
+                m_playerObject.GetComponent<MyPlayer>().enabled = true;
             }
         }
     }
@@ -178,6 +187,7 @@ public class MyWarpManager : MonoBehaviour
             }
             m_canUseWarp = false;
             myTransition.StartTransition();
+            player.GetComponent<MyPlayer>().enabled = false;
         }
     }
 }

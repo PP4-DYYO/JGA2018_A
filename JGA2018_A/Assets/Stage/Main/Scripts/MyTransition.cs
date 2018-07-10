@@ -4,9 +4,13 @@
 //製作者 京都コンピュータ学院京都駅前校ゲーム学科四回生　吉田純基
 //
 //////////////////////////////////////////////////////////////////
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// トランジション制御用
+/// </summary>
 public class MyTransition : MonoBehaviour {
 
     [SerializeField]
@@ -20,20 +24,36 @@ public class MyTransition : MonoBehaviour {
     Image image;
     float alfa;
 
-    // Use this for initialization
+
+    //----------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// トランジション制御用
+    /// </summary>
     void Start () {
         m_panel = this.gameObject;
         image = m_panel.GetComponent<Image>();
         alfa = GetComponent<Image>().color.a;
+
+        sp1 = AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Dummy/UI/sp1.png");
+        sp2 = AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Dummy/UI/sp2.png");
+
+        image.sprite = sp1;
     }
 
-   public void StartTransition()
+    //----------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// 画面切り替えスタート
+    /// </summary>
+    public void StartTransition()
     {
         m_change = true;
     }
-	
-	// Update is called once per frame
-	void Update () {
+
+    //----------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// 画像を時間で切り替える
+    /// </summary>
+    void Update () {
         if (m_change==true)
         {
             m_time += Time.deltaTime;

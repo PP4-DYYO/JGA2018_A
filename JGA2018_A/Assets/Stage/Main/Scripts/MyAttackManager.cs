@@ -699,6 +699,12 @@ public class MyAttackManager : MonoBehaviour
 	/// </summary>
 	[SerializeField]
 	float m_deathblow2Time;
+
+	/// <summary>
+	/// 壁にめり込まないための距離
+	/// </summary>
+	[SerializeField]
+	float m_distanceNotToGetDrownedInWall;
 	#endregion
 
 	#region 必殺技３
@@ -834,6 +840,16 @@ public class MyAttackManager : MonoBehaviour
 	/// 作業用のFloat
 	/// </summary>
 	float m_workFloat;
+
+	/// <summary>
+	/// 作業用のRay
+	/// </summary>
+	Ray m_workRay;
+
+	/// <summary>
+	/// 作業用のRaycastHit
+	/// </summary>
+	RaycastHit m_workRaycastHit;
 	#endregion
 
 #if DEBUG
@@ -1343,6 +1359,12 @@ public class MyAttackManager : MonoBehaviour
 					Teleportation(m_camera.gameObject, m_player.transform.position);
 					m_camera.transform.position += m_player.transform.forward * m_cameraDistanceDeathblowHit + Vector3.up * m_cameraHeightDeathblow;
 					m_camera.transform.LookAt(m_player.transform.position + (Vector3.up * m_cameraHeightDeathblow));
+					//壁めり込み考慮
+					m_workRay.origin = m_player.transform.position + Vector3.up * m_cameraHeightDeathblow;
+					m_workRay.direction = m_camera.transform.position - (m_player.transform.position + Vector3.up * m_cameraHeightDeathblow);
+					if (Physics.Raycast(m_workRay, out m_workRaycastHit, m_cameraDistanceDeathblowHit))
+						m_camera.transform.position = m_workRaycastHit.point
+							- (m_workRay.GetPoint(m_distanceNotToGetDrownedInWall) - (m_player.transform.position + Vector3.up * m_cameraHeightDeathblow));
 					break;
 			}
 		}

@@ -21,6 +21,8 @@ public class MyArrow : MonoBehaviour {
     /// </summary>
     const float m_cubeLength=0.1f;
 
+
+    //----------------------------------------------------------------------------------------------------
     /// <summary>
     /// 初期設定
     /// </summary>
@@ -29,6 +31,7 @@ public class MyArrow : MonoBehaviour {
         myAiBoss = GameObject.Find("CarryMinister").GetComponent<MyAiBoss>();
     }
 
+    //----------------------------------------------------------------------------------------------------
     /// <summary>
     /// 当たり判定
     /// </summary>

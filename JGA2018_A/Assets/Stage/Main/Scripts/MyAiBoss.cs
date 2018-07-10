@@ -11,13 +11,11 @@ using UnityEngine;
 
 public class MyAiBoss : MonoBehaviour
 {
-
     /// <summary>
     /// プレイヤーのオブジェクト
     /// </summary>
     [SerializeField]
     protected GameObject m_playerObject;
-
     public GameObject PlayerObject
     {
         get { return m_playerObject; }
@@ -28,14 +26,24 @@ public class MyAiBoss : MonoBehaviour
     /// </summary>
     [SerializeField]
     protected string m_playerObjectName = "DummyPlayer";
-
     public string PlayerObjectName
     {
         get { return m_playerObjectName; }
     }
 
+    /// <summary>
+	/// MyCharacterクラス
+	/// </summary>
     MyCharacter myCharacter;
+
+    /// <summary>
+	/// myBombShotクラス（ウイルス大臣）
+	/// </summary>
     MyBombShot myBombShot;
+
+    /// <summary>
+    /// MyArrowShotクラス（キャリー大臣）
+    /// </summary>
     MyArrowShot myArrowShot;
 
 	/// <summary>
@@ -59,14 +67,17 @@ public class MyAiBoss : MonoBehaviour
     /// HP//
     /// </summary>
     [SerializeField] 
-     protected int m_hitPoint;
+    protected int m_hitPoint;
+    public int HitPoint
+    {
+        get { return m_hitPoint; }
+    }
 
     /// <summary>
     /// 攻撃力
     /// </summary>
     [SerializeField]
     protected int m_attack;
-
     public int Attack
     {
         get { return m_attack; }
@@ -211,7 +222,6 @@ public class MyAiBoss : MonoBehaviour
                 break;
         }
         m_aimode = AIMode.WAIT;
-        m_myGameObject = GameObject.Find(m_myObjectName);
     }
 
     //----------------------------------------------------------------------------------------------------
@@ -344,6 +354,12 @@ public class MyAiBoss : MonoBehaviour
     {
         m_hitPoint = m_hitPoint - damage;
         ReceiveDamageAnimation();
+
+        //HP0で死ぬ
+        if (m_hitPoint <= 0)
+        {
+            transform.parent.GetComponent<MyAiManager>().CharacterScript.GameScript.ChangeState(StageStatus.BossDestroyed);
+        }
     }
 
     //----------------------------------------------------------------------------------------------------

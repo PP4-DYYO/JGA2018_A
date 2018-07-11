@@ -99,6 +99,12 @@ public class MyAttack : MonoBehaviour
 	}
 
 	/// <summary>
+	/// 指定威力
+	/// </summary>
+	[SerializeField]
+	int m_specifiedPower;
+
+	/// <summary>
 	/// 拡張する時間を数える
 	/// </summary>
 	float m_countTimeExpansion;
@@ -139,7 +145,9 @@ public class MyAttack : MonoBehaviour
 		m_mf = GetComponent<MeshFilter>();
 		m_mc = GetComponent<MeshCollider>();
 
+		//指定パラメータ
 		m_attribute = (m_specifiedAttribute != MaskAttribute.Non) ? m_specifiedAttribute : m_attribute;
+		m_power = (m_specifiedPower != 0) ? m_specifiedPower : m_power;
 
 		if (m_pos != Vector3.zero)
 		{

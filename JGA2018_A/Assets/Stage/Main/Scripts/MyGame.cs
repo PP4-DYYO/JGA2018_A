@@ -301,7 +301,7 @@ public class MyGame : MonoBehaviour
 			//設定
 			SetManipulateMainObject(false);
 			m_countTimeState = 0;
-			Debug.Log("UIに「ダンジョン先のボスを倒せ」と表示");
+			myMainUi.GameScreenScript.StartDungeonInstruction();
 
 			m_stageStatePrev = m_stageState;
 		}

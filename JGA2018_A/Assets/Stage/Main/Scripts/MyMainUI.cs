@@ -25,15 +25,13 @@ public class MyMainUI : MonoBehaviour
 		get { return myGame; }
 	}
 
-	// Use this for initialization
-	void Start()
+	/// <summary>
+	/// ゲームスクリーンクラス
+	/// </summary>
+	[SerializeField]
+	MyGameScreen myGameScreen;
+	public MyGameScreen GameScreenScript
 	{
-
-	}
-
-	// Update is called once per frame
-	void Update()
-	{
-
+		get { return myGameScreen; }
 	}
 }

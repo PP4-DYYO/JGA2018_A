@@ -11,6 +11,35 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+//----------------------------------------------------------------------------------------------------
+//Enum・Struct
+//----------------------------------------------------------------------------------------------------
+
+//----------------------------------------------------------------------------------------------------
+/// <summary>
+/// 命令の状態
+/// </summary>
+enum InstructionState
+{
+	/// <summary>
+	/// 登場
+	/// </summary>
+	Appearance,
+	/// <summary>
+	/// 表示
+	/// </summary>
+	Display,
+	/// <summary>
+	/// 撤退
+	/// </summary>
+	Withdraw,
+}
+
+//----------------------------------------------------------------------------------------------------
+//クラス
+//----------------------------------------------------------------------------------------------------
+
+//----------------------------------------------------------------------------------------------------
 /// <summary>
 /// ゲームスクリーンクラス
 /// </summary>
@@ -157,6 +186,18 @@ public class MyGameScreen : MonoBehaviour
 	Image MagicMaskInUse;
 
 	/// <summary>
+	/// 命令トランスフォーム
+	/// </summary>
+	[SerializeField]
+	RectTransform InstructionTrans;
+
+	/// <summary>
+	/// ダンジョン先のボスを倒せオブジェクト
+	/// </summary>
+	[SerializeField]
+	Image DefeatBossBeyondDungeon;
+
+	/// <summary>
 	/// キャラクター
 	/// </summary>
 	MyCharacter m_character;
@@ -205,6 +246,55 @@ public class MyGameScreen : MonoBehaviour
 	bool m_isLightingUp;
 	#endregion
 
+	#region 命令
+	[Header("命令")]
+	/// <summary>
+	/// 命令登場時間
+	/// </summary>
+	[SerializeField]
+	float m_instructionAppearanceTime;
+
+	/// <summary>
+	/// 命令登場位置
+	/// </summary>
+	[SerializeField]
+	Vector3 m_instructionAppearancePos;
+
+	/// <summary>
+	/// 命令表示時間
+	/// </summary>
+	[SerializeField]
+	float m_instructionDisplayTime;
+
+	/// <summary>
+	/// 命令表示位置
+	/// </summary>
+	[SerializeField]
+	Vector3 m_instructionDisplayPos;
+
+	/// <summary>
+	/// 命令撤退時間
+	/// </summary>
+	[SerializeField]
+	float m_instructionWithdrawTime;
+
+	/// <summary>
+	/// 命令撤退位置
+	/// </summary>
+	[SerializeField]
+	Vector3 m_instructionWithdrawPos;
+
+	/// <summary>
+	/// 命令の状態
+	/// </summary>
+	InstructionState m_instructionState;
+
+	/// <summary>
+	/// 命令時間を数える
+	/// </summary>
+	float m_countTimeInstruction;
+	#endregion
+
 	#region 作業用
 	/// <summary>
 	/// 作業用Float
@@ -237,6 +327,9 @@ public class MyGameScreen : MonoBehaviour
 
 		//マスクの状態処理
 		MaskStateProcess();
+
+		//指示処理
+		InstructionProcess();
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -346,7 +439,7 @@ public class MyGameScreen : MonoBehaviour
 		MagicMaskCollection.SetActive(m_player.MagicMask.isObtained);
 
 		//マスク使用中
-		if(MaskGauge.fillAmount > 0)
+		if (MaskGauge.fillAmount > 0)
 		{
 			//使用中マスクで必殺技が使われていないと点滅
 			VirusMaskToLetAttention.enabled = (!m_player.WasUseDeathblow && m_player.VirusMask.isUse) && m_isLightingUp;
@@ -368,5 +461,70 @@ public class MyGameScreen : MonoBehaviour
 		CarryMaskInUse.enabled = m_player.CarryMask.isUse;
 		MirrorMaskInUse.enabled = m_player.MirrorMask.isUse;
 		MagicMaskInUse.enabled = m_player.MagicMask.isUse;
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// 命令処理
+	/// </summary>
+	void InstructionProcess()
+	{
+		//カウント中
+		if (m_countTimeInstruction >= 0)
+		{
+			//状態更新
+			UpdateInstructionState();
+
+			//状態
+			switch (m_instructionState)
+			{
+				case InstructionState.Appearance:
+					//時間による位置
+					InstructionTrans.localPosition = m_instructionAppearancePos
+						+ ((m_instructionDisplayPos - m_instructionAppearancePos) * (m_countTimeInstruction / m_instructionAppearanceTime));
+					break;
+				case InstructionState.Display:
+					InstructionTrans.localPosition = m_instructionDisplayPos;
+					break;
+				case InstructionState.Withdraw:
+					//時間による位置
+					InstructionTrans.localPosition = m_instructionDisplayPos
+						+ ((m_instructionWithdrawPos - m_instructionDisplayPos)
+						* (m_countTimeInstruction - (m_instructionAppearanceTime + m_instructionDisplayTime)) / m_instructionWithdrawTime);
+					break;
+			}
+
+			m_countTimeInstruction += Time.deltaTime;
+
+			//カウント終了
+			if (m_countTimeInstruction >= m_instructionAppearanceTime + m_instructionDisplayTime + m_instructionWithdrawTime)
+				m_countTimeInstruction = -1;
+		}
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// 命令状態の更新
+	/// </summary>
+	void UpdateInstructionState()
+	{
+		//タイムライン
+		if (m_countTimeInstruction >= m_instructionAppearanceTime + m_instructionDisplayTime)
+			m_instructionState = InstructionState.Withdraw;
+		else if (m_countTimeInstruction >= m_instructionAppearanceTime)
+			m_instructionState = InstructionState.Display;
+		else
+			m_instructionState = InstructionState.Appearance;
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// ダンジョンの命令開始
+	/// </summary>
+	public void StartDungeonInstruction()
+	{
+		m_instructionState = InstructionState.Appearance;
+		m_countTimeInstruction = 0;
+		DefeatBossBeyondDungeon.enabled = true;
 	}
 }

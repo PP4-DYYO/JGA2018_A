@@ -92,9 +92,6 @@ public class MyStage : MonoBehaviour
 				return false;
 		}
 
-		//プレイヤーの位置
-		myGame.CharacterScript.PlayerScript.transform.position = m_currentField.StartPos;
-
 		return true;
 	}
 

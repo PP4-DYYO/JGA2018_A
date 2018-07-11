@@ -26,6 +26,16 @@ public class MyField : MonoBehaviour
 	}
 
 	/// <summary>
+	/// カメラの相対的位置
+	/// </summary>
+	[SerializeField]
+	Vector3 m_relativePosCamera;
+	public Vector3 RelativePosCamera
+	{
+		get { return m_relativePosCamera; }
+	}
+
+	/// <summary>
 	/// ボスのスタート位置
 	/// </summary>
 	[SerializeField]

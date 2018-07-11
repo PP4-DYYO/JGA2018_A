@@ -212,8 +212,18 @@ public class MyGame : MonoBehaviour
 	/// </summary>
 	void AddvanceStage()
 	{
-		if (!myStage.ChangeStage(++m_stageNum))
+		//ステージ変更
+		if (myStage.ChangeStage(++m_stageNum))
+		{
+			//プレイヤーの位置とカメラ
+			myCharacter.PlayerScript.transform.position = myStage.CurrentField.StartPos;
+			myCamera.SetPosition(myStage.CurrentField.RelativePosCamera);
+		}
+		else
+		{
 			Debug.Log("全クリ処理");
+		}
+
 		m_stageState = StageStatus.Dungeon;
 		m_stageStatePrev = StageStatus.BossDestroyed;
 	}
@@ -282,9 +292,11 @@ public class MyGame : MonoBehaviour
 		//初めてこの状態になった
 		if (m_stageState != m_stageStatePrev)
 		{
-			//ボスの生成とその他の設定
+			//ボスの生成
 			myCharacter.AiManagerScript.GenerateBoss(m_stageNum);
 			ReproduceInstance();
+
+			//その他の設定
 			SetManipulateMainObject(false);
 			m_countTimeState = 0;
 			Debug.Log("UIに「ダンジョン先のボスを倒せ」と表示");

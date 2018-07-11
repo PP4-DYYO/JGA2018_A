@@ -1957,6 +1957,7 @@ public class MyPlayer : MonoBehaviour
 	/// </summary>
 	public void StartAnimIdle()
 	{
+		m_behaviorStatePrev = BehaviorStatus.Idle;
 		Anim.SetTrigger(TRANS_IDLE);
 	}
 
@@ -1966,6 +1967,7 @@ public class MyPlayer : MonoBehaviour
 	/// </summary>
 	public void StartAnimRun()
 	{
+		m_behaviorStatePrev = BehaviorStatus.Run;
 		Anim.SetTrigger(TRANS_RUN);
 	}
 
@@ -1975,6 +1977,7 @@ public class MyPlayer : MonoBehaviour
 	/// </summary>
 	public void StartAnimAttackDeathblow1A()
 	{
+		m_behaviorStatePrev = BehaviorStatus.AttackDeathblow1;
 		Anim.SetTrigger(TRANS_ATTACK_DEATHBLOW1A);
 	}
 
@@ -1998,6 +2001,7 @@ public class MyPlayer : MonoBehaviour
 	/// </summary>
 	public void StartAnimAttackDethblow3A()
 	{
+		m_behaviorStatePrev = BehaviorStatus.AttackDeathblow3;
 		Anim.SetTrigger(TRANS_ATTACK_DEATHBLOW3A);
 	}
 
@@ -2007,6 +2011,7 @@ public class MyPlayer : MonoBehaviour
 	/// </summary>
 	public void StartAnimAttackDethblow4A()
 	{
+		m_behaviorStatePrev = BehaviorStatus.AttackDeathblow4;
 		Anim.SetTrigger(TRANS_ATTACK_DEATHBLOW4A);
 	}
 
@@ -2017,7 +2022,7 @@ public class MyPlayer : MonoBehaviour
 	/// <param name="pickupObj">拾うオブジェクト</param>
 	public void PickupObject(GameObject pickupObj)
 	{
-		m_behaviorState = BehaviorStatus.Pickup;
+		m_behaviorStatePrev = BehaviorStatus.Pickup;
 		m_isNotChangeBehaviorState = true;
 	}
 

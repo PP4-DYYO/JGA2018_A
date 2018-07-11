@@ -282,23 +282,15 @@ public class MyGameScreen : MonoBehaviour
 		//ボスHP表示非表示
 		BossHpCollection.SetActive(myMainUi.GameScript.StageState == StageStatus.BossGame);
 
-		//エラー回避
+		//ボスのHPが変わった
+		if (m_bossHp != m_character.BossScript.HitPoint)
 		{
-			if (m_bossHp == 0)
-			{
-				m_bossHp = 1;
-				Debug.Log("ボスのHPをアクセス可能にし、下記のコメントアウトを消してください");
-			}
+			//アシスタンスHPとHPの表示切替
+			BossAssistanceHp.fillAmount =
+				(BossAssistanceHp.fillAmount > BossHp.fillAmount) ? BossAssistanceHp.fillAmount : (float)m_bossHp / m_character.BossScript.MaxHitPoint;
+			m_bossHp = m_character.BossScript.HitPoint;
+			BossHp.fillAmount = (float)m_bossHp / m_character.BossScript.MaxHitPoint;
 		}
-		////ボスのHPが変わった
-		//if (m_bossHp != m_character.BossScript.Hp)
-		//{
-		//	//アシスタンスHPとHPの表示切替
-		//	BossAssistanceHp.fillAmount =
-		//		(BossAssistanceHp.fillAmount > BossHp.fillAmount) ? BossAssistanceHp.fillAmount : (float)m_bossHp / m_character.BossScript.MaxHp;
-		//	m_bossHp = m_character.BossScript.Hp;
-		//	BossHp.fillAmount = (float)m_bossHp / m_character.BossScript.MaxHp;
-		//}
 
 		//アシスタンスHPの減り
 		if (BossAssistanceHp.fillAmount > BossHp.fillAmount)

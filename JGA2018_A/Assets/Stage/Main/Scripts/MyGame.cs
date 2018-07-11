@@ -218,6 +218,10 @@ public class MyGame : MonoBehaviour
 			//プレイヤーの位置とカメラ
 			myCharacter.PlayerScript.transform.position = myStage.CurrentField.StartPos;
 			myCamera.SetPosition(myStage.CurrentField.RelativePosCamera);
+
+			//ボスの生成
+			myCharacter.AiManagerScript.GenerateBoss(m_stageNum);
+			ReproduceInstance();
 		}
 		else
 		{
@@ -292,11 +296,7 @@ public class MyGame : MonoBehaviour
 		//初めてこの状態になった
 		if (m_stageState != m_stageStatePrev)
 		{
-			//ボスの生成
-			myCharacter.AiManagerScript.GenerateBoss(m_stageNum);
-			ReproduceInstance();
-
-			//その他の設定
+			//設定
 			SetManipulateMainObject(false);
 			m_countTimeState = 0;
 			Debug.Log("UIに「ダンジョン先のボスを倒せ」と表示");

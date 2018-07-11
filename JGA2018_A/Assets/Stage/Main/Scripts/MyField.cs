@@ -106,6 +106,16 @@ public class MyField : MonoBehaviour
 	}
 
 	/// <summary>
+	/// ワープマネージャ
+	/// </summary>
+	[SerializeField]
+	MyWarpManager myWarpManager;
+	public MyWarpManager WarpManagerScript
+	{
+		get { return myWarpManager; }
+	}
+
+	/// <summary>
 	/// 作業用Vector３配列
 	/// </summary>
 	Vector3[] m_workVector3 = new Vector3[5];

@@ -215,9 +215,11 @@ public class MyGame : MonoBehaviour
 		//ステージ変更
 		if (myStage.ChangeStage(++m_stageNum))
 		{
-			//プレイヤーの位置とカメラ
-			myCharacter.PlayerScript.transform.position = myStage.CurrentField.StartPos;
+			//プレイヤーとカメラの位置と向き
+			m_player.transform.position = myStage.CurrentField.StartPos;
 			myCamera.SetPosition(myStage.CurrentField.RelativePosCamera);
+			m_player.transform.LookAt(m_player.transform.position
+				+ Vector3.Scale((m_player.transform.position - myCamera.transform.position), (Vector3.right + Vector3.forward)));
 
 			//ボスの生成
 			myCharacter.AiManagerScript.GenerateBoss(m_stageNum);
@@ -315,7 +317,7 @@ public class MyGame : MonoBehaviour
 	void BossEventOccurrenceManagement()
 	{
 		//現在のフィールドで、ボスイベントの位置にプレイヤーがいる
-		if (myStage.CurrentField.WallOccurrenceBossEventCollider.bounds.Contains(myCharacter.PlayerScript.transform.position))
+		if (myStage.CurrentField.WallOccurrenceBossEventCollider.bounds.Contains(m_player.transform.position))
 			m_stageState = StageStatus.BossAppearance;
 	}
 
@@ -336,6 +338,10 @@ public class MyGame : MonoBehaviour
 			m_initPosCameraState = CameraScript.transform.position;
 			m_player.StartAnimIdle();
 			Debug.Log("ボスの威嚇アニメーションスタート");
+
+			//ワープマネージャ
+			if (myStage.CurrentField.WarpManagerScript)
+				myStage.CurrentField.WarpManagerScript.enabled = false;
 
 			m_stageStatePrev = m_stageState;
 		}
@@ -375,7 +381,7 @@ public class MyGame : MonoBehaviour
 			m_boss.transform.position = myStage.CurrentField.GetPosDeathblow1()[0];
 			m_player.transform.LookAt(m_boss.transform);
 			m_boss.transform.LookAt(m_player.transform);
-			Debug.Log("カメラがボスを捕らえる設定");
+			myCamera.SetPosition(-(m_boss.transform.position - m_player.transform.position));
 
 			m_stageStatePrev = m_stageState;
 		}

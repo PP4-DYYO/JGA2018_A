@@ -122,13 +122,13 @@ public class MyCamera : MonoBehaviour
         }
         transform.RotateAround(m_lookAt, transform.right, m_rotY);
 
-        // 視点の設定
-        transform.LookAt(m_lookAt);
-
         // カメラとプレイヤーとの間の距離を調整
         transform.position = m_lookAt - transform.forward * m_distanceToPlayerM;
 
-        CheckWall();
+		// 視点の設定
+		transform.LookAt(m_lookAt);
+
+		CheckWall();
     }
 
     //----------------------------------------------------------------------------------------------------
@@ -157,5 +157,6 @@ public class MyCamera : MonoBehaviour
     public void SetPosition(Vector3 relativeLocations)
     {
         transform.position = m_player.transform.position + relativeLocations;
+		transform.LookAt(m_player.transform.position + Vector3.up * m_heightM);
     }
 }

@@ -14,6 +14,11 @@ using UnityEngine;
 public class MyVirusMinisterAI : MyAiBoss
 {
 
+    /// <summary>
+    /// スクリプト
+    /// </summary>
+    MyBombShot myBombShot;
+
     //----------------------------------------------------------------------------------------------------
     /// <summary>
     /// 初期状態設定
@@ -23,6 +28,7 @@ public class MyVirusMinisterAI : MyAiBoss
         m_attackNum = 1;
 
         m_myObjectName = this.gameObject.name;
+        m_myGameObject = this.gameObject;
         m_playerObject = GameObject.Find(m_playerObjectName);
         m_hitPoint = 310;
         m_attack = 50;
@@ -41,6 +47,8 @@ public class MyVirusMinisterAI : MyAiBoss
         m_aimode = AIMode.WAIT;
 
         m_gameTime = m_attackInterval;
+
+        myBombShot = GameObject.Find("BombPoint").GetComponent<MyBombShot>();
 
         base.Start();
     }

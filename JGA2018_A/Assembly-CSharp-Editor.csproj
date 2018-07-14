@@ -48,6 +48,8 @@
   <ItemGroup>
      <Compile Include="Assets\Dummy\AssetStore\Particle_Dissolve_Shader\Shaders\unity5\Editor\CustomMaterialEditor.cs" />
      <Compile Include="Assets\Dummy\AssetStore\Particle_Dissolve_Shader\Shaders\unity5\Editor\Shader_softrim_dissolve.cs" />
+     <Compile Include="Assets\Terasurware\Classes\Editor\Opening_importer.cs" />
+     <Compile Include="Assets\Terasurware\Editor\ExcelImporterMaker.cs" />
      <None Include="Assets\Dummy\AssetStore\Particle_Dissolve_Shader\Shaders\legacy\Dissolve_Alpha_Additive_Opacity_softrim.shader" />
      <None Include="Assets\Dummy\AssetStore\Particle_Dissolve_Shader\Shaders\legacy\DissolveSoft_Alpha_Additive_Opacity_softrim.shader" />
      <None Include="Assets\Dummy\AssetStore\Particle_Dissolve_Shader\Shaders\legacy\DissolveSoft_Alpha_Additive_softrim.shader" />
@@ -64,6 +66,10 @@
      <None Include="Assets\Dummy\AssetStore\Particle_Dissolve_Shader\Shaders\legacy\DissolveSoft_Alpha_Unlit_softrim.shader" />
      <None Include="Assets\Dummy\AssetStore\Particle_Dissolve_Shader\Shaders\unity5\Particle_Softrim_Dissolve_additive.shader" />
      <None Include="Assets\Dummy\AssetStore\Particle_Dissolve_Shader\Shaders\legacy\Dissolve_Alpha_Additive_Opacity.shader" />
+     <None Include="Assets\Terasurware\Editor\ExportTemplate.txt" />
+     <None Include="Assets\Terasurware\Editor\ExportTemplate2.txt" />
+     <None Include="Assets\Terasurware\Editor\EntityTemplate.txt" />
+     <None Include="Assets\Terasurware\Editor\EntityTemplate2.txt" />
      <None Include="Assets\Dummy\AssetStore\Particle_Dissolve_Shader\ReadMe.txt" />
      <None Include="Assets\Dummy\AssetStore\Particle_Dissolve_Shader\Shaders\legacy\Dissolve_Alpha_Unlit_Opacity_softrim.shader" />
      <None Include="Assets\Dummy\AssetStore\Particle_Dissolve_Shader\Shaders\softrim\Particle_softrim_alpha_stretch.shader" />
@@ -124,6 +130,21 @@
  </Reference>
  <Reference Include="UnityEditor.WindowsStandalone.Extensions">
  <HintPath>C:/Program Files/Unity/Editor/Data/PlaybackEngines/windowsstandalonesupport/UnityEditor.WindowsStandalone.Extensions.dll</HintPath>
+ </Reference>
+ <Reference Include="NPOI.OOXML">
+ <HintPath>C:/Users/ifeat/Downloads/Document/Git/JGA2018_A/JGA2018_A/Assets/Terasurware/Editor/npoi/NPOI.OOXML.dll</HintPath>
+ </Reference>
+ <Reference Include="NPOI.OpenXmlFormats">
+ <HintPath>C:/Users/ifeat/Downloads/Document/Git/JGA2018_A/JGA2018_A/Assets/Terasurware/Editor/npoi/NPOI.OpenXmlFormats.dll</HintPath>
+ </Reference>
+ <Reference Include="NPOI.OpenXml4Net">
+ <HintPath>C:/Users/ifeat/Downloads/Document/Git/JGA2018_A/JGA2018_A/Assets/Terasurware/Editor/npoi/NPOI.OpenXml4Net.dll</HintPath>
+ </Reference>
+ <Reference Include="ICSharpCode.SharpZipLib">
+ <HintPath>C:/Users/ifeat/Downloads/Document/Git/JGA2018_A/JGA2018_A/Assets/Terasurware/Editor/npoi/ICSharpCode.SharpZipLib.dll</HintPath>
+ </Reference>
+ <Reference Include="NPOI">
+ <HintPath>C:/Users/ifeat/Downloads/Document/Git/JGA2018_A/JGA2018_A/Assets/Terasurware/Editor/npoi/NPOI.dll</HintPath>
  </Reference>
   </ItemGroup>
   <ItemGroup>

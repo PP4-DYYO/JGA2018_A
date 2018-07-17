@@ -30,10 +30,20 @@ public class MyTitle : MonoBehaviour
     [SerializeField]
     Text PleaseAnyKey;
 
+    [SerializeField]
+    Image select1;
+
+    [SerializeField]
+    Image select2;
+
+    int m_selectNum;
+
     /// <summary>
     /// オープニングフラグ
     /// </summary>
     bool m_isOpening;
+
+    bool m_changeFlag;
 
     float m_count;
 
@@ -42,7 +52,7 @@ public class MyTitle : MonoBehaviour
 
     void Start()
     {
-
+        m_selectNum = 1;
     }
 
     void Update()
@@ -73,7 +83,57 @@ public class MyTitle : MonoBehaviour
             }
 
         }
-
+        if (Input.GetKeyDown(KeyCode.Joystick1Button0))
+        {
+            if (m_selectNum == 1)
+            {
+                OnClickStartButton();
+            }
+            else
+            {
+                Debug.Log("Load中");
+            }
+        }
+        float HorizontalKeyInput = Input.GetAxis("HorizontalKey");
+        
+        if (HorizontalKeyInput == -1.0f&&m_changeFlag==false)
+        {
+            if (m_selectNum == 1)
+            {
+                m_selectNum = 2;
+            }
+            else
+            {
+                m_selectNum = 1;
+            }
+            m_changeFlag = true;
+        }
+        else if (HorizontalKeyInput == 1.0f&&m_changeFlag==false)
+        {
+            if (m_selectNum == 1)
+            {
+                m_selectNum = 2;
+            }
+            else
+            {
+                m_selectNum = 1;
+            }
+            m_changeFlag = true;
+        }
+        if (m_selectNum == 1)
+        {
+            select1.enabled = true;
+            select2.enabled = false;
+        }
+        else if (m_selectNum == 2)
+        {
+            select1.enabled = false;
+            select2.enabled = true;
+        }
+        if (HorizontalKeyInput <= 0.1 && HorizontalKeyInput >= -0.1)
+        {
+            m_changeFlag = false;
+        }
     }
 
     public void OnClickStartButton()

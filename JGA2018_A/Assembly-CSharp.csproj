@@ -81,6 +81,12 @@
      <Compile Include="Assets\Stage\Main\Scripts\MyVirusMinisterAI.cs" />
      <Compile Include="Assets\Stage\Main\Scripts\MyWarpManager.cs" />
      <Compile Include="Assets\Stage\Main\Scripts\MyWarpPoint.cs" />
+     <Compile Include="Assets\Stage\Script\Common\MyBootloader.cs" />
+     <Compile Include="Assets\Stage\Script\Common\MyDontDestroyOnLoad.cs" />
+     <Compile Include="Assets\Stage\Script\Common\MySingleton.cs" />
+     <Compile Include="Assets\Stage\Script\Common\MySingletonMonoBehaviour.cs" />
+     <Compile Include="Assets\Stage\Script\Common\MyTool.cs" />
+     <Compile Include="Assets\Stage\Script\MySceneManager.cs" />
      <Compile Include="Assets\Stage\Title\Script\MyOpening.cs" />
      <Compile Include="Assets\Terasurware\Classes\MyOpeningData.cs" />
      <None Include="Assets\Dummy\AssetStore\Particle_Dissolve_Shader\Shaders\legacy\Dissolve_Alpha_Additive_Opacity_softrim.shader" />

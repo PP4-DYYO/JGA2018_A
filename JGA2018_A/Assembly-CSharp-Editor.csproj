@@ -125,26 +125,26 @@
  <Reference Include="UnityEngine.VR">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnityVR/RuntimeEditor/UnityEngine.VR.dll</HintPath>
  </Reference>
- <Reference Include="UnityEditor.Graphs">
- <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEditor.Graphs.dll</HintPath>
- </Reference>
- <Reference Include="UnityEditor.WindowsStandalone.Extensions">
- <HintPath>C:/Program Files/Unity/Editor/Data/PlaybackEngines/windowsstandalonesupport/UnityEditor.WindowsStandalone.Extensions.dll</HintPath>
- </Reference>
- <Reference Include="NPOI.OOXML">
- <HintPath>C:/Users/ifeat/Downloads/Document/Git/JGA2018_A/JGA2018_A/Assets/Terasurware/Editor/npoi/NPOI.OOXML.dll</HintPath>
- </Reference>
- <Reference Include="NPOI.OpenXmlFormats">
- <HintPath>C:/Users/ifeat/Downloads/Document/Git/JGA2018_A/JGA2018_A/Assets/Terasurware/Editor/npoi/NPOI.OpenXmlFormats.dll</HintPath>
- </Reference>
- <Reference Include="NPOI.OpenXml4Net">
- <HintPath>C:/Users/ifeat/Downloads/Document/Git/JGA2018_A/JGA2018_A/Assets/Terasurware/Editor/npoi/NPOI.OpenXml4Net.dll</HintPath>
- </Reference>
  <Reference Include="ICSharpCode.SharpZipLib">
  <HintPath>C:/Users/ifeat/Downloads/Document/Git/JGA2018_A/JGA2018_A/Assets/Terasurware/Editor/npoi/ICSharpCode.SharpZipLib.dll</HintPath>
  </Reference>
  <Reference Include="NPOI">
  <HintPath>C:/Users/ifeat/Downloads/Document/Git/JGA2018_A/JGA2018_A/Assets/Terasurware/Editor/npoi/NPOI.dll</HintPath>
+ </Reference>
+ <Reference Include="NPOI.OOXML">
+ <HintPath>C:/Users/ifeat/Downloads/Document/Git/JGA2018_A/JGA2018_A/Assets/Terasurware/Editor/npoi/NPOI.OOXML.dll</HintPath>
+ </Reference>
+ <Reference Include="NPOI.OpenXml4Net">
+ <HintPath>C:/Users/ifeat/Downloads/Document/Git/JGA2018_A/JGA2018_A/Assets/Terasurware/Editor/npoi/NPOI.OpenXml4Net.dll</HintPath>
+ </Reference>
+ <Reference Include="NPOI.OpenXmlFormats">
+ <HintPath>C:/Users/ifeat/Downloads/Document/Git/JGA2018_A/JGA2018_A/Assets/Terasurware/Editor/npoi/NPOI.OpenXmlFormats.dll</HintPath>
+ </Reference>
+ <Reference Include="UnityEditor.Graphs">
+ <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEditor.Graphs.dll</HintPath>
+ </Reference>
+ <Reference Include="UnityEditor.WindowsStandalone.Extensions">
+ <HintPath>C:/Program Files/Unity/Editor/Data/PlaybackEngines/windowsstandalonesupport/UnityEditor.WindowsStandalone.Extensions.dll</HintPath>
  </Reference>
   </ItemGroup>
   <ItemGroup>

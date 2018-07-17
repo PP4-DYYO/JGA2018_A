@@ -179,6 +179,12 @@ public class MyAiBoss : MonoBehaviour
     protected AIMode m_aimode;
 
     /// <summary>
+    /// 特殊技待機状態
+    /// </summary>
+    [SerializeField]
+    protected bool m_specialFlag;
+
+    /// <summary>
     /// 行動制御用(時間)
     /// </summary>
     [SerializeField]
@@ -401,6 +407,28 @@ public class MyAiBoss : MonoBehaviour
         m_hitPoint = m_hitPoint - damage;
         ReceiveDamageAnimation();
         Debug.Log(damage + "うけた");
+
+        //キャリーは被ダメ時に特殊技
+        if(m_myObjectName== "CarryMinister(Clone)" && m_specialFlag == true)
+        {
+            float m_length = 0.6f;
+
+            Vector3 vLDB = new Vector3(m_myGameObject.transform.position.x - m_length, m_myGameObject.transform.position.y - m_length, m_myGameObject.transform.position.z - m_length);
+            Vector3 vLDF = new Vector3(m_myGameObject.transform.position.x - m_length, m_myGameObject.transform.position.y - m_length, m_myGameObject.transform.position.z + m_length);
+            Vector3 vLUB = new Vector3(m_myGameObject.transform.position.x - m_length, m_myGameObject.transform.position.y + m_length, m_myGameObject.transform.position.z - m_length);
+            Vector3 vLUF = new Vector3(m_myGameObject.transform.position.x - m_length, m_myGameObject.transform.position.y + m_length, m_myGameObject.transform.position.z + m_length);
+            Vector3 vRDB = new Vector3(m_myGameObject.transform.position.x + m_length, m_myGameObject.transform.position.y - m_length, m_myGameObject.transform.position.z - m_length);
+            Vector3 vRDF = new Vector3(m_myGameObject.transform.position.x + m_length, m_myGameObject.transform.position.y - m_length, m_myGameObject.transform.position.z + m_length);
+            Vector3 vRUB = new Vector3(m_myGameObject.transform.position.x + m_length, m_myGameObject.transform.position.y + m_length, m_myGameObject.transform.position.z - m_length);
+            Vector3 vRUF = new Vector3(m_myGameObject.transform.position.x + m_length, m_myGameObject.transform.position.y + m_length, m_myGameObject.transform.position.z + m_length);
+
+            //当たり判定発生
+            MyCube attackRange = new MyCube(vLDB, vRDB, vLDF, vRDF, vLUB, vRUB, vLUF, vRUF);
+            //プレイヤーを飛ばす特殊技
+            myAttackManager.EnemyAttack(attackRange, MaskAttribute.Carry, 0, 0.1f);
+            m_specialFlag = false;
+            m_specialAttackCount+=1;
+        }
 
         //HP0で死ぬ
         if (m_hitPoint <= 0)

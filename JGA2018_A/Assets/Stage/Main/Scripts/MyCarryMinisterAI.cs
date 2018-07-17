@@ -28,7 +28,7 @@ public class MyCarryMinisterAI : MyAiBoss
         m_myObjectName = this.gameObject.name;
         m_playerObject = GameObject.Find(m_playerObjectName);
         m_myGameObject = this.gameObject;
-        m_hitPoint = 230;
+        m_maxHitPoint = 230;
         m_attack = 60;
         m_perceivedRange = 30;
         m_distance = 100;
@@ -124,6 +124,16 @@ public class MyCarryMinisterAI : MyAiBoss
                 m_isAttacked = false;
                 m_aimode = AIMode.IDLE;
             }
+        }
+
+        if (HitPoint < MaxHitPoint / 2 && m_specialAttackCount == 0)
+        {
+            m_specialFlag = true;
+        }
+        else if(HitPoint < MaxHitPoint / 4 && m_specialAttackCount == 1)
+        {
+            m_specialFlag = true;
+
         }
 
         //状態によって行動を切り替える

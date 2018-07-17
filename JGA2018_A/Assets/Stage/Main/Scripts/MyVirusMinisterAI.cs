@@ -28,9 +28,9 @@ public class MyVirusMinisterAI : MyAiBoss
         m_attackNum = 1;
 
         m_myObjectName = this.gameObject.name;
-        m_myGameObject = this.gameObject;
+        m_myGameObject = GameObject.Find(m_myObjectName);
         m_playerObject = GameObject.Find(m_playerObjectName);
-        m_hitPoint = 310;
+        m_maxHitPoint = 310;
         m_attack = 50;
         m_perceivedRange = 5;
         m_distance = 100;

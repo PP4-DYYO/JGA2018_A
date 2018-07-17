@@ -955,9 +955,19 @@ public class MyPlayer : MonoBehaviour
 	bool m_isPressedCrossKeyUp = false;
 
 	/// <summary>
+	/// 十字キー軸の上が押された
+	/// </summary>
+	bool m_isPressedCrossKeyAxisUp = false;
+
+	/// <summary>
 	/// 十字キー下が押された
 	/// </summary>
 	bool m_isPressedCrossKeyDown = false;
+
+	/// <summary>
+	/// 十字キー軸の下が押された
+	/// </summary>
+	bool m_isPressedCrossKeyAxisDown = false;
 
 	/// <summary>
 	/// 十字キー左が押された
@@ -965,9 +975,19 @@ public class MyPlayer : MonoBehaviour
 	bool m_isPressedCrossKeyLeft = false;
 
 	/// <summary>
+	/// 十字キー軸の左が押された
+	/// </summary>
+	bool m_isPressedCrossKeyAxisLeft = false;
+
+	/// <summary>
 	/// 十字キー右が押された
 	/// </summary>
 	bool m_isPressedCrossKeyRight = false;
+
+	/// <summary>
+	/// 十字キー軸の右が押された
+	/// </summary>
+	bool m_isPressedCrossKeyAxisRight = false;
 	#endregion
 
 	#region 作業用
@@ -1112,20 +1132,24 @@ public class MyPlayer : MonoBehaviour
 			m_isPressedRightClick = true;
 
 		//十字キー上の押下
-		if (Input.GetButtonDown(CROSS_KEY_UP))
+		if (Input.GetButtonDown(CROSS_KEY_UP) || (Input.GetAxis(CROSS_KEY_UP) >= 1.0f && !m_isPressedCrossKeyAxisUp))
 			m_isPressedCrossKeyUp = true;
+		m_isPressedCrossKeyAxisUp = (Input.GetAxis(CROSS_KEY_UP) >= 1.0f);
 
 		//十字キー下の押下
-		if (Input.GetButtonDown(CROSS_KEY_DOWN))
+		if (Input.GetButtonDown(CROSS_KEY_DOWN) || (Input.GetAxis(CROSS_KEY_DOWN) >= 1.0f && !m_isPressedCrossKeyAxisDown))
 			m_isPressedCrossKeyDown = true;
+		m_isPressedCrossKeyAxisDown = (Input.GetAxis(CROSS_KEY_DOWN) >= 1.0f);
 
 		//十字キー左の押下
-		if (Input.GetButtonDown(CROSS_KEY_LEFT))
+		if (Input.GetButtonDown(CROSS_KEY_LEFT) || (Input.GetAxis(CROSS_KEY_LEFT) >= 1.0f && !m_isPressedCrossKeyAxisLeft))
 			m_isPressedCrossKeyLeft = true;
+		m_isPressedCrossKeyAxisLeft = (Input.GetAxis(CROSS_KEY_LEFT) >= 1.0f);
 
 		//十字キー右の押下
-		if (Input.GetButtonDown(CROSS_KEY_RIGHT))
+		if (Input.GetButtonDown(CROSS_KEY_RIGHT) || (Input.GetAxis(CROSS_KEY_RIGHT) >= 1.0f && !m_isPressedCrossKeyAxisRight))
 			m_isPressedCrossKeyRight = true;
+		m_isPressedCrossKeyAxisRight = (Input.GetAxis(CROSS_KEY_RIGHT) >= 1.0f);
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -1468,7 +1492,7 @@ public class MyPlayer : MonoBehaviour
 			//向きたい方向に向く
 			m_workVector3.y = m_angle;
 		}
-		else if(m_workFloat < HALF_CIRCUMFERENCE_ANGLE) //向きたい角度が想定範囲
+		else if (m_workFloat < HALF_CIRCUMFERENCE_ANGLE) //向きたい角度が想定範囲
 		{
 			//徐々に向きたい方向に向く
 			m_angle -= m_workVector3.y;
@@ -1550,7 +1574,7 @@ public class MyPlayer : MonoBehaviour
 	void CheckActionState()
 	{
 		//動きがある
-		if(m_direction.sqrMagnitude > 0)
+		if (m_direction.sqrMagnitude > 0)
 		{
 			//歩いている
 			if (m_speed == m_walkSpeed)
@@ -1558,10 +1582,10 @@ public class MyPlayer : MonoBehaviour
 			else
 				m_behaviorState = BehaviorStatus.Run;
 		}
-		else if(m_behaviorState != BehaviorStatus.Damage) //ダメージ状態でなかった
+		else if (m_behaviorState != BehaviorStatus.Damage) //ダメージ状態でなかった
 		{
 			//拾う状態でない
-			if(m_behaviorState != BehaviorStatus.Pickup)
+			if (m_behaviorState != BehaviorStatus.Pickup)
 				m_behaviorState = BehaviorStatus.Idle;
 		}
 

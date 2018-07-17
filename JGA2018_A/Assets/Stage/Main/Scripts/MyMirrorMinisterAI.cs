@@ -24,8 +24,9 @@ public class MyMirrorMinisterAI : MyAiBoss
     {
         m_attackNum = 0;
         m_myObjectName = this.gameObject.name;
+        m_myGameObject= GameObject.Find(m_myObjectName);
         m_playerObject = GameObject.Find(m_playerObjectName);
-        m_hitPoint = 400;
+        m_maxHitPoint = 400;
         m_attack = 60;
         m_perceivedRange = 5;
         m_distance = 100;

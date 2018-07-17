@@ -46,10 +46,15 @@ public class MyAiBoss : MonoBehaviour
     /// </summary>
     MyArrowShot myArrowShot;
 
-	/// <summary>
-	/// 自分のタグ名
-	/// </summary>
-	public const string TAG_NAME = "Boss";
+    /// <summary>
+    /// MyAttackManagerクラス
+    /// </summary>
+    MyAttackManager myAttackManager;
+
+    /// <summary>
+    /// 自分のタグ名
+    /// </summary>
+    public const string TAG_NAME = "Boss";
 
     /// <summary>
     /// 自分の名前"CarryMinister","VirusMinister","MirrorMinister","MagicMinister"
@@ -93,7 +98,7 @@ public class MyAiBoss : MonoBehaviour
     }
 
     /// <summary>
-    /// 攻撃番号（近距離、遠距離など）
+    /// 攻撃番号（0:近距離、1:遠距離 2:スペシャル）
     /// </summary>
     [SerializeField]
     protected int m_attackNum;
@@ -219,6 +224,7 @@ public class MyAiBoss : MonoBehaviour
     {
         m_aimode = AIMode.WAIT;
         m_hitPoint= m_maxHitPoint;
+       myAttackManager=GameObject.Find("AttackManager").GetComponent<MyAttackManager>();
     }
 
     //----------------------------------------------------------------------------------------------------
@@ -274,17 +280,26 @@ public class MyAiBoss : MonoBehaviour
     {       
         switch (m_myObjectName)
         {
-            case "CarryMinister":
-                //HPが一定で制限に達していないとき
-                if (m_hitPoint < m_hitPoint / 4 && m_specialAttackCount < m_specialAttackLimit)
+            case "CarryMinister(Clone)":
+                //能力技発動条件
+                if (m_hitPoint < m_maxHitPoint / 2 && m_specialAttackCount == 0||
+                   m_hitPoint < m_maxHitPoint / 4 && m_specialAttackCount == 1||
+                   m_hitPoint < m_maxHitPoint / 4 && m_attackNum == 1)
                 {
                     SpecialAttack();
+                    if (m_specialAttackCount < m_specialAttackLimit)
+                    {
+                        m_specialAttackCount++;
+                    }
                 }
-               GameObject.Find("ArrowPoint").GetComponent<MyArrowShot>().Shot(m_attackNum);
+                else
+                {
+                    GameObject.Find("BombPoint").GetComponent<MyBombShot>().Shot(m_attackNum);
+                }
                 m_isAttacked = true;
                 break;
 
-            case "VirusMinister":
+            case "VirusMinister(Clone)":
                 //HPが一定で制限に達していないとき
                 if (m_hitPoint < m_hitPoint / 4 && m_specialAttackCount < m_specialAttackLimit)
                 {
@@ -293,15 +308,37 @@ public class MyAiBoss : MonoBehaviour
                 GameObject.Find("BombPoint").GetComponent<MyBombShot>().Shot(m_attackNum);
                 m_isAttacked = true;
                 break;
-            case "MirrorMinister":
+            case "MirrorMinister(Clone)":
+                Debug.Log("攻撃");
                 //HPが一定で制限に達していないとき
                 if (m_hitPoint < m_hitPoint / 4 && m_specialAttackCount < m_specialAttackLimit)
                 {
                     SpecialAttack();
                 }
+                else
+                {
+                    //当たり判定Cube
+                   Vector3 attackPoint = GameObject.Find(m_myObjectName).transform.position;
+
+                    float m_length = 0.6f;
+                    //頂点の位置
+                    Vector3 vLDB = new Vector3(attackPoint.x - m_length, 1+attackPoint.y - m_length, attackPoint.z - m_length);
+                    Vector3 vLDF = new Vector3(attackPoint.x - m_length, 1+attackPoint.y - m_length, attackPoint.z + m_length);
+                    Vector3 vLUB = new Vector3(attackPoint.x - m_length, 1+attackPoint.y + m_length, attackPoint.z - m_length);
+                    Vector3 vLUF = new Vector3(attackPoint.x - m_length, 1+attackPoint.y + m_length, attackPoint.z + m_length);
+                    Vector3 vRDB = new Vector3(attackPoint.x + m_length, 1+attackPoint.y - m_length, attackPoint.z - m_length);
+                    Vector3 vRDF = new Vector3(attackPoint.x + m_length, 1+attackPoint.y - m_length, attackPoint.z + m_length);
+                    Vector3 vRUB = new Vector3(attackPoint.x + m_length, 1+attackPoint.y + m_length, attackPoint.z - m_length);
+                    Vector3 vRUF = new Vector3(attackPoint.x + m_length, 1+attackPoint.y + m_length, attackPoint.z + m_length);
+
+                    //当たり判定発生
+                    MyCube attackRange = new MyCube(vLDB, vRDB, vLDF, vRDF, vLUB, vRUB, vLUF, vRUF);
+                    myAttackManager.EnemyAttack(attackRange, MaskAttribute.Non, m_attack, 1);
+                    Debug.Log("攻撃");
+                }
                 m_isAttacked = true;
                 break;
-            case "MagicMinister":
+            case "MagicMinister(Clone)":
                 //HPが一定で制限に達していないとき
                 if (m_hitPoint < m_hitPoint / 4 && m_specialAttackCount < m_specialAttackLimit)
                 {
@@ -321,20 +358,20 @@ public class MyAiBoss : MonoBehaviour
     {
         switch (m_myObjectName)
         {
-            case "CarryMinister":
+            case "CarryMinister(Clone)":
                 m_specialAttackCount += 1;
                 Debug.Log("特殊技！！！");
                 break;
-            case "VirusMinister":
+            case "VirusMinister(Clone)":
                 m_attack = 30;
+                GameObject.Find("BombPoint").GetComponent<MyBombShot>().Shot(2);
+                Debug.Log("特殊技！！！");
+                break;
+            case "MirrorMinister(Clone)":
                 m_specialAttackCount += 1;
                 Debug.Log("特殊技！！！");
                 break;
-            case "MirrorMinister":
-                m_specialAttackCount += 1;
-                Debug.Log("特殊技！！！");
-                break;
-            case "MagicMinister":
+            case "MagicMinister(Clone)":
                 m_specialAttackCount += 1;
                 Debug.Log("特殊技！！！");
                 break;
@@ -346,10 +383,24 @@ public class MyAiBoss : MonoBehaviour
     /// <summary>
     ///damage分のダメージを受ける
     /// </summary>
+    public void OnTriggerEnter(Collider other)
+    {
+       if( other.tag == AttackManagerTag.PLAYER_ATTACK_RANGE_TAG)
+        {
+            ReceiveDamage(other.GetComponent<MyAttack>().Power);
+        }
+    }
+
+
+    //----------------------------------------------------------------------------------------------------
+    /// <summary>
+    ///damage分のダメージを受ける
+    /// </summary>
     public void ReceiveDamage(int damage)
     {
         m_hitPoint = m_hitPoint - damage;
         ReceiveDamageAnimation();
+        Debug.Log(damage + "うけた");
 
         //HP0で死ぬ
         if (m_hitPoint <= 0)

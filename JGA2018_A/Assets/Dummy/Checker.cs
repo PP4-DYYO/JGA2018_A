@@ -63,7 +63,7 @@ public class Checker : MonoBehaviour {
             Debug.Log("R Stick Push");
         }
 
-        float TrigerInput = Input.GetAxis("Triger");
+        float TrigerInput = Input.GetAxis("Trigger");
         if (TrigerInput == 1.0f)
         {
             Debug.Log("L Triger");

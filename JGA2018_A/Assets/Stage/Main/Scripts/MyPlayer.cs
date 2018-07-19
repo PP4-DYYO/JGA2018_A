@@ -451,6 +451,24 @@ public class MyPlayer : MonoBehaviour
 	#region アクション
 	[Header("アクション")]
 	/// <summary>
+	/// 握る位置のトランスフォーム
+	/// </summary>
+	[SerializeField]
+	Transform GripPosTrans;
+
+	/// <summary>
+	/// 仮面の初期位置のトランスフォーム
+	/// </summary>
+	[SerializeField]
+	Transform MaskInitPosTrans;
+
+	/// <summary>
+	/// 剣
+	/// </summary>
+	[SerializeField]
+	GameObject Soard;
+
+	/// <summary>
 	/// ガードでの攻撃分割数
 	/// </summary>
 	[SerializeField]
@@ -466,6 +484,16 @@ public class MyPlayer : MonoBehaviour
 	/// ガードしているか
 	/// </summary>
 	bool m_isGuard;
+
+	/// <summary>
+	/// 拾うことが可能
+	/// </summary>
+	bool m_isPossiblePickUp;
+
+	/// <summary>
+	/// 拾うマスク
+	/// </summary>
+	MyMask m_pickUpMask;
 	#endregion
 
 	#region 攻撃
@@ -795,6 +823,12 @@ public class MyPlayer : MonoBehaviour
 	GameObject MaskObj;
 
 	/// <summary>
+	/// マスクオブジェクト達
+	/// </summary>
+	[SerializeField]
+	GameObject[] MaskObjects;
+
+	/// <summary>
 	/// 配達マスクゲージの最大値
 	/// </summary>
 	[SerializeField]
@@ -875,6 +909,11 @@ public class MyPlayer : MonoBehaviour
 	{
 		get { return m_magicMask; }
 	}
+
+	/// <summary>
+	/// マスクを見える状態に
+	/// </summary>
+	bool m_isViewMask;
 	#endregion
 
 	#region キーボード関係
@@ -915,6 +954,11 @@ public class MyPlayer : MonoBehaviour
 	const string GUARD = "Guard";
 
 	/// <summary>
+	/// 拾う
+	/// </summary>
+	const string PICK_UP = "PickUp";
+
+	/// <summary>
 	/// 十字キー上
 	/// </summary>
 	const string CROSS_KEY_UP = "CrossKeyUp";
@@ -948,6 +992,11 @@ public class MyPlayer : MonoBehaviour
 	/// 右クリックを押された
 	/// </summary>
 	bool m_isPressedRightClick = false;
+
+	/// <summary>
+	/// Pキーを押された
+	/// </summary>
+	bool m_isPressedP = false;
 
 	/// <summary>
 	/// 十字キー上が押された
@@ -1130,6 +1179,10 @@ public class MyPlayer : MonoBehaviour
 		//右クリックの押下
 		if (Input.GetButtonDown(ATTACK2))
 			m_isPressedRightClick = true;
+
+		//Pキーの押下
+		if (Input.GetButtonDown(PICK_UP))
+			m_isPressedP = true;
 
 		//十字キー上の押下
 		if (Input.GetButtonDown(CROSS_KEY_UP) || (Input.GetAxis(CROSS_KEY_UP) >= 1.0f && !m_isPressedCrossKeyAxisUp))
@@ -1408,7 +1461,11 @@ public class MyPlayer : MonoBehaviour
 	/// </summary>
 	void Action()
 	{
+		//ガード
 		Guard();
+
+		//拾う
+		PickUp();
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -1427,6 +1484,92 @@ public class MyPlayer : MonoBehaviour
 			return;
 
 		m_isGuard = Input.GetButton(GUARD);
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// 拾う
+	/// </summary>
+	void PickUp()
+	{
+		//拾っている状態でない
+		if (m_behaviorState != BehaviorStatus.Pickup)
+		{
+			//拾う処理の初期化
+			m_isViewMask = false;
+			MaskObj.transform.parent = MaskInitPosTrans;
+			ResetTransform(MaskObj.transform);
+			Soard.SetActive(true);
+		}
+
+		//拾うボタン押してないor拾えない条件
+		if (!m_isPressedP || !m_isPossiblePickUp)
+		{
+			m_isPossiblePickUp = false;
+			return;
+		}
+
+		//状態変更
+		m_behaviorState = BehaviorStatus.Pickup;
+		m_isNotChangeBehaviorState = true;
+		Soard.SetActive(false);
+
+		//マスクを拾う
+		if (m_pickUpMask)
+			PickUpMask();
+
+		m_isPossiblePickUp = false;
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// Transformの初期化
+	/// </summary>
+	/// <param name="trans">対象のTransform</param>
+	void ResetTransform(Transform trans)
+	{
+		trans.localPosition = Vector3.zero;
+		trans.localRotation = Quaternion.identity;
+		trans.localScale = Vector3.one;
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// マスクを拾う
+	/// </summary>
+	void PickUpMask()
+	{
+		//拾ったマスク属性
+		switch (m_pickUpMask.Attribute)
+		{
+			case MaskAttribute.Carry:
+				m_carryMask.isObtained = true;
+				break;
+			case MaskAttribute.Virus:
+				m_virusMask.isObtained = true;
+				break;
+			case MaskAttribute.Mirror:
+				m_mirrorMask.isObtained = true;
+				break;
+			case MaskAttribute.Magic:
+				m_magicMask.isObtained = true;
+				break;
+		}
+
+		//指定マスクだけ表示
+		m_isViewMask = true;
+		foreach (var mask in MaskObjects)
+		{
+			mask.SetActive(false);
+		}
+		MaskObjects[(int)(m_pickUpMask.Attribute - 1)].SetActive(true);
+
+		//拾ったものを削除
+		Destroy(m_pickUpMask.gameObject);
+
+		//マスクを手で持つ
+		MaskObj.transform.parent = GripPosTrans;
+		ResetTransform(MaskObj.transform);
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -1714,7 +1857,7 @@ public class MyPlayer : MonoBehaviour
 	{
 		//マスク状態の前回を更新
 		m_maskStatePrev = m_maskState;
-		MaskObj.SetActive(m_maskState != MaskAttribute.Non);
+		MaskObj.SetActive(m_maskState != MaskAttribute.Non || m_isViewMask);
 
 		//配達マスクが使用可能
 		if (m_carryMask.isObtained)
@@ -1856,6 +1999,7 @@ public class MyPlayer : MonoBehaviour
 		m_isPressedSpace = false;
 		m_isPressedLeftClick = false;
 		m_isPressedRightClick = false;
+		m_isPressedP = false;
 		m_isPressedCrossKeyUp = false;
 		m_isPressedCrossKeyDown = false;
 		m_isPressedCrossKeyLeft = false;
@@ -1948,6 +2092,14 @@ public class MyPlayer : MonoBehaviour
 				DamageAccumulation(m_workMyAttack);
 
 			m_workMyAttack = null;
+		}
+
+		//マスクの取得が可能
+		if (other.GetComponent<MyMask>())
+		{
+			m_isPossiblePickUp = true;
+			m_pickUpMask = other.GetComponent<MyMask>();
+			myCharacter.GameScript.MainUiScript.GameScreenScript.DisplayPossiblePickUp();
 		}
 	}
 

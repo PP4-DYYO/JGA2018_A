@@ -25,6 +25,11 @@ public class MyAiManager : MonoBehaviour
 		get { return myCharacter; }
 	}
 
+	/// <summary>
+	/// ボス
+	/// </summary>
+	MyAiBoss m_boss;
+
 	#region 生成されるプレファブ
 	[Header("生成されるプレファブ")]
 	/// <summary>
@@ -34,10 +39,19 @@ public class MyAiManager : MonoBehaviour
 	MyAiBoss[] m_stagesBoss;
 	#endregion
 
+	#region マスクオブジェクト
+	[Header("マスクオブジェクト")]
 	/// <summary>
-	/// ボス
+	/// マスクオブジェクト
 	/// </summary>
-	MyAiBoss m_boss;
+	[SerializeField]
+	GameObject[] MaskObject;
+	#endregion
+
+	/// <summary>
+	/// 作業用のマスク
+	/// </summary>
+	MyMask m_workMyMask;
 
 	//----------------------------------------------------------------------------------------------------
 	/// <summary>
@@ -56,5 +70,35 @@ public class MyAiManager : MonoBehaviour
 		m_boss.transform.position = myCharacter.GameScript.StageScript.CurrentField.BossStartPos;
 		m_boss.transform.LookAt(m_boss.transform.position + myCharacter.GameScript.StageScript.CurrentField.BossStartDirection);
 		myCharacter.BossScript = m_boss;
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// ボスのマスクを捨てる
+	/// </summary>
+	/// <param name="maskAttribute">マスク属性</param>
+	/// <param name="startPos">開始位置</param>
+	/// <param name="targetPos">目的位置</param>
+	public void ThrowAwayBossMask(MaskAttribute maskAttribute, Vector3 startPos, Vector3 targetPos)
+	{
+		//マスク属性によるマスクの生成
+		switch (maskAttribute)
+		{
+			case MaskAttribute.Carry:
+				m_workMyMask = Instantiate(MaskObject[0], transform).GetComponent<MyMask>();
+				break;
+			case MaskAttribute.Virus:
+				m_workMyMask = Instantiate(MaskObject[1], transform).GetComponent<MyMask>();
+				break;
+			case MaskAttribute.Mirror:
+				m_workMyMask = Instantiate(MaskObject[2], transform).GetComponent<MyMask>();
+				break;
+			case MaskAttribute.Magic:
+				m_workMyMask = Instantiate(MaskObject[3], transform).GetComponent<MyMask>();
+				break;
+		}
+
+		//マスクを捨てる
+		m_workMyMask.ThrowAwayMask(maskAttribute, startPos, targetPos);
 	}
 }

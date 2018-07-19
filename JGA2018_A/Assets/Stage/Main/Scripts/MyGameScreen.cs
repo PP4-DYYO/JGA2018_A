@@ -198,6 +198,12 @@ public class MyGameScreen : MonoBehaviour
 	Image DefeatBossBeyondDungeon;
 
 	/// <summary>
+	/// 拾うことが可能の画像
+	/// </summary>
+	[SerializeField]
+	Image PossiblePickUpImage;
+
+	/// <summary>
 	/// キャラクター
 	/// </summary>
 	MyCharacter m_character;
@@ -295,6 +301,24 @@ public class MyGameScreen : MonoBehaviour
 	float m_countTimeInstruction;
 	#endregion
 
+	#region 可能
+	/// <summary>
+	/// 可能表示時間
+	/// </summary>
+	[SerializeField]
+	float m_displayPossibleTime;
+
+	/// <summary>
+	/// 可能表示時間を数える
+	/// </summary>
+	float m_countDisplayPossibleTime;
+
+	/// <summary>
+	/// 可能の色
+	/// </summary>
+	Color m_possibleColor;
+	#endregion
+
 	#region 作業用
 	/// <summary>
 	/// 作業用Float
@@ -330,6 +354,9 @@ public class MyGameScreen : MonoBehaviour
 
 		//指示処理
 		InstructionProcess();
+
+		//可能処理
+		PossibleProcess();
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -519,6 +546,35 @@ public class MyGameScreen : MonoBehaviour
 
 	//----------------------------------------------------------------------------------------------------
 	/// <summary>
+	/// 可能処理
+	/// </summary>
+	void PossibleProcess()
+	{
+		if (PossiblePickUpImage.enabled)
+		{
+			m_countDisplayPossibleTime += Time.deltaTime;
+
+			//徐々に消える処理
+			m_possibleColor = PossiblePickUpImage.color;
+			m_possibleColor.a = 1 - (m_countDisplayPossibleTime / m_displayPossibleTime);
+			PossiblePickUpImage.color = m_possibleColor;
+
+			//終了
+			if (m_countDisplayPossibleTime >= m_displayPossibleTime)
+			{
+				//α値を元に戻す
+				m_possibleColor = PossiblePickUpImage.color;
+				m_possibleColor.a = 1;
+				PossiblePickUpImage.color = m_possibleColor;
+
+				m_countDisplayPossibleTime = 0;
+				PossiblePickUpImage.enabled = false;
+			}
+		}
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
 	/// ダンジョンの命令開始
 	/// </summary>
 	public void StartDungeonInstruction()
@@ -526,5 +582,15 @@ public class MyGameScreen : MonoBehaviour
 		m_instructionState = InstructionState.Appearance;
 		m_countTimeInstruction = 0;
 		DefeatBossBeyondDungeon.enabled = true;
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// 拾うことが可能を表示
+	/// </summary>
+	public void DisplayPossiblePickUp()
+	{
+		m_countDisplayPossibleTime = 0;
+		PossiblePickUpImage.enabled = true;
 	}
 }

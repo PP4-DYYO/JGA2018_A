@@ -106,6 +106,16 @@ public class MyField : MonoBehaviour
 	}
 
 	/// <summary>
+	/// 弱い敵達をまとめているオブジェクト
+	/// </summary>
+	[SerializeField]
+	Transform WeakEnemiesTrans;
+	public Transform WeakEnemiesCollection
+	{
+		get { return WeakEnemiesTrans; }
+	}
+
+	/// <summary>
 	/// ワープマネージャ
 	/// </summary>
 	[SerializeField]

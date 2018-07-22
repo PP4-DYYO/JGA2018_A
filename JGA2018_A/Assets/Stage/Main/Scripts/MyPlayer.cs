@@ -104,6 +104,18 @@ enum BehaviorStatus
 
 //----------------------------------------------------------------------------------------------------
 /// <summary>
+/// プレイヤー情報
+/// </summary>
+public struct PlayerInfo
+{
+	/// <summary>
+	/// タグ
+	/// </summary>
+	public const string TAG = "Player";
+}
+
+//----------------------------------------------------------------------------------------------------
+/// <summary>
 /// プレイヤーのマスク
 /// </summary>
 public struct PlayerMask

@@ -71,7 +71,9 @@ public class MyStage : MonoBehaviour
 	{
 		//現在のフィールドの削除
 		if (m_currentField)
+		{
 			Destroy(m_currentField.gameObject);
+		}
 
 		//ステージ番号
 		switch(stageNum)
@@ -90,6 +92,12 @@ public class MyStage : MonoBehaviour
 				break;
 			default:
 				return false;
+		}
+
+		//ステージの敵設定
+		foreach(Transform enemy in m_currentField.WeakEnemiesCollection)
+		{
+			enemy.GetComponent<MyWeakEnemy>().AiManagerScript = myGame.CharacterScript.AiManagerScript;
 		}
 
 		return true;

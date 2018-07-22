@@ -190,6 +190,18 @@ public class MyGame : MonoBehaviour
 	float m_workFloat;
 	#endregion
 
+
+#if DEBUG
+	#region デバッグ
+	[Header("デバッグ")]
+	/// <summary>
+	/// ステージを進める(デバッグ用)
+	/// </summary>
+	[SerializeField]
+	bool m_isAddvanceStage_debug;
+	#endregion
+#endif
+
 	//----------------------------------------------------------------------------------------------------
 	/// <summary>
 	/// 初期
@@ -259,6 +271,9 @@ public class MyGame : MonoBehaviour
 
 		//時間の経過
 		m_countTimeState += Time.deltaTime;
+
+		//デバッグ
+		DebugProcess();
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -419,6 +434,21 @@ public class MyGame : MonoBehaviour
 		//状態の終了
 		if (m_countTimeState >= m_bossDevastationTime)
 			AddvanceStage();
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// デバッグ用処理
+	/// </summary>
+	void DebugProcess()
+	{
+#if DEBUG
+		if (m_isAddvanceStage_debug)
+		{
+			AddvanceStage();
+			m_isAddvanceStage_debug = false;
+		}
+#endif
 	}
 
 	//----------------------------------------------------------------------------------------------------

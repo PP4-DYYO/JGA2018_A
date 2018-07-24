@@ -413,7 +413,8 @@ public class MyWeakEnemy : MonoBehaviour
 			m_behaviorState = EnemyBehaviorStatus.BeforeAttack;
 			m_speed = 0;
 			m_isAttackMotion = true;
-			transform.LookAt(m_lineSightInfo.transform);
+			transform.LookAt(
+				Vector3.Scale(m_lineSightInfo.transform.position, (Vector3.right + Vector3.forward)) + Vector3.Scale(transform.position, (Vector3.up)));
 			m_countAttackTime = 0;
 			return;
 		}

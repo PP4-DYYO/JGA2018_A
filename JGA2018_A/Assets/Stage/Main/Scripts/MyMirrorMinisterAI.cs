@@ -27,6 +27,7 @@ public class MyMirrorMinisterAI : MyAiBoss
         m_myGameObject= GameObject.Find(m_myObjectName);
         m_maskPositionObject = GameObject.Find(MaskPositionObjectName);
         m_playerObject = GameObject.Find(PLAYER_OBJECT_NAME);
+        m_stageObject = GameObject.Find("Stage");
         m_maxHitPoint = 400;
         if(m_myObjectName== "MirrorMinister(Clone)(Clone)")
         {
@@ -104,23 +105,6 @@ public class MyMirrorMinisterAI : MyAiBoss
             {
                 //それ以上離れると近づく
                 m_aimode = AIMode.APPROACH;
-                //移動の+-切り替え
-                if (m_movingX == true)
-                {
-                    m_moveX = m_step;
-                }
-                else
-                {
-                    m_moveX = -m_step;
-                }
-                if (m_movingZ == true)
-                {
-                    m_moveZ = m_step;
-                }
-                else
-                {
-                    m_moveZ = -m_step;
-                }
             }
         }
 

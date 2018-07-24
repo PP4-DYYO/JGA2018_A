@@ -29,7 +29,6 @@ public class MyArrowShot : MonoBehaviour
     /// </summary>
     const float ARROWSPEED = 500;
 
-    GameObject m_playerObject;
 
     //----------------------------------------------------------------------------------------------------
     /// <summary>
@@ -38,7 +37,6 @@ public class MyArrowShot : MonoBehaviour
     void Start()
     {
         m_throwPoint = this.gameObject.transform;
-        m_playerObject = GameObject.Find("DummyPlayer");
     }
 
 
@@ -49,6 +47,7 @@ public class MyArrowShot : MonoBehaviour
     public void Shot(int num)
     {
         transform.Translate(new Vector3(0, 0, 0.5f));
+        //遠距離
         if (num == 1)
         {
             GameObject arrows = GameObject.Instantiate(m_arrow) as GameObject;
@@ -58,8 +57,8 @@ public class MyArrowShot : MonoBehaviour
             float m_random = UnityEngine.Random.Range(15, 30) / 10;
             force = this.gameObject.transform.forward * (3*ARROWSPEED) + this.gameObject.transform.up *ARROWSPEED/2;
             arrows.GetComponent<Rigidbody>().AddForce(force);
-            Debug.Log("矢遠距離!");
         }
+        //近距離
         else
         {
             GameObject arrows = GameObject.Instantiate(m_arrow) as GameObject;
@@ -68,7 +67,6 @@ public class MyArrowShot : MonoBehaviour
             //力は横だけ
             force = this.gameObject.transform.forward * ((2 * ARROWSPEED) / 5);
             arrows.GetComponent<Rigidbody>().AddForce(force);
-            Debug.Log("矢近距離!");
         }
         transform.Translate(new Vector3(0, 0, -0.5f));
     }

@@ -29,6 +29,7 @@ public class MyMagicMinisterAI : MyAiBoss
         m_myGameObject = gameObject;
         m_playerObject = GameObject.Find(PLAYER_OBJECT_NAME);
         m_maskPositionObject = GameObject.Find(MaskPositionObjectName);
+        m_stageObject = GameObject.Find("Stage");
         m_hitPoint = 450;
         m_attack = 65;
         m_perceivedRange = 30;
@@ -65,27 +66,6 @@ public class MyMagicMinisterAI : MyAiBoss
             {
                     m_aimode = AIMode.LEAVE;
 
-            }
-            //それ以上離れると近づく
-            else if (m_distance>5)
-            {                
-                //移動の+-切り替え
-                if (m_movingX == true)
-                {
-                    m_moveX = m_step;
-                }
-                else
-                {
-                    m_moveX = -m_step;
-                }
-                if (m_movingZ == true)
-                {
-                    m_moveZ = m_step;
-                }
-                else
-                {
-                    m_moveZ = -m_step;
-                }
             }
         }
 

@@ -29,8 +29,6 @@ public class MyBombShot : MonoBehaviour
     /// </summary>
     const float BOMBSPEED = 500;
 
-    GameObject m_playerObject;
-
 
     //----------------------------------------------------------------------------------------------------
     /// <summary>
@@ -39,7 +37,6 @@ public class MyBombShot : MonoBehaviour
     void Start()
     {
         m_throwPoint = this.gameObject.transform;
-        m_playerObject = GameObject.Find("DummyPlayer");
     }
 
 

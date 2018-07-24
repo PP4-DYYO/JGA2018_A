@@ -69,6 +69,12 @@ public class MyAiBoss : MonoBehaviour
     protected GameObject m_myGameObject;
 
     /// <summary>
+    /// 自分のゲームオブジェクト
+    /// </summary>
+    [SerializeField]
+    protected GameObject m_stageObject;
+
+    /// <summary>
     /// マスクの位置用ゲームオブジェクトの名前
     /// </summary>
     [SerializeField]
@@ -275,20 +281,20 @@ public class MyAiBoss : MonoBehaviour
             //位置関係を確認して、移動の+-を変更する
             if (m_playerObject.transform.position.x > m_myGameObject.transform.position.x)
             {
-                m_movingX = true;
+                m_moveX = -m_step;
             }
             else
             {
-                m_movingX = false;
+                m_moveX = m_step;
             }
 
             if (m_playerObject.transform.position.z > m_myGameObject.transform.position.z)
             {
-                m_movingZ = true;
+                m_moveZ = -m_step;
             }
             else
             {
-                m_movingZ = false;
+                m_moveZ = m_step;
             }
         }
         //マスクを捨てる
@@ -301,22 +307,22 @@ public class MyAiBoss : MonoBehaviour
                 case "CarryMinister(Clone)":
                     transform.parent.GetComponent<MyAiManager>().
                         ThrowAwayBossMask(MaskAttribute.Carry, new Vector3(m_maskPositionObject.transform.position.x, m_maskPositionObject.transform.position.y, m_maskPositionObject.transform.position.z),
-                        new Vector3(transform.position.x + randx, 0, transform.position.z + randz));
+                        m_stageObject.GetComponent<MyStage>().CurrentField.BossRoomCenterPos);
                     break;
                 case "VirusMinister(Clone)":
                     transform.parent.GetComponent<MyAiManager>().
                         ThrowAwayBossMask(MaskAttribute.Virus, new Vector3(m_maskPositionObject.transform.position.x, m_maskPositionObject.transform.position.y, m_maskPositionObject.transform.position.z),
-                        new Vector3(transform.position.x + randx, 0, transform.position.z + randz));
+                        m_stageObject.GetComponent<MyStage>().CurrentField.BossRoomCenterPos);
                     break;
                 case "MirrorMinister(Clone)":
                     transform.parent.GetComponent<MyAiManager>().
                         ThrowAwayBossMask(MaskAttribute.Mirror, new Vector3(m_maskPositionObject.transform.position.x, m_maskPositionObject.transform.position.y, m_maskPositionObject.transform.position.z),
-                        new Vector3(transform.position.x + randx, 0, transform.position.z + randz));
+                        m_stageObject.GetComponent<MyStage>().CurrentField.BossRoomCenterPos);
                     break;
                 case "MagicMinister(Clone)":
                     transform.parent.GetComponent<MyAiManager>().
                         ThrowAwayBossMask(MaskAttribute.Magic, new Vector3(m_maskPositionObject.transform.position.x, m_maskPositionObject.transform.position.y, m_maskPositionObject.transform.position.z),
-                        new Vector3(transform.position.x + randx, 0, transform.position.z + randz));
+                        m_stageObject.GetComponent<MyStage>().CurrentField.BossRoomCenterPos);
                     break;
             }
             m_maskThrow = true;
@@ -354,7 +360,7 @@ public class MyAiBoss : MonoBehaviour
                 }
                 else
                 {
-                    GameObject.Find("BombPoint").GetComponent<MyBombShot>().Shot(m_attackNum);
+                    GameObject.Find("ArrowPoint").GetComponent<MyArrowShot>().Shot(m_attackNum);
                 }
                 m_isAttacked = true;
                 break;

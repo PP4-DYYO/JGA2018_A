@@ -29,6 +29,7 @@ public class MyCarryMinisterAI : MyAiBoss
         m_playerObject = GameObject.Find(PLAYER_OBJECT_NAME);
         m_myGameObject = this.gameObject;
         m_maskPositionObject = GameObject.Find(MaskPositionObjectName);
+        m_stageObject = GameObject.Find("Stage");
         m_maxHitPoint = 230;
         m_attack = 60;
         m_perceivedRange = 30;
@@ -77,24 +78,6 @@ public class MyCarryMinisterAI : MyAiBoss
                 {
                     m_aimode = AIMode.LEAVE;
                 }
-                //移動の+-切り替え
-                if (m_movingX == true)
-                {
-                    m_moveX = -m_step;
-                }
-                else
-                {
-                    m_moveX = m_step;
-                }
-                if (m_movingZ == true)
-                {
-                    m_moveZ = -m_step;
-                }
-                else
-                {
-                    m_moveZ = m_step;
-                }
-
             }
             //距離が15より小さければ攻撃継続
             else if (m_distance < 15)

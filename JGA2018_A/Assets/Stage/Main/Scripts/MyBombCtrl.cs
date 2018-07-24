@@ -49,7 +49,7 @@ public class MyBombCtrl : MonoBehaviour
     /// </summary>
     private void Start()
     {
-        myAiBoss = GameObject.Find("VirusMinister").GetComponent<MyAiBoss>();
+        myAiBoss = GameObject.Find("VirusMinister(Clone)").GetComponent<MyAiBoss>();
         myBombShot = GameObject.Find(m_BombPoint).GetComponent<MyBombShot>();
         myAttackManager = GameObject.Find("AttackManager").GetComponent<MyAttackManager>();
         myCharacter = myAiBoss.PlayerObject.GetComponent<MyCharacter>();
@@ -71,11 +71,7 @@ public class MyBombCtrl : MonoBehaviour
     /// </summary>
     private void OnCollisionEnter(Collision other)
     {
-        if (other.gameObject.CompareTag("VirusMinister"))
-        {
-            //なにかするかも
-        }
-        else if (other.gameObject.name==myAiBoss.PlayerObjectName)
+       if (other.gameObject.name==myAiBoss.PlayerObjectName)
         {
             Explosion();
         }

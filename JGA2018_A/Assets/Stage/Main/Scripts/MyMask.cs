@@ -114,6 +114,7 @@ public class MyMask : MonoBehaviour
 	{
 		m_attribute = maskAttribute;
 		m_startPos = startPos;
+		transform.position = m_startPos;
 		m_targetPos = targetPos;
 		m_isMove = true;
 		RB.mass = m_weight;

@@ -33,10 +33,6 @@ enum EnemyBehaviorStatus
 	/// </summary>
 	Run,
 	/// <summary>
-	/// ダメージ
-	/// </summary>
-	Damage,
-	/// <summary>
 	/// 攻撃前
 	/// </summary>
 	BeforeAttack,
@@ -47,6 +43,23 @@ enum EnemyBehaviorStatus
 	/// <summary>
 	/// 死ぬ
 	/// </summary>
+	Die,
+	/// <summary>
+	/// なし
+	/// </summary>
+	Non,
+}
+
+/// <summary>
+/// 弱い敵のアニメーション番号
+/// </summary>
+enum WeakEnemyAnimIdx
+{
+	Idle,
+	Walk,
+	Run,
+	BeforeAttack,
+	Attack,
 	Die,
 }
 
@@ -254,39 +267,44 @@ public class MyWeakEnemy : MonoBehaviour
 	#region アニメーション
 	[Header("アニメーション")]
 	/// <summary>
-	/// 待機遷移
+	/// 弱い敵のアニメーション
 	/// </summary>
-	const string TRANS_IDLE = "Idle";
+	const string WEAK_ENEMY_ANIM = "WeakEnemyAnimIdx";
+
+	/// <summary>
+	/// アニメーションのレイヤー
+	/// </summary>
+	const string ANIM_LAYER = "Base Layer.";
+
+	/// <summary>
+	/// 待機状態
+	/// </summary>
+	const string ANIM_IDLE = "Idle";
 
 	/// <summary>
 	/// 歩く遷移
 	/// </summary>
-	const string TRANS_WALK = "Walk";
+	const string ANIM_WALK = "Walk";
 
 	/// <summary>
 	/// 走る遷移
 	/// </summary>
-	const string TRANS_RUN = "Run";
-
-	/// <summary>
-	/// ダメージ遷移
-	/// </summary>
-	const string TRANS_DAMAGE = "Damage";
+	const string ANIM_RUN = "Run";
 
 	/// <summary>
 	/// 攻撃前遷移
 	/// </summary>
-	const string TRANS_BEFORE_ATTACK = "BeforeAttack";
+	const string ANIM_BEFORE_ATTACK = "BeforeAttack";
 
 	/// <summary>
 	/// 攻撃遷移
 	/// </summary>
-	const string TRANS_ATTACK = "Attack";
+	const string ANIM_ATTACK = "Attack";
 
 	/// <summary>
 	/// 死ぬ遷移
 	/// </summary>
-	const string TRANS_DIE = "Die";
+	const string ANIM_DIE = "Die";
 	#endregion
 
 	#region 作業用
@@ -475,35 +493,24 @@ public class MyWeakEnemy : MonoBehaviour
 	/// </summary>
 	void Animation()
 	{
-		//状態に変化なし
-		if (m_behaviorState == m_behaviorStatePrev)
+		//状態遷移済み
+		if ((int)m_behaviorState == Anim.GetInteger(WEAK_ENEMY_ANIM))
+		{
+			Anim.SetInteger(WEAK_ENEMY_ANIM, (int)EnemyBehaviorStatus.Non);
+			return;
+		}
+
+		//状態とアニメーションが一緒
+		if (m_behaviorState == EnemyBehaviorStatus.Idle && Anim.GetCurrentAnimatorStateInfo(0).IsName(ANIM_LAYER + ANIM_IDLE)
+			|| m_behaviorState == EnemyBehaviorStatus.Walk && Anim.GetCurrentAnimatorStateInfo(0).IsName(ANIM_LAYER + ANIM_WALK)
+			|| m_behaviorState == EnemyBehaviorStatus.Run && Anim.GetCurrentAnimatorStateInfo(0).IsName(ANIM_LAYER + ANIM_RUN)
+			|| m_behaviorState == EnemyBehaviorStatus.BeforeAttack && Anim.GetCurrentAnimatorStateInfo(0).IsName(ANIM_LAYER + ANIM_BEFORE_ATTACK)
+			|| m_behaviorState == EnemyBehaviorStatus.Attack && Anim.GetCurrentAnimatorStateInfo(0).IsName(ANIM_LAYER + ANIM_ATTACK)
+			|| m_behaviorState == EnemyBehaviorStatus.Die && Anim.GetCurrentAnimatorStateInfo(0).IsName(ANIM_LAYER + ANIM_DIE))
 			return;
 
-		//状態
-		switch (m_behaviorState)
-		{
-			case EnemyBehaviorStatus.Idle:
-				Anim.SetTrigger(TRANS_IDLE);
-				break;
-			case EnemyBehaviorStatus.Walk:
-				Anim.SetTrigger(TRANS_WALK);
-				break;
-			case EnemyBehaviorStatus.Run:
-				Anim.SetTrigger(TRANS_RUN);
-				break;
-			case EnemyBehaviorStatus.Damage:
-				Anim.SetTrigger(TRANS_DAMAGE);
-				break;
-			case EnemyBehaviorStatus.BeforeAttack:
-				Anim.SetTrigger(TRANS_BEFORE_ATTACK);
-				break;
-			case EnemyBehaviorStatus.Attack:
-				Anim.SetTrigger(TRANS_ATTACK);
-				break;
-			case EnemyBehaviorStatus.Die:
-				Anim.SetTrigger(TRANS_DIE);
-				break;
-		}
+		//状態変更
+		Anim.SetInteger(WEAK_ENEMY_ANIM, (int)m_behaviorState);
 	}
 
 	//----------------------------------------------------------------------------------------------------

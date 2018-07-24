@@ -1747,7 +1747,7 @@ public class MyPlayer : MonoBehaviour
 		//ジャンプ中andジャンプ状態にしてよい状態
 		if (m_jumpForceCountTime != -1 &&
 			(m_behaviorState == BehaviorStatus.Walk || m_behaviorState == BehaviorStatus.Idle
-			|| m_behaviorState == BehaviorStatus.Run || m_behaviorState == BehaviorStatus.Pickup))
+			|| m_behaviorState == BehaviorStatus.Run || m_behaviorState == BehaviorStatus.Pickup || m_behaviorState == BehaviorStatus.Damage))
 			m_behaviorState = BehaviorStatus.Jump;
 
 		//ガード可能ならガード

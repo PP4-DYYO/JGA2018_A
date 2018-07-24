@@ -462,6 +462,7 @@ public class MyGame : MonoBehaviour
 		m_player.enabled = !isManipulate;
 		m_player.GetComponent<Collider>().enabled = !isManipulate;
 		m_player.GetComponent<Rigidbody>().useGravity = !isManipulate;
+		m_player.GetComponent<Rigidbody>().velocity = Vector3.zero;
 		m_boss.enabled = !isManipulate;
 		myCamera.enabled = !isManipulate;
 	}

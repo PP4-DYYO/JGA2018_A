@@ -271,6 +271,7 @@ public class MyWarpManager : MonoBehaviour
             myTransition.StartTransition();
             player.GetComponent<MyPlayer>().enabled = false;
 			player.GetComponent<MyPlayer>().StartAnimIdle();
+			player.GetComponent<Rigidbody>().velocity = Vector3.zero;
         }
     }
 }

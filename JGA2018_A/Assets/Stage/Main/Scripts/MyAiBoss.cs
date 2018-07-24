@@ -25,10 +25,10 @@ public class MyAiBoss : MonoBehaviour
     /// プレイヤーオブジェクトの名前
     /// </summary>
     [SerializeField]
-    protected string m_playerObjectName = "DummyPlayer";
+    protected string PLAYER_OBJECT_NAME = "DummyPlayer";
     public string PlayerObjectName
     {
-        get { return m_playerObjectName; }
+        get { return PLAYER_OBJECT_NAME; }
     }
 
     /// <summary>
@@ -67,6 +67,23 @@ public class MyAiBoss : MonoBehaviour
     /// </summary>
     [SerializeField]
     protected GameObject m_myGameObject;
+
+    /// <summary>
+    /// マスクの位置用ゲームオブジェクトの名前
+    /// </summary>
+    [SerializeField]
+    const string MASK_POSITION_OBJECT_NAME= "MaskPositionObject";
+    public string MaskPositionObjectName
+    {
+        get { return MASK_POSITION_OBJECT_NAME; }
+    }
+
+    /// <summary>
+    /// マスクの位置用ゲームオブジェクト
+    /// </summary>
+    [SerializeField]
+    protected GameObject m_maskPositionObject;
+
 
     /// <summary>
     /// MAXHP//
@@ -283,19 +300,23 @@ public class MyAiBoss : MonoBehaviour
             {
                 case "CarryMinister(Clone)":
                     transform.parent.GetComponent<MyAiManager>().
-                        ThrowAwayBossMask(MaskAttribute.Carry, transform.position, new Vector3(transform.position.x+ randx, transform.position.y, transform.position.z + randz));
+                        ThrowAwayBossMask(MaskAttribute.Carry, new Vector3(m_maskPositionObject.transform.position.x, m_maskPositionObject.transform.position.y, m_maskPositionObject.transform.position.z),
+                        new Vector3(transform.position.x + randx, 0, transform.position.z + randz));
                     break;
                 case "VirusMinister(Clone)":
                     transform.parent.GetComponent<MyAiManager>().
-                        ThrowAwayBossMask(MaskAttribute.Virus, transform.position, new Vector3(transform.position.x+ randx, transform.position.y, transform.position.z + randz));
+                        ThrowAwayBossMask(MaskAttribute.Virus, new Vector3(m_maskPositionObject.transform.position.x, m_maskPositionObject.transform.position.y, m_maskPositionObject.transform.position.z),
+                        new Vector3(transform.position.x + randx, 0, transform.position.z + randz));
                     break;
                 case "MirrorMinister(Clone)":
                     transform.parent.GetComponent<MyAiManager>().
-                        ThrowAwayBossMask(MaskAttribute.Mirror, transform.position, new Vector3(transform.position.x+ randx, transform.position.y, transform.position.z + randz));
+                        ThrowAwayBossMask(MaskAttribute.Mirror, new Vector3(m_maskPositionObject.transform.position.x, m_maskPositionObject.transform.position.y, m_maskPositionObject.transform.position.z),
+                        new Vector3(transform.position.x + randx, 0, transform.position.z + randz));
                     break;
                 case "MagicMinister(Clone)":
                     transform.parent.GetComponent<MyAiManager>().
-                        ThrowAwayBossMask(MaskAttribute.Magic, transform.position, new Vector3(transform.position.x+ randx, transform.position.y, transform.position.z + randz));
+                        ThrowAwayBossMask(MaskAttribute.Magic, new Vector3(m_maskPositionObject.transform.position.x, m_maskPositionObject.transform.position.y, m_maskPositionObject.transform.position.z),
+                        new Vector3(transform.position.x + randx, 0, transform.position.z + randz));
                     break;
             }
             m_maskThrow = true;

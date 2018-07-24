@@ -99,6 +99,15 @@ public class MyAttack : MonoBehaviour
 	}
 
 	/// <summary>
+	/// 有効時間
+	/// </summary>
+	float m_effectiveTime;
+	public float EffectiveTime
+	{
+		set { m_effectiveTime = value; }
+	}
+
+	/// <summary>
 	/// 指定威力
 	/// </summary>
 	[SerializeField]
@@ -136,6 +145,11 @@ public class MyAttack : MonoBehaviour
 		set { m_prism12 = value; }
 	}
 
+	/// <summary>
+	/// パーティクル
+	/// </summary>
+	ParticleSystem m_particle;
+
 	//----------------------------------------------------------------------------------------------------
 	/// <summary>
 	/// 初期
@@ -153,6 +167,17 @@ public class MyAttack : MonoBehaviour
 		{
 			transform.position = m_pos;
 			m_centerPosVertices += m_pos;
+		}
+
+		//ウイルス属性and拡張あり
+		if(m_attribute == MaskAttribute.Virus && m_expansionTime != 0)
+		{
+			//パーティクルの付与
+			m_particle = transform.parent.GetComponent<MyAttackManager>().CharacterScript
+				.GameScript.ParticleManagerScript.CreateParticle(ParticleKind.VirusDethblow);
+			m_particle.transform.position = m_pos;
+			if (m_effectiveTime > 0)
+				Destroy(m_particle.gameObject, m_effectiveTime);
 		}
 	}
 
@@ -198,6 +223,9 @@ public class MyAttack : MonoBehaviour
 	void ExpansionMyPrism12()
 	{
 		m_prism12.SetRadius((m_countTimeExpansion / m_expansionTime) * m_expansionDistance);
+		if (m_particle)
+			m_particle.transform.localScale
+				= Vector3.forward + (Vector3.right + Vector3.up) * (m_countTimeExpansion / m_expansionTime) * m_expansionDistance;
 
 		//頂点の設定
 		m_mf.mesh.vertices = m_prism12.GetVertices();

@@ -91,6 +91,16 @@ public class MyGame : MonoBehaviour
 	}
 
 	/// <summary>
+	/// パーティクルマネージャ
+	/// </summary>
+	[SerializeField]
+	MyParticleManager myParticleManager;
+	public MyParticleManager ParticleManagerScript
+	{
+		get { return myParticleManager; }
+	}
+
+	/// <summary>
 	/// プレイヤー
 	/// </summary>
 	MyPlayer m_player;
@@ -396,6 +406,7 @@ public class MyGame : MonoBehaviour
 			m_boss.transform.position = myStage.CurrentField.GetPosDeathblow1()[0];
 			m_player.transform.LookAt(m_boss.transform);
 			m_boss.transform.LookAt(m_player.transform);
+			m_boss.StartAI();
 			myCamera.SetPosition(-(m_boss.transform.position - m_player.transform.position));
 
 			m_stageStatePrev = m_stageState;

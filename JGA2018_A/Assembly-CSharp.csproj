@@ -74,6 +74,7 @@
      <Compile Include="Assets\Stage\Main\Scripts\MyMask.cs" />
      <Compile Include="Assets\Stage\Main\Scripts\MyMenu.cs" />
      <Compile Include="Assets\Stage\Main\Scripts\MyMirrorMinisterAI.cs" />
+     <Compile Include="Assets\Stage\Main\Scripts\MyParticleManager.cs" />
      <Compile Include="Assets\Stage\Main\Scripts\MyPlayer.cs" />
      <Compile Include="Assets\Stage\Main\Scripts\MyPositionRotate.cs" />
      <Compile Include="Assets\Stage\Main\Scripts\MyShadowMagicMinisterAI.cs" />

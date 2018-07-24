@@ -63,6 +63,11 @@ public class MyMask : MonoBehaviour
 	public const string MASK_TAG = "Mask";
 
 	/// <summary>
+	/// パーティカル
+	/// </summary>
+	ParticleSystem m_particle;
+
+	/// <summary>
 	/// 作業用のFloat
 	/// </summary>
 	float m_workFloat;
@@ -80,7 +85,7 @@ public class MyMask : MonoBehaviour
 	/// <summary>
 	/// 定期フレーム
 	/// </summary>
-	void Update()
+	void FixedUpdate()
 	{
 		//目的地についていないand移動している
 		if (transform.position != m_targetPos && m_isMove)
@@ -119,5 +124,10 @@ public class MyMask : MonoBehaviour
 		m_isMove = true;
 		RB.mass = m_weight;
 		RB.drag = m_drag;
+
+		m_particle = transform.parent.GetComponent<MyAiManager>().CharacterScript
+			.GameScript.ParticleManagerScript.CreateParticle(ParticleKind.PickUpMask);
+		m_particle.transform.position = transform.position;
+		m_particle.transform.SetParent(transform);
 	}
 }

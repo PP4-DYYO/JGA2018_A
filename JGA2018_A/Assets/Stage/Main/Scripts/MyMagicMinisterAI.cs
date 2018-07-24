@@ -26,6 +26,7 @@ public class MyMagicMinisterAI : MyAiBoss
         m_attackNum = 0;
 
         m_myObjectName = this.gameObject.name;
+        m_myGameObject = gameObject;
         m_playerObject = GameObject.Find(m_playerObjectName);
         m_hitPoint = 450;
         m_attack = 65;
@@ -61,50 +62,12 @@ public class MyMagicMinisterAI : MyAiBoss
             //距離が0.5より小さければ離れる
             if (m_distance < 0.5)
             {
-                //ATTACK_INTERVALまで到達していれば攻撃する
-                if (m_gameTime >= m_attackInterval)
-                {
-                    m_aimode = AIMode.ATTACK;
-                }
-                else
-                {
                     m_aimode = AIMode.LEAVE;
-                }
-                //移動の+-切り替え
-                if (m_movingX == true)
-                {
-                    m_moveX = -m_step;
-                }
-                else
-                {
-                    m_moveX = m_step;
-                }
-                if (m_movingZ == true)
-                {
-                    m_moveZ = -m_step;
-                }
-                else
-                {
-                    m_moveZ = m_step;
-                }
 
             }
-            //距離が2より小さければ攻撃継続
-            else if (m_distance < 2)
-            {
-                //ATTACK_INTERVALまで到達していれば攻撃する
-                if (m_gameTime >= m_attackInterval)
-                {
-                    m_aimode = AIMode.ATTACK;
-                }
-                else
-                {
-                    m_aimode = AIMode.IDLE;
-                }
-            }
-            else
-            {
-                //それ以上離れると近づく
+            //それ以上離れると近づく
+            else if (m_distance>5)
+            {                
                 //移動の+-切り替え
                 if (m_movingX == true)
                 {
@@ -131,8 +94,6 @@ public class MyMagicMinisterAI : MyAiBoss
             case AIMode.IDLE:
                 break;
             case AIMode.ATTACK:
-                //一定時間毎に攻撃をする
-                NomalAttack();
                 break;
             case AIMode.DEFENSE:
                 break;

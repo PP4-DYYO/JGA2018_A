@@ -27,7 +27,15 @@ public class MyMirrorMinisterAI : MyAiBoss
         m_myGameObject= GameObject.Find(m_myObjectName);
         m_playerObject = GameObject.Find(m_playerObjectName);
         m_maxHitPoint = 400;
+        if(m_myObjectName== "MirrorMinister(Clone)(Clone)")
+        {
+            m_maxHitPoint = (m_maxHitPoint * 2 )/ 3;
+        }
         m_attack = 60;
+        if (m_myObjectName == "MirrorMinister(Clone)(Clone)")
+        {
+            m_attack = (m_attack * 2) / 3;
+        }
         m_perceivedRange = 5;
         m_distance = 100;
         m_isAttacked = false;
@@ -37,10 +45,18 @@ public class MyMirrorMinisterAI : MyAiBoss
         m_moveZ = 0;
         m_movingX = false;
         m_movingZ = false;
-        m_specialAttackLimit = 2;
+        m_specialAttackLimit = 1;
+        if (m_myObjectName == "MirrorMinister(Clone)(Clone)")
+        {
+            m_specialAttackLimit = 0;
+        }
         m_specialAttackCount = 0;
         m_playerAttacked = false;
         m_aimode = AIMode.WAIT;
+        if (m_myObjectName == "MirrorMinister(Clone)(Clone)")
+        {
+            m_aimode = AIMode.IDLE;
+        }
 
         base.Start();
     }
@@ -71,7 +87,7 @@ public class MyMirrorMinisterAI : MyAiBoss
                 }
             }
             //距離が2より小さければ攻撃継続
-            else if (m_distance < 2)
+            else if (m_distance < 1)
             {
                 //ATTACK_INTERVALまで到達していれば攻撃する
                 if (m_gameTime >= m_attackInterval)
@@ -114,7 +130,17 @@ public class MyMirrorMinisterAI : MyAiBoss
                 break;
             case AIMode.ATTACK:
                 //一定時間毎に攻撃をする
-                NomalAttack();
+                if (m_hitPoint < (m_maxHitPoint * 3) / 4 && m_specialAttackCount < m_specialAttackLimit)
+                {
+                    GameObject dop = GameObject.Instantiate(m_myGameObject) as GameObject;
+                    dop.transform.position = new Vector3(gameObject.transform.position.x + 3f, gameObject.transform.position.y, gameObject.transform.position.z+3f);
+
+                    m_specialAttackCount += 1;
+                }
+                else
+                {
+                    NomalAttack();
+                }
                 break;
             case AIMode.DEFENSE:
                 break;

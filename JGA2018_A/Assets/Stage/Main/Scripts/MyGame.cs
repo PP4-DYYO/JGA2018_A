@@ -91,6 +91,16 @@ public class MyGame : MonoBehaviour
 	}
 
 	/// <summary>
+	/// パーティクルマネージャ
+	/// </summary>
+	[SerializeField]
+	MyParticleManager myParticleManager;
+	public MyParticleManager ParticleManagerScript
+	{
+		get { return myParticleManager; }
+	}
+
+	/// <summary>
 	/// プレイヤー
 	/// </summary>
 	MyPlayer m_player;

@@ -520,6 +520,10 @@ public class MyAttackManager : MonoBehaviour
 	/// </summary>
 	[SerializeField]
 	MyCharacter myCharacter;
+	public MyCharacter CharacterScript
+	{
+		get { return myCharacter; }
+	}
 
 	/// <summary>
 	/// ゲーム
@@ -2109,6 +2113,7 @@ public class MyAttackManager : MonoBehaviour
 		m_workAttack.Pos = pos;
 		m_workAttack.Attribute = attribute;
 		m_workAttack.Power = power;
+		m_workAttack.EffectiveTime = time;
 		m_workAttack.ExpansionTime = expansionTime;
 		m_workAttack.ExpansionDistance = expansionDistance;
 		m_workAttack.Kind = AttackKind.MyPrism12;

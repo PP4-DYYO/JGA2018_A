@@ -1556,15 +1556,19 @@ public class MyPlayer : MonoBehaviour
 		{
 			case MaskAttribute.Carry:
 				m_carryMask.isObtained = true;
+				m_carryMask.countGauge = m_maxCarryMaskGauge;
 				break;
 			case MaskAttribute.Virus:
 				m_virusMask.isObtained = true;
+				m_virusMask.countGauge = m_maxVirusMaskGauge;
 				break;
 			case MaskAttribute.Mirror:
 				m_mirrorMask.isObtained = true;
+				m_mirrorMask.countGauge = m_maxMirrorMaskGauge;
 				break;
 			case MaskAttribute.Magic:
 				m_magicMask.isObtained = true;
+				m_magicMask.countGauge = m_maxMagicMaskGauge;
 				break;
 		}
 

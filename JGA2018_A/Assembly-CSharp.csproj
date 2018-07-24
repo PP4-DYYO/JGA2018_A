@@ -61,7 +61,6 @@
      <Compile Include="Assets\Stage\Main\Scripts\MyAutoDestroyer.cs" />
      <Compile Include="Assets\Stage\Main\Scripts\MyBaseButtonCtrl.cs" />
      <Compile Include="Assets\Stage\Main\Scripts\MyBombCtrl.cs" />
-     <Compile Include="Assets\Stage\Main\Scripts\MyBombPointCtrl.cs" />
      <Compile Include="Assets\Stage\Main\Scripts\MyBombShot.cs" />
      <Compile Include="Assets\Stage\Main\Scripts\MyButtonCtrl.cs" />
      <Compile Include="Assets\Stage\Main\Scripts\MyCamera.cs" />

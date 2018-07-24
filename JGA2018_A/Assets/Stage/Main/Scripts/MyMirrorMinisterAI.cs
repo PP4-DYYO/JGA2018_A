@@ -25,7 +25,8 @@ public class MyMirrorMinisterAI : MyAiBoss
         m_attackNum = 0;
         m_myObjectName = this.gameObject.name;
         m_myGameObject= GameObject.Find(m_myObjectName);
-        m_playerObject = GameObject.Find(m_playerObjectName);
+        m_maskPositionObject = GameObject.Find(MaskPositionObjectName);
+        m_playerObject = GameObject.Find(PLAYER_OBJECT_NAME);
         m_maxHitPoint = 400;
         if(m_myObjectName== "MirrorMinister(Clone)(Clone)")
         {

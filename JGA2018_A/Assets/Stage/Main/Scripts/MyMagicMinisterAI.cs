@@ -27,7 +27,8 @@ public class MyMagicMinisterAI : MyAiBoss
 
         m_myObjectName = this.gameObject.name;
         m_myGameObject = gameObject;
-        m_playerObject = GameObject.Find(m_playerObjectName);
+        m_playerObject = GameObject.Find(PLAYER_OBJECT_NAME);
+        m_maskPositionObject = GameObject.Find(MaskPositionObjectName);
         m_hitPoint = 450;
         m_attack = 65;
         m_perceivedRange = 30;

@@ -1143,6 +1143,12 @@ public class MyPlayer : MonoBehaviour
 	/// </summary>
 	[SerializeField]
 	bool m_isObtainedMagicMask_debug;
+
+	/// <summary>
+	/// 無敵（デバッグ用）
+	/// </summary>
+	[SerializeField]
+	bool m_isInvincible_debug;
 	#endregion
 #endif
 
@@ -2064,10 +2070,14 @@ public class MyPlayer : MonoBehaviour
 	void DebugProcess()
 	{
 #if DEBUG
+		//マスク取得
 		m_carryMask.isObtained = m_carryMask.isObtained || m_isObtainedCarryMask_debug;
 		m_virusMask.isObtained = m_virusMask.isObtained || m_isObtainedVirusMask_debug;
 		m_mirrorMask.isObtained = m_mirrorMask.isObtained || m_isObtainedMirrorMask_debug;
 		m_magicMask.isObtained = m_magicMask.isObtained || m_isObtainedMagicMask_debug;
+
+		//HP
+		m_hp = (m_isInvincible_debug) ? m_maxHp : m_hp;
 #endif
 	}
 

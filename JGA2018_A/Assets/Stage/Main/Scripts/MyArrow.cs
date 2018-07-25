@@ -38,6 +38,9 @@ public class MyArrow : MonoBehaviour {
     /// </summary>
     private void OnTriggerEnter(Collider other)
     {
+		if (!myAiBoss)
+			return;
+
         if (other.gameObject.name == myAiBoss.PlayerObjectName)
         {
             //頂点の位置

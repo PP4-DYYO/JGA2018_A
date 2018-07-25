@@ -104,7 +104,11 @@ public class MyMask : MonoBehaviour
 				//落ちた
 				m_isMove = false;
 				transform.position = m_targetPos;
+				transform.rotation = Quaternion.identity;
+				GetComponent<BoxCollider>().enabled = true;
+				GetComponent<SphereCollider>().enabled = true;
 			}
+			Debug.Log(m_workFloat);
 		}
 	}
 

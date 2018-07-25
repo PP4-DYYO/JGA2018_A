@@ -153,7 +153,7 @@ public class MyWeakEnemy : MonoBehaviour
 	/// <summary>
 	/// 視線
 	/// </summary>
-	Ray m_lineSight;
+	Ray m_lineSight = new Ray();
 
 	/// <summary>
 	/// 視線の情報

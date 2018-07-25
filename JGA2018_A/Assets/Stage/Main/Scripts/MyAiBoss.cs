@@ -35,17 +35,7 @@ public class MyAiBoss : MonoBehaviour
 	/// MyCharacterクラス
 	/// </summary>
     MyCharacter myCharacter;
-
-    /// <summary>
-	/// myBombShotクラス（ウイルス大臣）
-	/// </summary>
-    MyBombShot myBombShot;
-
-    /// <summary>
-    /// MyArrowShotクラス（キャリー大臣）
-    /// </summary>
-    MyArrowShot myArrowShot;
-
+	
     /// <summary>
     /// MyAttackManagerクラス
     /// </summary>
@@ -266,7 +256,7 @@ public class MyAiBoss : MonoBehaviour
     /// <summary>
     /// AIの基本行動
     /// </summary>
-    protected virtual void Update()
+    protected virtual void FixedUpdate()
     {
         //起動状態の時
         if (m_aimode != AIMode.WAIT)
@@ -465,6 +455,7 @@ public class MyAiBoss : MonoBehaviour
     /// </summary>
     public void ReceiveDamage(int damage)
     {
+		Debug.Log(m_hitPoint);
         m_hitPoint = m_hitPoint - damage;
         ReceiveDamageAnimation();
         Debug.Log(damage + "うけた");

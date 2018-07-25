@@ -209,6 +209,12 @@ public class MyGame : MonoBehaviour
 	/// </summary>
 	[SerializeField]
 	bool m_isAddvanceStage_debug;
+
+	/// <summary>
+	/// 状態を進める（デバッグ用）
+	/// </summary>
+	[SerializeField]
+	bool m_isAddvanceState_debug;
 	#endregion
 #endif
 
@@ -454,10 +460,22 @@ public class MyGame : MonoBehaviour
 	void DebugProcess()
 	{
 #if DEBUG
+		//ステージを進める
 		if (m_isAddvanceStage_debug)
 		{
 			AddvanceStage();
 			m_isAddvanceStage_debug = false;
+		}
+
+		//状態を進める
+		if(m_isAddvanceState_debug)
+		{
+			if (m_stageState != StageStatus.BossDestroyed)
+				m_stageState++;
+			else
+				AddvanceStage();
+
+			m_isAddvanceState_debug = false;
 		}
 #endif
 	}

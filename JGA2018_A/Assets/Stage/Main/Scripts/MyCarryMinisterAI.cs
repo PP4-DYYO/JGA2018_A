@@ -28,7 +28,7 @@ public class MyCarryMinisterAI : MyAiBoss
         m_myObjectName = this.gameObject.name;
         m_playerObject = GameObject.Find(PLAYER_OBJECT_NAME);
         m_myGameObject = this.gameObject;
-        m_maskPositionObject = GameObject.Find(MaskPositionObjectName);
+        m_maskPositionObject = transform.FindChild(MaskPositionObjectName).gameObject;
         m_stageObject = GameObject.Find("Stage");
         m_maxHitPoint = 230;
         m_attack = 60;
@@ -57,9 +57,9 @@ public class MyCarryMinisterAI : MyAiBoss
     /// <summary>
     /// 移動、行動
     /// </summary>
-    protected override void Update()
+    protected override void FixedUpdate()
     {
-        base.Update();
+        base.FixedUpdate();
         if (m_aimode != AIMode.WAIT)
         {
             m_attackNum = 1;

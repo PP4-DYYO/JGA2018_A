@@ -30,7 +30,7 @@ public class MyVirusMinisterAI : MyAiBoss
         m_myObjectName = this.gameObject.name;
         m_myGameObject = GameObject.Find(m_myObjectName);
         m_playerObject = GameObject.Find(PLAYER_OBJECT_NAME);
-        m_maskPositionObject = GameObject.Find(MaskPositionObjectName);
+        m_maskPositionObject = transform.FindChild(MaskPositionObjectName).gameObject;
         m_stageObject = GameObject.Find("Stage");
         m_maxHitPoint = 310;
         m_attack = 50;
@@ -60,9 +60,9 @@ public class MyVirusMinisterAI : MyAiBoss
     /// <summary>
     /// 移動、行動
     /// </summary>
-    protected override void Update()
+    protected override void FixedUpdate()
     {
-        base.Update();
+        base.FixedUpdate();
         if (m_aimode != AIMode.WAIT)
         {
             //距離が５より小さければ離れる

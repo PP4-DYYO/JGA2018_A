@@ -25,7 +25,7 @@ public class MyMirrorMinisterAI : MyAiBoss
         m_attackNum = 0;
         m_myObjectName = this.gameObject.name;
         m_myGameObject= GameObject.Find(m_myObjectName);
-        m_maskPositionObject = GameObject.Find(MaskPositionObjectName);
+        m_maskPositionObject = transform.FindChild(MaskPositionObjectName).gameObject;
         m_playerObject = GameObject.Find(PLAYER_OBJECT_NAME);
         m_stageObject = GameObject.Find("Stage");
         m_maxHitPoint = 400;
@@ -68,9 +68,9 @@ public class MyMirrorMinisterAI : MyAiBoss
     /// <summary>
     /// 移動、行動
     /// </summary>
-    protected override void Update()
+    protected override void FixedUpdate()
     {
-        base.Update();
+        base.FixedUpdate();
 
         if (m_aimode != AIMode.WAIT)
         {
@@ -118,6 +118,7 @@ public class MyMirrorMinisterAI : MyAiBoss
                 if (m_hitPoint < (m_maxHitPoint * 3) / 4 && m_specialAttackCount < m_specialAttackLimit)
                 {
                     GameObject dop = GameObject.Instantiate(m_myGameObject) as GameObject;
+					dop.transform.parent = transform;
                     dop.transform.position = new Vector3(gameObject.transform.position.x + 3f, gameObject.transform.position.y, gameObject.transform.position.z+3f);
 
                     m_specialAttackCount += 1;

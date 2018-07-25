@@ -28,7 +28,7 @@ public class MyMagicMinisterAI : MyAiBoss
         m_myObjectName = this.gameObject.name;
         m_myGameObject = gameObject;
         m_playerObject = GameObject.Find(PLAYER_OBJECT_NAME);
-        m_maskPositionObject = GameObject.Find(MaskPositionObjectName);
+        m_maskPositionObject = transform.FindChild(MaskPositionObjectName).gameObject;
         m_stageObject = GameObject.Find("Stage");
         m_hitPoint = 450;
         m_attack = 65;
@@ -56,9 +56,9 @@ public class MyMagicMinisterAI : MyAiBoss
     /// <summary>
     /// 移動、行動
     /// </summary>
-    protected override void Update()
+    protected override void FixedUpdate()
     {
-        base.Update();
+        base.FixedUpdate();
         if (m_aimode != AIMode.WAIT)
         {
             //距離が0.5より小さければ離れる

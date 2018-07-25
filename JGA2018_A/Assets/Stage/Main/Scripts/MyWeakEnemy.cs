@@ -100,11 +100,6 @@ public class MyWeakEnemy : MonoBehaviour
 	/// 状態
 	/// </summary>
 	EnemyBehaviorStatus m_behaviorState;
-
-	/// <summary>
-	/// フレーム前の状態
-	/// </summary>
-	EnemyBehaviorStatus m_behaviorStatePrev;
 	#endregion
 
 	#region 移動
@@ -357,8 +352,6 @@ public class MyWeakEnemy : MonoBehaviour
 
 		//アニメーション
 		Animation();
-
-		m_behaviorStatePrev = m_behaviorState;
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -523,7 +516,7 @@ public class MyWeakEnemy : MonoBehaviour
 	void OnTriggerEnter(Collider other)
 	{
 		//敵からの攻撃を受ける
-		if (other.tag.Equals(AttackManagerTag.PLAYER_ATTACK_RANGE_TAG))
+		if (other.tag.Equals(AttackManagerTag.PLAYER_ATTACK_RANGE_TAG) || other.tag.Equals(AttackManagerTag.PLAYER_ATTACK_DEATHBLOW_RANGE_TAG))
 			Damage(other.GetComponent<MyAttack>());
 	}
 

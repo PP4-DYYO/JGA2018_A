@@ -100,6 +100,10 @@ enum BehaviorStatus
 	/// 必殺技の攻撃４
 	/// </summary>
 	AttackDeathblow4,
+	/// <summary>
+	/// 必殺技の攻撃４の弱い敵用
+	/// </summary>
+	AttackDeathblow4WeadEnemy,
 }
 
 //----------------------------------------------------------------------------------------------------
@@ -345,6 +349,11 @@ public class MyPlayer : MonoBehaviour
 	/// 必殺技の攻撃４遷移
 	/// </summary>
 	const string TRANS_ATTACK_DEATHBLOW4 = "AttackDeathblow4";
+
+	/// <summary>
+	/// 必殺技の攻撃４の弱い敵用遷移
+	/// </summary>
+	const string TRANS_ATTACK_DEATHBLOW4_WEAK_ENEMY = "AttackDeathblow4WeakEnemy";
 
 	/// <summary>
 	/// 必殺技の攻撃４のAパターン遷移
@@ -823,6 +832,21 @@ public class MyPlayer : MonoBehaviour
 		new Vector3(0.3399217f,1.475883f,0.6992293f),
 		new Vector3(0.3399217f,1.475883f,0.6992293f),
 		new Vector3(0.3399217f,1.475883f,0.6992293f),
+	};
+
+	/// <summary>
+	/// 必殺技の攻撃４の弱い敵用の頂点
+	/// </summary>
+	static readonly Vector3[] ATTACK_DEATHBLOW4_WEAK_ENEMY_VERTECES =
+	{
+		new Vector3(-2.76715f,0.6671497f,1.5825509f),
+		new Vector3(-1.658033f,1.108374f,1.2252046f),
+		new Vector3(-1.5207606f,0.5439724f,-2.696099f),
+		new Vector3(-1.2424484f,1.081343f,-1.624122f),
+		new Vector3(2.695093f,0.4451257f,-1.3083975f),
+		new Vector3(1.6111093f,1.063734f,-1.1974359f),
+		new Vector3(1.0841179f,0.4025702f,2.660222f),
+		new Vector3(1.1402777f,1.054813f,1.6047654f),
 	};
 	#endregion
 
@@ -1875,6 +1899,17 @@ public class MyPlayer : MonoBehaviour
 		m_maskStatePrev = m_maskState;
 		MaskObj.SetActive(m_maskState != MaskAttribute.Non || m_isViewMask);
 
+		//マスクが見える状態にしていないandマスクを装着
+		if (!m_isViewMask && m_maskState != MaskAttribute.Non)
+		{
+			//指定マスクだけ表示
+			foreach (var mask in MaskObjects)
+			{
+				mask.SetActive(false);
+			}
+			MaskObjects[(int)(m_maskState - 1)].SetActive(true);
+		}
+
 		//配達マスクが使用可能
 		if (m_carryMask.isObtained)
 		{
@@ -2049,13 +2084,27 @@ public class MyPlayer : MonoBehaviour
 			m_workMyAttack = other.GetComponent<MyAttack>();
 
 			//カウンター中
-			if (m_isCounter)
+			if (m_isCounter && myCharacter.GameScript.StageState == StageStatus.BossGame)
 				myCharacter.AttackManagerScript.StartDeathblow4();
+			else if (m_isCounter)
+				CounterAttack();
 			else if (m_workMyAttack)
 				Damage(m_workMyAttack);
 
 			m_workMyAttack = null;
 		}
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// カウンター攻撃
+	/// </summary>
+	void CounterAttack()
+	{
+		//m_isNotChangeBehaviorState = true;
+		m_behaviorState = BehaviorStatus.AttackDeathblow4WeadEnemy;
+		Anim.SetTrigger(TRANS_ATTACK_DEATHBLOW4_WEAK_ENEMY);
+		m_currentAttackBreakTime = m_attackBreakTime;
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -2205,17 +2254,6 @@ public class MyPlayer : MonoBehaviour
 	{
 		m_behaviorStatePrev = BehaviorStatus.AttackDeathblow4;
 		Anim.SetTrigger(TRANS_ATTACK_DEATHBLOW4A);
-	}
-
-	//----------------------------------------------------------------------------------------------------
-	/// <summary>
-	/// 物を拾う状態にする
-	/// </summary>
-	/// <param name="pickupObj">拾うオブジェクト</param>
-	public void PickupObject(GameObject pickupObj)
-	{
-		m_behaviorStatePrev = BehaviorStatus.Pickup;
-		m_isNotChangeBehaviorState = true;
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -2564,6 +2602,30 @@ public class MyPlayer : MonoBehaviour
 	void AttackDeathblow3AEvent()
 	{
 		myCharacter.BossScript.ReceiveDamage(m_powerAttackDeathblow3PerBlow);
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// 必殺技の攻撃４の弱い敵用
+	/// </summary>
+	void AttackDeathblow4WeakEnemyEvent()
+	{
+		//ワールド座標でボスの位置とプレイヤーの方向
+		m_workMatrix.SetTRS(transform.position, transform.rotation, Vector3.one);
+
+		//攻撃範囲頂点の決定
+		for (var i = 0; i < MyCube.NUM_VERTICES; i++)
+		{
+			//絶対的な攻撃範囲の決定
+			m_workVector3Array[i] = m_workMatrix.MultiplyPoint(ATTACK_DEATHBLOW4_WEAK_ENEMY_VERTECES[i]);
+		}
+
+		//攻撃範囲の直方体の構築
+		m_workMyCube.SetCube(m_workVector3Array[0], m_workVector3Array[1], m_workVector3Array[2], m_workVector3Array[3],
+			m_workVector3Array[4], m_workVector3Array[5], m_workVector3Array[6], m_workVector3Array[7]);
+
+		//攻撃範囲の生成
+		myCharacter.AttackManagerScript.PlayerAttack(m_workMyCube, m_maskState, m_powerAttackDeathblow4, m_effectiveAttackTime, true);
 	}
 
 	//----------------------------------------------------------------------------------------------------

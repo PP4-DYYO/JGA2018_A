@@ -22,6 +22,10 @@ public class MyStage : MonoBehaviour
 	/// </summary>
 	[SerializeField]
 	MyGame myGame;
+	public MyGame GameScript
+	{
+		get { return myGame; }
+	}
 	#endregion
 
 	#region 生成されるプレファブ

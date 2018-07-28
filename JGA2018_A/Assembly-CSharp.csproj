@@ -50,7 +50,6 @@
      <Compile Include="Assets\Dummy\AssetStore\Particle_Dissolve_Shader\Scripts\PDS_GameController.cs" />
      <Compile Include="Assets\Dummy\AssetStore\Particle_Dissolve_Shader\Scripts\ScrollingUVs_PDS.cs" />
      <Compile Include="Assets\Dummy\Checker.cs" />
-     <Compile Include="Assets\MyTitle.cs" />
      <Compile Include="Assets\Stage\Field\Particle Ribbon\Scripts\ReverseNormals.cs" />
      <Compile Include="Assets\Stage\Main\Scripts\MyAiBoss.cs" />
      <Compile Include="Assets\Stage\Main\Scripts\MyAiManager.cs" />
@@ -69,6 +68,7 @@
      <Compile Include="Assets\Stage\Main\Scripts\MyField.cs" />
      <Compile Include="Assets\Stage\Main\Scripts\MyGame.cs" />
      <Compile Include="Assets\Stage\Main\Scripts\MyGameScreen.cs" />
+     <Compile Include="Assets\Stage\Main\Scripts\MyItem.cs" />
      <Compile Include="Assets\Stage\Main\Scripts\MyMagicMinisterAI.cs" />
      <Compile Include="Assets\Stage\Main\Scripts\MyMainUI.cs" />
      <Compile Include="Assets\Stage\Main\Scripts\MyMask.cs" />
@@ -89,8 +89,10 @@
      <Compile Include="Assets\Stage\Script\Common\MySingleton.cs" />
      <Compile Include="Assets\Stage\Script\Common\MySingletonMonoBehaviour.cs" />
      <Compile Include="Assets\Stage\Script\Common\MyTool.cs" />
+     <Compile Include="Assets\Stage\Script\MyGameInfo.cs" />
      <Compile Include="Assets\Stage\Script\MySceneManager.cs" />
      <Compile Include="Assets\Stage\Title\Script\MyOpening.cs" />
+     <Compile Include="Assets\Stage\Title\Script\MyTitle.cs" />
      <Compile Include="Assets\Terasurware\Classes\MyOpeningData.cs" />
      <None Include="Assets\Dummy\AssetStore\Particle_Dissolve_Shader\Shaders\legacy\Dissolve_Alpha_Additive_Opacity_softrim.shader" />
      <None Include="Assets\Dummy\AssetStore\Particle_Dissolve_Shader\Shaders\legacy\DissolveSoft_Alpha_Additive_Opacity_softrim.shader" />

@@ -228,7 +228,7 @@ public class MyGame : MonoBehaviour
 		m_player = myCharacter.PlayerScript;
 		m_boss = myCharacter.BossScript;
 
-		m_stageNum = 0 - 1;
+		m_stageNum = MyGameInfo.Instance.StageNum - 1;
 
 		//ステージの変更
 		AddvanceStage();
@@ -252,6 +252,9 @@ public class MyGame : MonoBehaviour
 			//ボスの生成
 			myCharacter.AiManagerScript.GenerateBoss(m_stageNum);
 			ReproduceInstance();
+
+			//ステージ番号の保存
+			PlayerPrefs.SetInt(PlayerPrefsKeys.STAGE_NUM, m_stageNum);
 		}
 		else
 		{

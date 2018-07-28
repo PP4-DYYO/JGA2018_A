@@ -139,6 +139,15 @@ public class MyOpening : MonoBehaviour
 	/// 状態番号
 	/// </summary>
 	int m_stateNum;
+
+	/// <summary>
+	/// 終了フラグ
+	/// </summary>
+	bool m_isEnd;
+	public bool IsEnd
+	{
+		get { return m_isEnd; }
+	}
 	#endregion
 
 	#region 全体
@@ -667,6 +676,8 @@ public class MyOpening : MonoBehaviour
 	void EndOfMovingProcess()
 	{
 		gameObject.SetActive(false);
+		m_isEnd = true;
+		PlayerPrefs.SetInt(PlayerPrefsKeys.IS_WATCH_OPENING, PlayerPrefsKeys.TRUE);
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -685,6 +696,13 @@ public class MyOpening : MonoBehaviour
 	/// </summary>
 	public void StartOpening()
 	{
+		//視聴済み
+		if (PlayerPrefs.GetInt(PlayerPrefsKeys.IS_WATCH_OPENING) == PlayerPrefsKeys.TRUE)
+		{
+			m_isEnd = true;
+			return;
+		}
+
 		gameObject.SetActive(true);
 		Sign.SetActive(false);
 		King.SetActive(false);
@@ -696,5 +714,6 @@ public class MyOpening : MonoBehaviour
 		AppealText.text = "";
 		m_openingState = OpeningStatus.Moving;
 		m_openingStatePrev = OpeningStatus.NotOpening;
+		m_isEnd = false;
 	}
 }

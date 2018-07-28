@@ -29,6 +29,8 @@ public class MyBootloader : MonoBehaviour
 		//シーンを跨ぐオブジェクト生成
 		foreach (var child in ScenesObject)
 		{
+			if (GameObject.Find(child.name))
+				continue;
 			var obj = Instantiate(child);
 			obj.name = obj.name.Replace("(Clone)", "");
 			obj.AddComponent<MyDontDestroyOnLoad>();

@@ -471,7 +471,7 @@ public class MyGame : MonoBehaviour
 		}
 
 		//状態を進める
-		if(m_isAddvanceState_debug)
+		if (m_isAddvanceState_debug)
 		{
 			if (m_stageState != StageStatus.BossDestroyed)
 				m_stageState++;
@@ -497,6 +497,10 @@ public class MyGame : MonoBehaviour
 		m_player.GetComponent<Rigidbody>().velocity = Vector3.zero;
 		m_boss.enabled = !isManipulate;
 		myCamera.enabled = !isManipulate;
+
+		//反転描画対策
+		if (myStage.CurrentField.IsInversionField)
+			myCamera.InvertDrawing(myCamera.enabled);
 	}
 
 	//----------------------------------------------------------------------------------------------------

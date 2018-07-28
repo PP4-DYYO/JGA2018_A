@@ -16,6 +16,16 @@ using UnityEngine;
 public class MyField : MonoBehaviour
 {
 	/// <summary>
+	/// 反転フィールド
+	/// </summary>
+	[SerializeField]
+	bool m_isInversionField;
+	public bool IsInversionField
+	{
+		get { return m_isInversionField; }
+	}
+
+	/// <summary>
 	/// スタートする位置
 	/// </summary>
 	[SerializeField]

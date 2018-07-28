@@ -1,11 +1,11 @@
 ﻿////////////////////////////////////////////////////////////////////////////////////////////////////
 //
 //2018/5月/8日～
-//製作者 京都コンピュータ学院 ゲーム学科 四回生 中村智哉
+//製作者　京都コンピュータ学院京都駅前校　ゲーム学科　四回生　中村智哉
+//協力者　京都コンピュータ学院京都駅前校　ゲーム学科　四回生　奥田裕也
 //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -29,25 +29,25 @@ public class MyCamera : MonoBehaviour
 	/// <summary>
 	/// カメラの対象
 	/// </summary>
-	MyPlayer m_player;
+	MyPlayer m_target;
 
 	[Header("カメラとプレイヤーの距離")]
 	/// <summary>
 	/// カメラとプレイヤーとの距離[m]
 	/// </summary>
 	[SerializeField]
-	float m_distanceToPlayerM = 2f;
+	float m_distanceToPlayer;
 
 	[Header("注視点の高さ")]
 	/// <summary>
 	/// 注視点の高さ[m]
 	/// </summary>
 	[SerializeField]
-	float m_heightM;
+	float m_heightToWatch;
 
-	[Header("カメラ感度")]
+	[Header("回転感度")]
 	/// <summary>
-	/// 感度
+	/// 回転感度
 	/// </summary>
 	[SerializeField]
 	float m_rotationSensitivity;
@@ -65,7 +65,7 @@ public class MyCamera : MonoBehaviour
 	/// <summary>
 	/// プレイヤーの中心位置
 	/// </summary>
-	Vector3 m_lookAt;
+	Vector3 m_playerCenterPos;
 
 	/// <summary>
 	/// Rayの方向
@@ -82,6 +82,15 @@ public class MyCamera : MonoBehaviour
 	/// </summary>
 	RaycastHit m_hit;
 
+	/// <summary>
+	/// 反転描画
+	/// </summary>
+	bool m_isInvertedDrawing;
+	public bool IsInvertedDrawing
+	{
+		get { return m_isInvertedDrawing; }
+	}
+
 	//----------------------------------------------------------------------------------------------------
 	/// <summary>
 	/// 初期
@@ -89,13 +98,12 @@ public class MyCamera : MonoBehaviour
 	void Start()
 	{
 		//対象の設定
-		m_player = myGame.CharacterScript.PlayerScript;
-		if (m_player == null)
+		m_target = myGame.CharacterScript.PlayerScript;
+		if (m_target == null)
 		{
 			Debug.LogError("ターゲットが設定されていない");
 			Application.Quit();
 		}
-
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -104,14 +112,18 @@ public class MyCamera : MonoBehaviour
 	/// </summary>
 	void FixedUpdate()
 	{
+		//カメラの回転量
 		m_rotX = Input.GetAxis("HorizontalR") * Time.deltaTime * m_rotationSensitivity;
 		m_rotY = Input.GetAxis("VerticalR") * Time.deltaTime * m_rotationSensitivity;
 
-		m_lookAt = m_player.transform.position + Vector3.up * m_heightM;
+		//プレイヤーの中心位置
+		m_playerCenterPos = m_target.transform.position + Vector3.up * m_heightToWatch;
 
-		// 回転
-		transform.RotateAround(m_lookAt, Vector3.up, m_rotX);
-		// カメラがプレイヤーの真上や真下にあるときにそれ以上回転させないようにする
+		//Y回転
+		transform.RotateAround(m_playerCenterPos, Vector3.up, m_rotX);
+
+		//X回転
+		//カメラがプレイヤーの真上や真下にあるときにそれ以上回転させないようにする
 		if (transform.forward.y > 0.9f && m_rotY < 0)
 		{
 			m_rotY = 0;
@@ -120,14 +132,15 @@ public class MyCamera : MonoBehaviour
 		{
 			m_rotY = 0;
 		}
-		transform.RotateAround(m_lookAt, transform.right, m_rotY);
+		transform.RotateAround(m_playerCenterPos, transform.right, m_rotY);
 
 		// カメラとプレイヤーとの間の距離を調整
-		transform.position = m_lookAt - transform.forward * m_distanceToPlayerM;
+		transform.position = m_playerCenterPos - transform.forward * m_distanceToPlayer;
 
 		// 視点の設定
-		transform.LookAt(m_lookAt);
+		transform.LookAt(m_playerCenterPos);
 
+		//壁のチェック
 		CheckWall();
 	}
 
@@ -138,17 +151,37 @@ public class MyCamera : MonoBehaviour
 	void CheckWall()
 	{
 		// 自分の位置とプレイヤーの位置から向きベクトルを作成しRayに渡す
-		m_rayDirection = transform.position - m_lookAt;
-		m_ray = new Ray(m_lookAt, m_rayDirection);
+		m_rayDirection = transform.position - m_playerCenterPos;
+		m_ray = new Ray(m_playerCenterPos, m_rayDirection);
 
 		// Rayが衝突したかどうか
-		if (Physics.Raycast(m_ray, out m_hit, m_distanceToPlayerM))
+		if (Physics.Raycast(m_ray, out m_hit, m_distanceToPlayer))
 		{
 			//触れることが可
 			if (!m_hit.collider.isTrigger)
 				transform.position = m_hit.point;
 		}
-		transform.position -= m_ray.GetPoint(Camera.main.nearClipPlane) - m_lookAt;
+		transform.position -= m_ray.GetPoint(Camera.main.nearClipPlane) - m_playerCenterPos;
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// 描画前
+	/// </summary>
+	void OnPreRender()
+	{
+		//反転描画対策
+		GL.invertCulling = m_isInvertedDrawing;
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// 描画後
+	/// </summary>
+	void OnPostRender()
+	{
+		//反転処理を元に戻す
+		GL.invertCulling = false;
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -158,7 +191,51 @@ public class MyCamera : MonoBehaviour
 	/// <param name="relativeLocations">相対的位置</param>
 	public void SetPosition(Vector3 relativeLocations)
 	{
-		transform.position = m_player.transform.position + relativeLocations;
-		transform.LookAt(m_player.transform.position + Vector3.up * m_heightM);
+		transform.position = m_target.transform.position + relativeLocations;
+		transform.LookAt(m_target.transform.position + Vector3.up * m_heightToWatch);
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// 反転描画する
+	/// </summary>
+	/// <param name="isFlip">反転するか</param>
+	public void InvertDrawing(bool isFlip)
+	{
+		//既に変更済み
+		if (m_isInvertedDrawing == isFlip)
+			return;
+
+		m_isInvertedDrawing = isFlip;
+
+		//反転
+		if (!m_isInvertedDrawing)
+			RestoreCameraDisplay();
+		else
+			InvertCameraDisplay();
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// カメラ表示を元に戻す
+	/// </summary>
+	void RestoreCameraDisplay()
+	{
+		var mat = Camera.main.projectionMatrix * Matrix4x4.Scale(new Vector3(-1, 1, 1));
+		Camera.main.ResetWorldToCameraMatrix();
+		Camera.main.ResetProjectionMatrix();
+		Camera.main.projectionMatrix = mat;
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// カメラ表示を反転にする
+	/// </summary>
+	void InvertCameraDisplay()
+	{
+		var mat = Camera.main.projectionMatrix * Matrix4x4.Scale(new Vector3(-1, 1, 1));
+		Camera.main.ResetWorldToCameraMatrix();
+		Camera.main.ResetProjectionMatrix();
+		Camera.main.projectionMatrix = mat;
 	}
 }

@@ -60,7 +60,7 @@ public class MyStage : MonoBehaviour
 		get { return m_currentField; }
 		set { m_currentField = value; }
 	}
-	
+
 	//----------------------------------------------------------------------------------------------------
 	/// <summary>
 	/// ステージを変更
@@ -100,9 +100,13 @@ public class MyStage : MonoBehaviour
 			enemy.GetComponent<MyWeakEnemy>().AiManagerScript = myGame.CharacterScript.AiManagerScript;
 		}
 
+		//ステージの反転設定
+		if(myGame.CameraScript.IsInvertedDrawing != m_currentField.IsInversionField)
+			myGame.CameraScript.InvertDrawing(m_currentField.IsInversionField);
+
 		return true;
 	}
-
+	
 	//----------------------------------------------------------------------------------------------------
 	/// <summary>
 	/// 現在のフィールドのボス部屋の中心位置を取得

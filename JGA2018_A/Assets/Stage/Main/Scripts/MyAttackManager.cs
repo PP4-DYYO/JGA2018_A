@@ -142,7 +142,8 @@ public struct MyCube
 	public Vector3 GetCenter()
 	{
 		return new Vector3((vLDB.x + vRDB.x + vLDF.x + vRDF.x + vLUB.x + vRUB.x + vLUF.x + vRUF.x) / NUM_VERTICES,
-			(vLDB.y + vRDB.y + vLDF.y + vRDF.y + vLUB.y + vRUB.y + vLUF.y + vRUF.y) / NUM_VERTICES);
+			(vLDB.y + vRDB.y + vLDF.y + vRDF.y + vLUB.y + vRUB.y + vLUF.y + vRUF.y) / NUM_VERTICES,
+			(vLDB.z + vRDB.z + vLDF.z + vRDF.z + vLUB.z + vRUB.z + vLUF.z + vRUF.z) / NUM_VERTICES);
 	}
 }
 
@@ -2242,6 +2243,7 @@ public class MyAttackManager : MonoBehaviour
 		AdjustAttackRange(attackRange, attackCube);
 
 		//攻撃の詳細
+		m_workAttack.CenterPosVertices = attackCube.GetCenter();
 		m_workAttack.Attribute = attribute;
 		m_workAttack.Power = power;
 

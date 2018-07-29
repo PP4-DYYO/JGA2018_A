@@ -2135,18 +2135,39 @@ public class MyPlayer : MonoBehaviour
 
 		m_hp -= m_isGuard ? (attack.Power / m_numAttackDivisionsGuard) : attack.Power;
 
+		//属性のダメージ
+		AttributeDamage(attack.Attribute);
+
 		//ガード中
 		if (m_isGuard)
 		{
 			//弾かれる
-			transform.LookAt(attack.CenterPosVertices);
+			transform.LookAt(Vector3.Scale(attack.CenterPosVertices, (Vector3.right + Vector3.forward))
+				+ Vector3.Scale(transform.position, Vector3.up));
 			RB.AddForce(-transform.forward * m_powerAddGuard);
 		}
 
 		//死亡
 		if (m_hp <= 0)
 		{
-			Debug.Log("死にましたよ");
+			myCharacter.GameScript.RebuildStage();
+		}
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// 属性のダメージ
+	/// </summary>
+	/// <param name="attribute">属性</param>
+	void AttributeDamage(MaskAttribute attribute)
+	{
+		//攻撃属性
+		switch (attribute)
+		{
+			case MaskAttribute.Carry:
+				//キャリー属性
+				transform.position = myCharacter.GameScript.StageScript.CurrentField.BossRoomCenterPos;
+				break;
 		}
 	}
 

@@ -108,7 +108,6 @@ public class MyMask : MonoBehaviour
 				GetComponent<BoxCollider>().enabled = true;
 				GetComponent<SphereCollider>().enabled = true;
 			}
-			Debug.Log(m_workFloat);
 		}
 	}
 

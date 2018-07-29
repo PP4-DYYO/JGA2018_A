@@ -177,7 +177,7 @@ public class MyTitle : MonoBehaviour
 		//エンターガード
 		if(m_isEnterGuard)
 		{
-			if (Input.GetKeyUp(KeyCode.Joystick1Button0) || Input.GetKeyUp(KeyCode.Return))
+			if (!Input.anyKey)
 				m_isEnterGuard = false;
 			return;
 		}

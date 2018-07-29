@@ -259,10 +259,13 @@ public class MyGame : MonoBehaviour
 
 			//ステージ番号の保存
 			PlayerPrefs.SetInt(PlayerPrefsKeys.STAGE_NUM, m_stageNum);
+			MyGameInfo.Instance.StageNum = m_stageNum;
 		}
 		else
 		{
-			Debug.Log("全クリ処理");
+			//シーン遷移
+			MySceneManager.Instance.ChangeScene(MyScene.Ending);
+			enabled = false;
 		}
 
 		m_stageState = StageStatus.Dungeon;

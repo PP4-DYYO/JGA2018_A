@@ -65,6 +65,12 @@ public class MySceneManager : MySingletonMonoBehaviour<MySceneManager>
 	Image MaskImage;
 
 	/// <summary>
+	/// マスクイメージ達
+	/// </summary>
+	[SerializeField]
+	Sprite[] MaskImages;
+	
+	/// <summary>
 	/// 現在シーン
 	/// </summary>
 	MyScene m_currentScene;
@@ -95,6 +101,11 @@ public class MySceneManager : MySingletonMonoBehaviour<MySceneManager>
 	/// </summary>
 	Color m_workColor;
 
+	/// <summary>
+	/// シーンチェンジ中
+	/// </summary>
+	bool m_isChangeScene;
+
 	//----------------------------------------------------------------------------------------------------
 	/// <summary>
 	///	初期
@@ -107,7 +118,7 @@ public class MySceneManager : MySingletonMonoBehaviour<MySceneManager>
 
 	//----------------------------------------------------------------------------------------------------
 	/// <summary>
-	///	定期フレーム
+	///	フレーム
 	/// </summary>
 	void FixedUpdate()
 	{
@@ -136,6 +147,9 @@ public class MySceneManager : MySingletonMonoBehaviour<MySceneManager>
 	/// </summary>
 	void PastSceneProcess()
 	{
+		MaskImage.raycastTarget = true;
+		m_isChangeScene = true;
+
 		m_countMaskTime += Time.deltaTime;
 
 		m_workColor = MaskImage.color;
@@ -153,13 +167,9 @@ public class MySceneManager : MySingletonMonoBehaviour<MySceneManager>
 	/// </summary>
 	void SceneChangeInProgressProcess()
 	{
-		//シーンのチェンジ
-		if (SceneManager.GetActiveScene().name != m_currentScene.ToString())
-		{
-			//ロードシーン
-			SceneManager.LoadScene(m_currentScene.ToString());
-			m_sceneState = SceneStatus.CurrentScene;
-		}
+		//ロードシーン
+		SceneManager.LoadScene(m_currentScene.ToString());
+		m_sceneState = SceneStatus.CurrentScene;
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -176,7 +186,11 @@ public class MySceneManager : MySingletonMonoBehaviour<MySceneManager>
 
 		//マスク処理完了
 		if (MaskImage.color.a <= 0f)
+		{
+			MaskImage.raycastTarget = false;
+			m_isChangeScene = false;
 			m_pastScene = m_currentScene;
+		}
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -184,8 +198,18 @@ public class MySceneManager : MySingletonMonoBehaviour<MySceneManager>
 	/// シーンのチェンジ
 	/// </summary>
 	/// <param name="scene">シーン</param>
-	public void ChangeScene(MyScene scene)
+	/// <param name="maskNum">マスク番号</param>
+	public void ChangeScene(MyScene scene, int maskNum = 0)
 	{
+		//遷移中
+		if (m_isChangeScene)
+			return;
+
+		//マスク画像の選択
+		maskNum = (maskNum >= MaskImages.Length) ? MaskImages.Length - 1 : (maskNum < 0) ? 0 : maskNum;
+		MaskImage.sprite = MaskImages[maskNum];
+
+		//シーンチェンジ
 		m_currentScene = scene;
 		m_pastScene = (m_pastScene == m_currentScene) ? MyScene.Non : m_pastScene;
 		m_sceneState = SceneStatus.PastScene;

@@ -359,6 +359,11 @@ public class MyPlayer : MonoBehaviour
 	/// 必殺技の攻撃４のAパターン遷移
 	/// </summary>
 	const string TRANS_ATTACK_DEATHBLOW4A = "AttackDeathblow4A";
+
+	/// <summary>
+	/// 死の遷移
+	/// </summary>
+	const string TRANS_DIE = "Die";
 	#endregion
 
 	#region 状態
@@ -2149,9 +2154,7 @@ public class MyPlayer : MonoBehaviour
 
 		//死亡
 		if (m_hp <= 0)
-		{
-			myCharacter.GameScript.RebuildStage();
-		}
+			DieProcess();
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -2169,6 +2172,24 @@ public class MyPlayer : MonoBehaviour
 				transform.position = myCharacter.GameScript.StageScript.CurrentField.BossRoomCenterPos;
 				break;
 		}
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// 死の処理
+	/// </summary>
+	void DieProcess()
+	{
+		//操作無効
+		myCharacter.GameScript.SetManipulateMainObject(true);
+
+		//主要オブジェクトの設定
+		transform.position = myCharacter.GameScript.StageScript.CurrentField.BossRoomCenterPos;
+		myCharacter.GameScript.CameraScript.transform.position = transform.position + (Vector3.up * m_height);
+		myCharacter.GameScript.CameraScript.transform.LookAt(transform);
+
+		//死のアニメーション
+		Anim.SetTrigger(TRANS_DIE);
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -2666,5 +2687,14 @@ public class MyPlayer : MonoBehaviour
 	void AttackDeathblow4AEvent()
 	{
 		myCharacter.BossScript.ReceiveDamage(m_powerAttackDeathblow4);
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// 死
+	/// </summary>
+	void DieEvent()
+	{
+		MySceneManager.Instance.ChangeScene(MyScene.Main,1);
 	}
 }

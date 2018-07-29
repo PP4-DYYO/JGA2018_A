@@ -765,13 +765,13 @@ public class MyPlayer : MonoBehaviour
 	static readonly Vector3[] ATTACK2_KIND4_A_VERTECES =
 	{
 		new Vector3(0.08698074f, 2.237455f, 1.532429f),
-		new Vector3(0.1659906f, 1.311585f, 0.6939639f),
+		new Vector3(0.1659906f, 1.311585f, -0.6939639f),
 		new Vector3(-0.6301885f, 0.4820206f, 1.491178f),
-		new Vector3(-0.04720514f, 1.017675f, 0.5212768f),
-		new Vector3(-0.04720514f, 1.017675f, 0.5212768f),
-		new Vector3(-0.04720514f, 1.017675f, 0.5212768f),
-		new Vector3(-0.04720514f, 1.017675f, 0.5212768f),
-		new Vector3(-0.04720514f, 1.017675f, 0.5212768f),
+		new Vector3(-0.04720514f, 1.017675f, -0.5212768f),
+		new Vector3(-0.04720514f, 1.017675f, -0.5212768f),
+		new Vector3(-0.04720514f, 1.017675f, -0.5212768f),
+		new Vector3(-0.04720514f, 1.017675f, -0.5212768f),
+		new Vector3(-0.04720514f, 1.017675f, -0.5212768f),
 	};
 
 	/// <summary>
@@ -779,14 +779,14 @@ public class MyPlayer : MonoBehaviour
 	/// </summary>
 	static readonly Vector3[] ATTACK2_KIND4_B_VERTECES =
 	{
-		new Vector3(-1.086515f, 0.9399486f, 0.6289284f),
-		new Vector3(0.1558482f, 0.9843702f,0.519088f),
+		new Vector3(-1.086515f, 0.9399486f, -0.6289284f),
+		new Vector3(0.1558482f, 0.9843702f,-0.519088f),
 		new Vector3(1.140949f,1.735734f,1.729904f),
-		new Vector3(0.6208854f,1.634966f,0.604331f),
-		new Vector3(0.6208854f,1.634966f,0.604331f),
-		new Vector3(0.6208854f,1.634966f,0.604331f),
-		new Vector3(0.6208854f,1.634966f,0.604331f),
-		new Vector3(0.6208854f,1.634966f,0.604331f),
+		new Vector3(0.6208854f,1.634966f,-0.604331f),
+		new Vector3(0.6208854f,1.634966f,-0.604331f),
+		new Vector3(0.6208854f,1.634966f,-0.604331f),
+		new Vector3(0.6208854f,1.634966f,-0.604331f),
+		new Vector3(0.6208854f,1.634966f,-0.604331f),
 	};
 
 	/// <summary>

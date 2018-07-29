@@ -37,7 +37,7 @@ public class MyAutoDestroyer : MonoBehaviour
         }
 
         //爆弾は１.5秒
-        if (this.gameObject.CompareTag("Bomb"))
+        if (this.gameObject.GetComponent<MyBombCtrl>())
         {
             if (m_time > 1.5)
             {

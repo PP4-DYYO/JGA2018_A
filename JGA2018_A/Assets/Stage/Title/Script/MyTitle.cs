@@ -2,6 +2,7 @@
 //
 //2018/7月/17日～
 //製作者 京都コンピュータ学院 ゲーム学科 四回生 中村智哉
+//協力者 京都コンピュータ学院 ゲーム学科 四回生 奥田裕也
 //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -90,6 +91,11 @@ public class MyTitle : MonoBehaviour
 	[SerializeField]
 	Image[] LoadSelects;
 
+	/// <summary>
+	/// エンターガード
+	/// </summary>
+	bool m_isEnterGuard;
+
 	//----------------------------------------------------------------------------------------------------
 	/// <summary>
 	/// 初期
@@ -168,6 +174,14 @@ public class MyTitle : MonoBehaviour
 		if (!m_isOpening)
 			FirstTitleProcess();
 
+		//エンターガード
+		if(m_isEnterGuard)
+		{
+			if (Input.GetKeyUp(KeyCode.Joystick1Button0) || Input.GetKeyUp(KeyCode.Return))
+				m_isEnterGuard = false;
+			return;
+		}
+
 		if (myOpening.IsEnd)
 			if (!m_isLoad)
 				SecondTitleProcess();
@@ -207,6 +221,7 @@ public class MyTitle : MonoBehaviour
 				m_isOpening = true;
 				SecondTitle.SetActive(true);
 				myOpening.StartOpening();
+				m_isEnterGuard = true;
 			}
 		}
 	}

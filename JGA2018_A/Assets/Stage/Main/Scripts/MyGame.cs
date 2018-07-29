@@ -131,6 +131,10 @@ public class MyGame : MonoBehaviour
 	/// ステージ番号
 	/// </summary>
 	int m_stageNum;
+	public int StageNum
+	{
+		get { return m_stageNum; }
+	}
 	#endregion
 
 	#region オブジェクトの操り

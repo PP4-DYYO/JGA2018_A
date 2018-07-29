@@ -12,6 +12,15 @@ using UnityEngine;
 ///</summary>
 public class MyMenu : MonoBehaviour
 {
+	/// <summary>
+	/// メインUI
+	/// </summary>
+	[SerializeField]
+	MyMainUI myMainUi;
+	public MyMainUI MainUiScript
+	{
+		get { return myMainUi; }
+	}
 
     /// <summary>
     /// メニュー画面の４つのボタンを設定（unity上で）

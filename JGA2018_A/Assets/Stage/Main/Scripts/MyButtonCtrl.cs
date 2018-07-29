@@ -2,6 +2,7 @@
 //
 //2018/5/29～
 //製作者 京都コンピュータ学院京都駅前校ゲーム学科四回生　吉田純基
+//協力者 京都コンピュータ学院京都駅前校ゲーム学科四回生　奥田裕也
 //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -20,6 +21,11 @@ public class MyButtonCtrl : MyBaseButtonCtrl
 	MyMenu myMenu;
 
 	/// <summary>
+	/// プレイヤー
+	/// </summary>
+	MyPlayer m_player;
+
+	/// <summary>
 	/// uiの親オブジェクト
 	/// </summary>
 	public GameObject m_uiBaseObject;
@@ -35,10 +41,30 @@ public class MyButtonCtrl : MyBaseButtonCtrl
 	public GameObject m_button5ChooseImage;
 	public GameObject m_button6ChooseImage;
 	public GameObject m_retireText;
-	//財宝
-	public GameObject m_MaskAImage;
-	public GameObject m_MaskBImage;
-	public GameObject m_MaskCImage;
+
+	/// <summary>
+	/// 財宝
+	/// </summary>
+	[SerializeField]
+	GameObject Treature;
+
+	/// <summary>
+	/// 財宝たち
+	/// </summary>
+	[SerializeField]
+	GameObject[] Treatures;
+
+	/// <summary>
+	/// 財宝画像たち
+	/// </summary>
+	[SerializeField]
+	Image[] TreatureImages;
+
+	/// <summary>
+	/// 操作表
+	/// </summary>
+	[SerializeField]
+	GameObject OperationTable;
 
 	/// <summary>
 	/// ボタンオブジェクト(Unity上で設定)
@@ -106,8 +132,153 @@ public class MyButtonCtrl : MyBaseButtonCtrl
 	/// </summary>
 	public enum MenuStates
 	{
-		menuBase, retire, treasure, description
+		menuBase, retire, treasure, description, mask
 	}
+
+	#region マスク関係
+	[Header("マスク関係")]
+	/// <summary>
+	/// マスクの収集物
+	/// </summary>
+	[SerializeField]
+	GameObject MaskCollection;
+
+	/// <summary>
+	/// マスクゲージ
+	/// </summary>
+	[SerializeField]
+	Image MaskGauge;
+
+	/// <summary>
+	/// ウイルスマスクゲージ
+	/// </summary>
+	[SerializeField]
+	Image VirusMaskGauge;
+
+	/// <summary>
+	/// キャリーマスクゲージ
+	/// </summary>
+	[SerializeField]
+	Image CarryMaskGauge;
+
+	/// <summary>
+	/// ミラーマスクゲージ
+	/// </summary>
+	[SerializeField]
+	Image MirrorMaskGauge;
+
+	/// <summary>
+	/// マジックマスクゲージ
+	/// </summary>
+	[SerializeField]
+	Image MagicMaskGauge;
+
+	/// <summary>
+	/// ウイルスマスクの収集物
+	/// </summary>
+	[SerializeField]
+	GameObject VirusMaskCollection;
+
+	/// <summary>
+	/// 注目させるウイルスマスク
+	/// </summary>
+	[SerializeField]
+	Image VirusMaskToLetAttention;
+
+	/// <summary>
+	/// 使用中のウイルスマスク
+	/// </summary>
+	[SerializeField]
+	Image VirusMaskInUse;
+
+	/// <summary>
+	/// キャリーマスクの収集物
+	/// </summary>
+	[SerializeField]
+	GameObject CarryMaskCollection;
+
+	/// <summary>
+	/// 注目させるキャリーマスク
+	/// </summary>
+	[SerializeField]
+	Image CarryMaskToLetAttention;
+
+	/// <summary>
+	/// 使用中のキャリーマスク
+	/// </summary>
+	[SerializeField]
+	Image CarryMaskInUse;
+
+	/// <summary>
+	/// ミラーマスクの収集物
+	/// </summary>
+	[SerializeField]
+	GameObject MirrorMaskCollection;
+
+	/// <summary>
+	/// 注目させるミラーマスク
+	/// </summary>
+	[SerializeField]
+	Image MirrorMaskToLetAttention;
+
+	/// <summary>
+	/// 使用中のミラーマスク
+	/// </summary>
+	[SerializeField]
+	Image MirrorMaskInUse;
+
+	/// <summary>
+	/// マジックマスクの収集物
+	/// </summary>
+	[SerializeField]
+	GameObject MagicMaskCollection;
+
+	/// <summary>
+	/// 注目させるマジックマスク
+	/// </summary>
+	[SerializeField]
+	Image MagicMaskToLetAttention;
+
+	/// <summary>
+	/// 使用中のマジックマスク
+	/// </summary>
+	[SerializeField]
+	Image MagicMaskInUse;
+
+	/// <summary>
+	/// マスク名
+	/// </summary>
+	[SerializeField]
+	Text MaskName;
+
+	/// <summary>
+	/// マスク名たち
+	/// </summary>
+	[SerializeField]
+	string[] m_maskNames;
+
+	/// <summary>
+	/// マスクの説明
+	/// </summary>
+	[SerializeField]
+	Text DescriptionOfMask;
+
+	/// <summary>
+	/// マスクの説明たち
+	/// </summary>
+	[SerializeField, Multiline]
+	string[] m_descriptionOfMask;
+
+	/// <summary>
+	/// マスク選択番号
+	/// </summary>
+	int m_maskSelectionNum;
+	#endregion
+
+	/// <summary>
+	/// 作業用のFloat
+	/// </summary>
+	float m_workFloat;
 
 	//----------------------------------------------------------------------------------------------------
 	/// <summary>
@@ -116,6 +287,7 @@ public class MyButtonCtrl : MyBaseButtonCtrl
 	void Start()
 	{
 		myMenu = m_uiBaseObject.GetComponent<MyMenu>();
+		m_player = myMenu.MainUiScript.GameScript.CharacterScript.PlayerScript;
 		UiReset();
 		//名前を取得
 		m_button1Name = m_button1.name;
@@ -124,6 +296,7 @@ public class MyButtonCtrl : MyBaseButtonCtrl
 		m_button4Name = m_button4.name;
 
 		retireNum = 0;
+		m_maskSelectionNum = -1;
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -140,15 +313,29 @@ public class MyButtonCtrl : MyBaseButtonCtrl
 		m_button4ChooseImage.GetComponent<Image>().enabled = false;
 		m_button5ChooseImage.GetComponent<Image>().enabled = false;
 		m_button6ChooseImage.GetComponent<Image>().enabled = false;
+		//仮面メニュー
+		MaskCollection.SetActive(false);
 		//リタイアメニュー
 		m_retireText.SetActive(false);
 		m_button5.SetActive(false);
 		m_button6.SetActive(false);
 		retireNum = 0;
 		//財宝メニュー
-		m_MaskAImage.GetComponent<Image>().enabled = false;
-		m_MaskBImage.GetComponent<Image>().enabled = false;
-		m_MaskCImage.GetComponent<Image>().enabled = false;
+		int multiplier2; //２の乗数
+		var treature = PlayerPrefs.GetInt(PlayerPrefsKeys.IS_GET_ITEM); //財宝取得状況
+		for (var i = 0; i < TreatureImages.Length; i++)
+		{
+			//財宝の取得状況を反映
+			multiplier2 = (int)Mathf.Pow(2, i);
+			TreatureImages[i].enabled = ((treature & multiplier2) == multiplier2);
+		}
+		for (var i = 0; i < Treatures.Length; i++)
+		{
+			//ステージ番号に対応した財宝を表示
+			Treatures[i].SetActive(i == myMenu.MainUiScript.GameScript.StageNum);
+		}
+		//操作表
+		OperationTable.SetActive(false);
 
 		//コントローラー関係
 		m_inputUpCrossKey = false;
@@ -171,6 +358,57 @@ public class MyButtonCtrl : MyBaseButtonCtrl
 		m_inputLeftCrossKey = false;
 		m_waitLeftCrossKey = false;
 
+		//マスクゲージの取得
+		GetMaskGauge();
+
+		//マスクの状態の取得
+		GetMaskState();
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// マスクゲージの取得
+	/// </summary>
+	void GetMaskGauge()
+	{
+		//ウイルスマスク
+		m_workFloat = VirusMaskGauge.fillAmount;
+		VirusMaskGauge.fillAmount = m_player.VirusMask.countGauge / m_player.MaxVirusMaskGauge;
+		MaskGauge.fillAmount = (m_workFloat > VirusMaskGauge.fillAmount) ? VirusMaskGauge.fillAmount : MaskGauge.fillAmount;
+
+		//キャリーマスク
+		m_workFloat = CarryMaskGauge.fillAmount;
+		CarryMaskGauge.fillAmount = m_player.CarryMask.countGauge / m_player.MaxCarryMaskGauge;
+		MaskGauge.fillAmount = (m_workFloat > CarryMaskGauge.fillAmount) ? CarryMaskGauge.fillAmount : MaskGauge.fillAmount;
+
+		//ミラーマスク
+		m_workFloat = MirrorMaskGauge.fillAmount;
+		MirrorMaskGauge.fillAmount = m_player.MirrorMask.countGauge / m_player.MaxMirrorMaskGauge;
+		MaskGauge.fillAmount = (m_workFloat > MirrorMaskGauge.fillAmount) ? MirrorMaskGauge.fillAmount : MaskGauge.fillAmount;
+
+		//マジックマスク
+		m_workFloat = MagicMaskGauge.fillAmount;
+		MagicMaskGauge.fillAmount = m_player.MagicMask.countGauge / m_player.MaxMagicMaskGauge;
+		MaskGauge.fillAmount = (m_workFloat > MagicMaskGauge.fillAmount) ? MagicMaskGauge.fillAmount : MaskGauge.fillAmount;
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// マスクの状態の取得
+	/// </summary>
+	void GetMaskState()
+	{
+		//マスク獲得済みか
+		VirusMaskCollection.SetActive(m_player.VirusMask.isObtained);
+		CarryMaskCollection.SetActive(m_player.CarryMask.isObtained);
+		MirrorMaskCollection.SetActive(m_player.MirrorMask.isObtained);
+		MagicMaskCollection.SetActive(m_player.MagicMask.isObtained);
+
+		//使用中マスク
+		VirusMaskInUse.enabled = m_player.VirusMask.isUse;
+		CarryMaskInUse.enabled = m_player.CarryMask.isUse;
+		MirrorMaskInUse.enabled = m_player.MirrorMask.isUse;
+		MagicMaskInUse.enabled = m_player.MagicMask.isUse;
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -298,8 +536,19 @@ public class MyButtonCtrl : MyBaseButtonCtrl
 			}
 			#endregion
 			//メニュー基本画面の時
-			if (menuStates == MenuStates.menuBase || menuStates == MenuStates.description || menuStates == MenuStates.treasure)
+			if (menuStates == MenuStates.menuBase || menuStates == MenuStates.description
+				|| menuStates == MenuStates.treasure || menuStates == MenuStates.mask)
 			{
+				//仮面技
+				if (menuStates == MenuStates.mask)
+				{
+					if (Input.GetKeyDown("right") || m_inputRightStick == true || m_inputRightCrossKey == true)
+						FallBackMaskSelectionNum();
+					if (Input.GetKeyDown("left") || m_inputLeftStick == true || m_inputLeftCrossKey == true)
+						AddvanceMaskSelectionNum();
+					SelectMask();
+				}
+
 				//キー入力時
 				if (Input.GetKeyDown("up") || m_inputUpCrossKey == true || m_inputUpStick == true)
 				{
@@ -308,7 +557,7 @@ public class MyButtonCtrl : MyBaseButtonCtrl
 					m_waitUpCrossKey = true;
 					m_inputUpStick = false;
 					m_waitUpStick = true;
-					if (menuStates == MenuStates.treasure)
+					if (menuStates == MenuStates.treasure || menuStates == MenuStates.mask || menuStates == MenuStates.description)
 					{
 						menuStates = MenuStates.menuBase;
 					}
@@ -321,7 +570,7 @@ public class MyButtonCtrl : MyBaseButtonCtrl
 					m_waitDownCrossKey = true;
 					m_inputDownStick = false;
 					m_waitDownStick = true;
-					if (menuStates == MenuStates.treasure)
+					if (menuStates == MenuStates.treasure || menuStates == MenuStates.mask || menuStates == MenuStates.description)
 					{
 						menuStates = MenuStates.menuBase;
 					}
@@ -408,18 +657,15 @@ public class MyButtonCtrl : MyBaseButtonCtrl
 		}
 		if (menuStates == MenuStates.treasure)
 		{
-			m_MaskAImage.GetComponent<Image>().enabled = true;
-			m_MaskBImage.GetComponent<Image>().enabled = true;
-			m_MaskCImage.GetComponent<Image>().enabled = true;
+			Treature.SetActive(true);
 		}
 		else
 		{
-			m_MaskAImage.GetComponent<Image>().enabled = false;
-			m_MaskBImage.GetComponent<Image>().enabled = false;
-			m_MaskCImage.GetComponent<Image>().enabled = false;
+			Treature.SetActive(false);
 		}
+		MaskCollection.SetActive(menuStates == MenuStates.mask);
+		OperationTable.SetActive(menuStates == MenuStates.description);
 	}
-
 
 	//----------------------------------------------------------------------------------------------------
 	/// <summary>
@@ -462,6 +708,108 @@ public class MyButtonCtrl : MyBaseButtonCtrl
 				m_button4ChooseImage.GetComponent<Image>().enabled = true;
 				break;
 		}
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// マスク選択番号を後退させる
+	/// </summary>
+	void FallBackMaskSelectionNum()
+	{
+		var maskSelectionNum = m_maskSelectionNum;
+
+		//全マスクを検索
+		for (var i = 0; i < m_maskNames.Length; i++)
+		{
+			m_maskSelectionNum = (m_maskSelectionNum <= 0) ? m_maskNames.Length - 1 : m_maskSelectionNum - 1;
+
+			//指定マスクが獲得済み
+			if (IsObtainedMask(m_maskSelectionNum))
+				return;
+		}
+
+		m_maskSelectionNum = maskSelectionNum;
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// マスク選択番号を進める
+	/// </summary>
+	void AddvanceMaskSelectionNum()
+	{
+		var maskSelectionNum = m_maskSelectionNum;
+
+		//全マスクを検索
+		for (var i = 0; i < m_maskNames.Length; i++)
+		{
+			m_maskSelectionNum = (m_maskSelectionNum >= m_maskNames.Length - 1) ? 0 : m_maskSelectionNum + 1;
+
+			//指定マスクが獲得済み
+			if (IsObtainedMask(m_maskSelectionNum))
+				return;
+		}
+
+		m_maskSelectionNum = maskSelectionNum;
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// マスクが獲得済みか
+	/// </summary>
+	/// <param name="maskNum">マスク番号</param>
+	/// <returns>獲得済み</returns>
+	bool IsObtainedMask(int maskNum)
+	{
+		//マスク番号
+		switch(maskNum)
+		{
+			case 0:
+				return CarryMaskCollection.activeInHierarchy;
+			case 1:
+				return VirusMaskCollection.activeInHierarchy;
+			case 2:
+				return MirrorMaskCollection.activeInHierarchy;
+			case 3:
+				return MagicMaskCollection.activeInHierarchy;
+		}
+
+		return false;
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// マスクを選択
+	/// </summary>
+	void SelectMask()
+	{
+		//注目を非表示
+		CarryMaskToLetAttention.enabled = false;
+		VirusMaskToLetAttention.enabled = false;
+		MirrorMaskToLetAttention.enabled = false;
+		MagicMaskToLetAttention.enabled = false;
+
+		//マスク選択番号
+		switch (m_maskSelectionNum)
+		{
+			case 0:
+				CarryMaskToLetAttention.enabled = true;
+				break;
+			case 1:
+				VirusMaskToLetAttention.enabled = true;
+				break;
+			case 2:
+				MirrorMaskToLetAttention.enabled = true;
+				break;
+			case 3:
+				MagicMaskToLetAttention.enabled = true;
+				break;
+			default:
+				return;
+		}
+
+		//マスク名とマスク説明
+		MaskName.text = m_maskNames[m_maskSelectionNum];
+		DescriptionOfMask.text = m_descriptionOfMask[m_maskSelectionNum];
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -588,9 +936,10 @@ public class MyButtonCtrl : MyBaseButtonCtrl
 	/// </summary>
 	void Button1Click()
 	{
-		Debug.Log("仮面技選択");
 		m_choosingNum = 1;
 		MoveChooseImage(m_choosingNum);
+		menuStates = MenuStates.mask;
+		MaskCollection.SetActive(true);
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -599,22 +948,17 @@ public class MyButtonCtrl : MyBaseButtonCtrl
 	/// </summary>
 	void Button2Click()
 	{
-		Debug.Log("財宝選択");
 		if (menuStates != MenuStates.treasure)
 		{
 			menuStates = MenuStates.treasure;
 			m_choosingNum = 2;
 			MoveChooseImage(m_choosingNum);
-			m_MaskAImage.GetComponent<Image>().enabled = true;
-			m_MaskBImage.GetComponent<Image>().enabled = true;
-			m_MaskCImage.GetComponent<Image>().enabled = true;
+			Treature.SetActive(true);
 		}
 		else
 		{
 			menuStates = MenuStates.menuBase;
-			m_MaskAImage.GetComponent<Image>().enabled = false;
-			m_MaskBImage.GetComponent<Image>().enabled = false;
-			m_MaskCImage.GetComponent<Image>().enabled = false;
+			Treature.SetActive(false);
 		}
 	}
 
@@ -624,9 +968,10 @@ public class MyButtonCtrl : MyBaseButtonCtrl
 	/// </summary>
 	void Button3Click()
 	{
-		Debug.Log("操作選択");
 		m_choosingNum = 3;
 		MoveChooseImage(m_choosingNum);
+		menuStates = MenuStates.description;
+		OperationTable.SetActive(true);
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -635,7 +980,6 @@ public class MyButtonCtrl : MyBaseButtonCtrl
 	/// </summary>
 	void Button4Click()
 	{
-		Debug.Log("リタイア選択");
 		menuStates = MenuStates.retire;
 		m_choosingNum = 4;
 		MoveChooseImage(m_choosingNum);

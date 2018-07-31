@@ -594,6 +594,15 @@ public class MyAttackManager : MonoBehaviour
 	float m_cameraDistanceDeathblowHit;
 
 	/// <summary>
+	/// 必殺技中
+	/// </summary>
+	bool m_isDeathblow;
+	public bool IsDeathblow
+	{
+		get { return m_isDeathblow; }
+	}
+
+	/// <summary>
 	/// プレイヤーの状態番号
 	/// </summary>
 	int m_playerStateNum;
@@ -1042,6 +1051,8 @@ public class MyAttackManager : MonoBehaviour
 		//終了
 		if (m_countTimeDeathblow >= m_deathblowTime)
 		{
+			m_isDeathblow = false;
+			m_game.WaitingForDeathblow();
 			m_numDeathblow = NumDeathblow.Non;
 			m_game.SetManipulateMainObject(false);
 			m_player.StartAnimIdle();
@@ -1306,6 +1317,8 @@ public class MyAttackManager : MonoBehaviour
 		//終了
 		if (m_countTimeDeathblow >= m_deathblow2Time)
 		{
+			m_isDeathblow = false;
+			m_game.WaitingForDeathblow();
 			m_numDeathblow = NumDeathblow.Non;
 			m_game.SetManipulateMainObject(false);
 			return;
@@ -1444,6 +1457,8 @@ public class MyAttackManager : MonoBehaviour
 		//終了
 		if (m_countTimeDeathblow >= m_deathblowTime)
 		{
+			m_isDeathblow = false;
+			m_game.WaitingForDeathblow();
 			m_numDeathblow = NumDeathblow.Non;
 			m_game.SetManipulateMainObject(false);
 			m_player.StartAnimIdle();
@@ -1827,6 +1842,8 @@ public class MyAttackManager : MonoBehaviour
 		//終了
 		if (m_countTimeDeathblow >= m_deathblow4Time)
 		{
+			m_isDeathblow = false;
+			m_game.WaitingForDeathblow();
 			m_numDeathblow = NumDeathblow.Non;
 			m_game.SetManipulateMainObject(false);
 			m_player.StartAnimIdle();
@@ -2272,6 +2289,7 @@ public class MyAttackManager : MonoBehaviour
 		m_game.SetManipulateMainObject(true);
 
 		//必殺技設定
+		m_isDeathblow = true;
 		m_countTimeDeathblow = 0;
 		m_numDeathblow = NumDeathblow.Dethblow1;
 
@@ -2294,6 +2312,7 @@ public class MyAttackManager : MonoBehaviour
 		m_game.SetManipulateMainObject(true);
 
 		//必殺技設定
+		m_isDeathblow = true;
 		m_countTimeDeathblow = 0;
 		m_numDeathblow = NumDeathblow.Dethblow2;
 
@@ -2316,6 +2335,7 @@ public class MyAttackManager : MonoBehaviour
 		m_game.SetManipulateMainObject(true);
 
 		//必殺技設定
+		m_isDeathblow = true;
 		m_countTimeDeathblow = 0;
 		m_numDeathblow = NumDeathblow.Dethblow3;
 
@@ -2338,6 +2358,7 @@ public class MyAttackManager : MonoBehaviour
 		m_game.SetManipulateMainObject(true);
 
 		//必殺技設定
+		m_isDeathblow = true;
 		m_countTimeDeathblow = 0;
 		m_numDeathblow = NumDeathblow.Dethblow4;
 

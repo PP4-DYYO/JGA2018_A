@@ -36,6 +36,10 @@ public enum StageStatus
 	/// ボス撃破
 	/// </summary>
 	BossDestroyed,
+	/// <summary>
+	/// なし
+	/// </summary>
+	Non,
 }
 
 //----------------------------------------------------------------------------------------------------
@@ -126,6 +130,11 @@ public class MyGame : MonoBehaviour
 	/// フレーム前のステージ状態
 	/// </summary>
 	StageStatus m_stageStatePrev;
+
+	/// <summary>
+	/// 必殺技終了後の状態
+	/// </summary>
+	StageStatus m_conditionAfterEndOfDeathblow;
 
 	/// <summary>
 	/// ステージ番号
@@ -527,6 +536,24 @@ public class MyGame : MonoBehaviour
 	/// <param name="stageState">ステージ状態</param>
 	public void ChangeState(StageStatus stageState)
 	{
-		m_stageState = stageState;
+		//必殺技が発動中
+		if (myCharacter.AttackManagerScript.IsDeathblow)
+			m_conditionAfterEndOfDeathblow = stageState;
+		else
+			m_stageState = stageState;
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// 必殺技のための待ち
+	/// </summary>
+	public void WaitingForDeathblow()
+	{
+		//待機中の状態がある
+		if (m_conditionAfterEndOfDeathblow != StageStatus.Non)
+		{
+			m_stageState = m_conditionAfterEndOfDeathblow;
+			m_conditionAfterEndOfDeathblow = StageStatus.Non;
+		}
 	}
 }

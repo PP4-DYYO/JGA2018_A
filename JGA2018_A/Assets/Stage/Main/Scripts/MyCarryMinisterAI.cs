@@ -33,7 +33,7 @@ public class MyCarryMinisterAI : MyAiBoss
         m_maxHitPoint = 230;
         m_attack = 60;
         m_perceivedRange = 30;
-        m_distance = 100;
+        m_distance = 30;
         m_isAttacked = false;
         m_attackInterval = 4.0f;
         m_step = 0.03f;
@@ -57,9 +57,9 @@ public class MyCarryMinisterAI : MyAiBoss
     /// <summary>
     /// 移動、行動
     /// </summary>
-    protected override void Update()
+    protected override void FixedUpdate()
     {
-        base.Update();
+        base.FixedUpdate();
         if (m_aimode != AIMode.WAIT)
         {
             m_attackNum = 1;

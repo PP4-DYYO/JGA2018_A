@@ -33,7 +33,7 @@ public class MyMagicMinisterAI : MyAiBoss
         m_hitPoint = 450;
         m_attack = 65;
         m_perceivedRange = 30;
-        m_distance = 100;
+        m_distance = 30;
         m_isAttacked = false;
         m_attackInterval = 0.5f;
         m_step = 0.06f;
@@ -56,9 +56,9 @@ public class MyMagicMinisterAI : MyAiBoss
     /// <summary>
     /// 移動、行動
     /// </summary>
-    protected override void Update()
+    protected override void FixedUpdate()
     {
-        base.Update();
+        base.FixedUpdate();
         if (m_aimode != AIMode.WAIT)
         {
             //距離が0.5より小さければ離れる
@@ -76,11 +76,9 @@ public class MyMagicMinisterAI : MyAiBoss
                 break;
             case AIMode.ATTACK:
                 break;
-            case AIMode.DEFENSE:
-                break;
             case AIMode.LEAVE:
                 //離れる            
-                this.transform.Translate(new Vector3(m_moveX, 0, m_moveZ));
+                transform.position = Vector3.MoveTowards(transform.position, m_playerObject.transform.position, -m_step);
                 break;
         }
     }

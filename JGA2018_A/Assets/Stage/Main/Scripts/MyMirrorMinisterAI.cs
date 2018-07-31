@@ -39,7 +39,7 @@ public class MyMirrorMinisterAI : MyAiBoss
             m_attack = (m_attack * 2) / 3;
         }
         m_perceivedRange = 5;
-        m_distance = 100;
+        m_distance = 30;
         m_isAttacked = false;
         m_attackInterval = 0.5f;
         m_step = 0.06f;
@@ -68,9 +68,9 @@ public class MyMirrorMinisterAI : MyAiBoss
     /// <summary>
     /// 移動、行動
     /// </summary>
-    protected override void Update()
+    protected override void FixedUpdate()
     {
-        base.Update();
+        base.FixedUpdate();
 
         if (m_aimode != AIMode.WAIT)
         {
@@ -139,8 +139,10 @@ public class MyMirrorMinisterAI : MyAiBoss
                 break;
             case AIMode.LEAVE:
                 //離れる            
-                this.transform.Translate(new Vector3(m_moveX, 0, m_moveZ));
-                break;
+                this.transform.position = Vector3.MoveTowards(
+                                  new Vector3(this.transform.position.x, this.transform.position.y, this.transform.position.z),
+                                  new Vector3(m_playerObject.transform.position.x, this.transform.position.y, m_playerObject.transform.position.z),
+                                  -m_step); break;
         }
     }
 

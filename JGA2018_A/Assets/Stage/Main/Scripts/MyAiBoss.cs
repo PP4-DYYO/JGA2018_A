@@ -265,16 +265,11 @@ public class MyAiBoss : MonoBehaviour
     /// <summary>
     /// AIの基本行動
     /// </summary>
-    protected virtual void Update()
+    protected virtual void FixedUpdate()
     {
         //起動状態の時
         if (m_aimode != AIMode.WAIT)
         {
-            if (Input.GetKeyDown("space"))
-            {
-                ReceiveDamage(30);
-            }
-
             if (m_distance > 30)
             {
                 PositionReset();

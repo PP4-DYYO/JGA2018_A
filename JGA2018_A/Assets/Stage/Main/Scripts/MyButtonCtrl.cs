@@ -543,9 +543,21 @@ public class MyButtonCtrl : MyBaseButtonCtrl
 				if (menuStates == MenuStates.mask)
 				{
 					if (Input.GetKeyDown("right") || m_inputRightStick == true || m_inputRightCrossKey == true)
+					{
+						m_inputRightStick = false;
+						m_waitRightStick = true;
+						m_inputRightCrossKey = false;
+						m_waitRightCrossKey = true;
 						FallBackMaskSelectionNum();
+					}
 					if (Input.GetKeyDown("left") || m_inputLeftStick == true || m_inputLeftCrossKey == true)
+					{
+						m_inputLeftStick = false;
+						m_waitLeftStick = true;
+						m_inputLeftCrossKey = false;
+						m_waitLeftCrossKey = true;
 						AddvanceMaskSelectionNum();
+					}
 					SelectMask();
 				}
 

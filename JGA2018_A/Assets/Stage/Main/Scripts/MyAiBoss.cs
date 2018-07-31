@@ -452,7 +452,13 @@ public class MyAiBoss : MonoBehaviour
         switch (m_myObjectName)
         {
             case "CarryMinister(Clone)":
-                Debug.Log("特殊技！！！");
+                float warpPosX, warpPosY, warpPosZ;
+                float randamX = Random.Range(0,4);
+                float randamZ = Random.Range(0, 4);
+                warpPosX = m_stageObject.GetComponent<MyStage>().CurrentField.BossRoomCenterPos.x+randamX;
+                warpPosY = m_stageObject.GetComponent<MyStage>().CurrentField.BossRoomCenterPos.y+1;
+                warpPosZ = m_stageObject.GetComponent<MyStage>().CurrentField.BossRoomCenterPos.z+ randamZ;
+                m_playerObject.transform.position = new Vector3(warpPosX, warpPosY, warpPosZ);
                 break;
             case "VirusMinister(Clone)":
                 m_attack = 5;
@@ -479,7 +485,6 @@ public class MyAiBoss : MonoBehaviour
                 m_attack = 25;
                 break;
             case "MirrorMinister(Clone)":
-                Debug.Log("特殊技！！！");
                 break;
             case "MagicMinister(Clone)":
                 Debug.Log("特殊技！！！");
@@ -498,7 +503,6 @@ public class MyAiBoss : MonoBehaviour
         if (other.tag == AttackManagerTag.PLAYER_ATTACK_RANGE_TAG)
         {
             ReceiveDamage(other.GetComponent<MyAttack>().Power);
-            Debug.Log(other.name);
         }
     }
 
@@ -509,31 +513,16 @@ public class MyAiBoss : MonoBehaviour
     /// </summary>
     public void ReceiveDamage(int damage)
     {
-		Debug.Log(m_hitPoint);
         m_hitPoint = m_hitPoint - damage;
         ReceiveDamageAnimation();
-        Debug.Log(damage + "うけた");
+        Debug.Log("プレイヤーは" +m_myObjectName+"に"+ damage + "を与えた");
 
         //キャリーは被ダメ時に特殊技
-        if (m_myObjectName == "CarryMinister(Clone)" && m_specialFlag == true)
+        if (m_myObjectName == "CarryMinister(Clone)" && m_hitPoint < m_maxHitPoint/2 &&m_specialAttackCount==0||
+           m_myObjectName == "CarryMinister(Clone)" && m_hitPoint < m_maxHitPoint / 4 && m_specialAttackCount == 1)
         {
-            float m_length = 0.6f;
-
-            Vector3 vLDB = new Vector3(m_myGameObject.transform.position.x - m_length, m_myGameObject.transform.position.y - m_length, m_myGameObject.transform.position.z - m_length);
-            Vector3 vLDF = new Vector3(m_myGameObject.transform.position.x - m_length, m_myGameObject.transform.position.y - m_length, m_myGameObject.transform.position.z + m_length);
-            Vector3 vLUB = new Vector3(m_myGameObject.transform.position.x - m_length, m_myGameObject.transform.position.y + m_length, m_myGameObject.transform.position.z - m_length);
-            Vector3 vLUF = new Vector3(m_myGameObject.transform.position.x - m_length, m_myGameObject.transform.position.y + m_length, m_myGameObject.transform.position.z + m_length);
-            Vector3 vRDB = new Vector3(m_myGameObject.transform.position.x + m_length, m_myGameObject.transform.position.y - m_length, m_myGameObject.transform.position.z - m_length);
-            Vector3 vRDF = new Vector3(m_myGameObject.transform.position.x + m_length, m_myGameObject.transform.position.y - m_length, m_myGameObject.transform.position.z + m_length);
-            Vector3 vRUB = new Vector3(m_myGameObject.transform.position.x + m_length, m_myGameObject.transform.position.y + m_length, m_myGameObject.transform.position.z - m_length);
-            Vector3 vRUF = new Vector3(m_myGameObject.transform.position.x + m_length, m_myGameObject.transform.position.y + m_length, m_myGameObject.transform.position.z + m_length);
-
-            //当たり判定発生
-            MyCube attackRange = new MyCube(vLDB, vRDB, vLDF, vRDF, vLUB, vRUB, vLUF, vRUF);
-            //プレイヤーを飛ばす特殊技
-            myAttackManager.EnemyAttack(attackRange, MaskAttribute.Carry, 0, 0.1f);
+            SpecialAttack();
             m_specialFlag = false;
-            m_specialAttackCount += 1;
         }
         //マジックのカウンター攻撃
         else if (m_myObjectName == "MagicMinister(Clone)")

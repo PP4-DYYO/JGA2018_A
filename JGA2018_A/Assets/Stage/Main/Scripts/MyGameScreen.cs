@@ -90,16 +90,16 @@ public class MyGameScreen : MonoBehaviour
 	Image MaskGauge;
 
 	/// <summary>
-	/// ウイルスマスクゲージ
-	/// </summary>
-	[SerializeField]
-	Image VirusMaskGauge;
-
-	/// <summary>
 	/// キャリーマスクゲージ
 	/// </summary>
 	[SerializeField]
 	Image CarryMaskGauge;
+
+	/// <summary>
+	/// ウイルスマスクゲージ
+	/// </summary>
+	[SerializeField]
+	Image VirusMaskGauge;
 
 	/// <summary>
 	/// ミラーマスクゲージ
@@ -112,24 +112,6 @@ public class MyGameScreen : MonoBehaviour
 	/// </summary>
 	[SerializeField]
 	Image MagicMaskGauge;
-
-	/// <summary>
-	/// ウイルスマスクの収集物
-	/// </summary>
-	[SerializeField]
-	GameObject VirusMaskCollection;
-
-	/// <summary>
-	/// 注目させるウイルスマスク
-	/// </summary>
-	[SerializeField]
-	Image VirusMaskToLetAttention;
-
-	/// <summary>
-	/// 使用中のウイルスマスク
-	/// </summary>
-	[SerializeField]
-	Image VirusMaskInUse;
 
 	/// <summary>
 	/// キャリーマスクの収集物
@@ -148,6 +130,24 @@ public class MyGameScreen : MonoBehaviour
 	/// </summary>
 	[SerializeField]
 	Image CarryMaskInUse;
+
+	/// <summary>
+	/// ウイルスマスクの収集物
+	/// </summary>
+	[SerializeField]
+	GameObject VirusMaskCollection;
+
+	/// <summary>
+	/// 注目させるウイルスマスク
+	/// </summary>
+	[SerializeField]
+	Image VirusMaskToLetAttention;
+
+	/// <summary>
+	/// 使用中のウイルスマスク
+	/// </summary>
+	[SerializeField]
+	Image VirusMaskInUse;
 
 	/// <summary>
 	/// ミラーマスクの収集物
@@ -423,15 +423,15 @@ public class MyGameScreen : MonoBehaviour
 	/// </summary>
 	void MaskGaugeProcess()
 	{
-		//ウイルスマスク
-		m_workFloat = VirusMaskGauge.fillAmount;
-		VirusMaskGauge.fillAmount = m_player.VirusMask.countGauge / m_player.MaxVirusMaskGauge;
-		MaskGauge.fillAmount = (m_workFloat > VirusMaskGauge.fillAmount) ? VirusMaskGauge.fillAmount : MaskGauge.fillAmount;
-
 		//キャリーマスク
 		m_workFloat = CarryMaskGauge.fillAmount;
 		CarryMaskGauge.fillAmount = m_player.CarryMask.countGauge / m_player.MaxCarryMaskGauge;
 		MaskGauge.fillAmount = (m_workFloat > CarryMaskGauge.fillAmount) ? CarryMaskGauge.fillAmount : MaskGauge.fillAmount;
+
+		//ウイルスマスク
+		m_workFloat = VirusMaskGauge.fillAmount;
+		VirusMaskGauge.fillAmount = m_player.VirusMask.countGauge / m_player.MaxVirusMaskGauge;
+		MaskGauge.fillAmount = (m_workFloat > VirusMaskGauge.fillAmount) ? VirusMaskGauge.fillAmount : MaskGauge.fillAmount;
 
 		//ミラーマスク
 		m_workFloat = MirrorMaskGauge.fillAmount;
@@ -460,8 +460,8 @@ public class MyGameScreen : MonoBehaviour
 		}
 
 		//マスク獲得済みか
-		VirusMaskCollection.SetActive(m_player.VirusMask.isObtained);
 		CarryMaskCollection.SetActive(m_player.CarryMask.isObtained);
+		VirusMaskCollection.SetActive(m_player.VirusMask.isObtained);
 		MirrorMaskCollection.SetActive(m_player.MirrorMask.isObtained);
 		MagicMaskCollection.SetActive(m_player.MagicMask.isObtained);
 
@@ -469,23 +469,23 @@ public class MyGameScreen : MonoBehaviour
 		if (MaskGauge.fillAmount > 0)
 		{
 			//使用中マスクで必殺技が使われていないと点滅
-			VirusMaskToLetAttention.enabled = (!m_player.WasUseDeathblow && m_player.VirusMask.isUse) && m_isLightingUp;
 			CarryMaskToLetAttention.enabled = (!m_player.WasUseDeathblow && m_player.CarryMask.isUse) && m_isLightingUp;
+			VirusMaskToLetAttention.enabled = (!m_player.WasUseDeathblow && m_player.VirusMask.isUse) && m_isLightingUp;
 			MirrorMaskToLetAttention.enabled = (!m_player.WasUseDeathblow && m_player.MirrorMask.isUse) && m_isLightingUp;
 			MagicMaskToLetAttention.enabled = (!m_player.WasUseDeathblow && m_player.MagicMask.isUse) && m_isLightingUp;
 		}
 		else
 		{
 			//使用可能であれば点滅
-			VirusMaskToLetAttention.enabled = (VirusMaskGauge.fillAmount >= 1) ? m_isLightingUp : false;
 			CarryMaskToLetAttention.enabled = (CarryMaskGauge.fillAmount >= 1) ? m_isLightingUp : false;
+			VirusMaskToLetAttention.enabled = (VirusMaskGauge.fillAmount >= 1) ? m_isLightingUp : false;
 			MirrorMaskToLetAttention.enabled = (MirrorMaskGauge.fillAmount >= 1) ? m_isLightingUp : false;
 			MagicMaskToLetAttention.enabled = (MagicMaskGauge.fillAmount >= 1) ? m_isLightingUp : false;
 		}
 
 		//使用中マスク
-		VirusMaskInUse.enabled = m_player.VirusMask.isUse;
 		CarryMaskInUse.enabled = m_player.CarryMask.isUse;
+		VirusMaskInUse.enabled = m_player.VirusMask.isUse;
 		MirrorMaskInUse.enabled = m_player.MirrorMask.isUse;
 		MagicMaskInUse.enabled = m_player.MagicMask.isUse;
 	}

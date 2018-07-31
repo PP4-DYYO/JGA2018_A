@@ -150,16 +150,16 @@ public class MyButtonCtrl : MyBaseButtonCtrl
 	Image MaskGauge;
 
 	/// <summary>
-	/// ウイルスマスクゲージ
-	/// </summary>
-	[SerializeField]
-	Image VirusMaskGauge;
-
-	/// <summary>
 	/// キャリーマスクゲージ
 	/// </summary>
 	[SerializeField]
 	Image CarryMaskGauge;
+
+	/// <summary>
+	/// ウイルスマスクゲージ
+	/// </summary>
+	[SerializeField]
+	Image VirusMaskGauge;
 
 	/// <summary>
 	/// ミラーマスクゲージ
@@ -172,24 +172,6 @@ public class MyButtonCtrl : MyBaseButtonCtrl
 	/// </summary>
 	[SerializeField]
 	Image MagicMaskGauge;
-
-	/// <summary>
-	/// ウイルスマスクの収集物
-	/// </summary>
-	[SerializeField]
-	GameObject VirusMaskCollection;
-
-	/// <summary>
-	/// 注目させるウイルスマスク
-	/// </summary>
-	[SerializeField]
-	Image VirusMaskToLetAttention;
-
-	/// <summary>
-	/// 使用中のウイルスマスク
-	/// </summary>
-	[SerializeField]
-	Image VirusMaskInUse;
 
 	/// <summary>
 	/// キャリーマスクの収集物
@@ -208,6 +190,24 @@ public class MyButtonCtrl : MyBaseButtonCtrl
 	/// </summary>
 	[SerializeField]
 	Image CarryMaskInUse;
+
+	/// <summary>
+	/// ウイルスマスクの収集物
+	/// </summary>
+	[SerializeField]
+	GameObject VirusMaskCollection;
+
+	/// <summary>
+	/// 注目させるウイルスマスク
+	/// </summary>
+	[SerializeField]
+	Image VirusMaskToLetAttention;
+
+	/// <summary>
+	/// 使用中のウイルスマスク
+	/// </summary>
+	[SerializeField]
+	Image VirusMaskInUse;
 
 	/// <summary>
 	/// ミラーマスクの収集物
@@ -371,15 +371,15 @@ public class MyButtonCtrl : MyBaseButtonCtrl
 	/// </summary>
 	void GetMaskGauge()
 	{
-		//ウイルスマスク
-		m_workFloat = VirusMaskGauge.fillAmount;
-		VirusMaskGauge.fillAmount = m_player.VirusMask.countGauge / m_player.MaxVirusMaskGauge;
-		MaskGauge.fillAmount = (m_workFloat > VirusMaskGauge.fillAmount) ? VirusMaskGauge.fillAmount : MaskGauge.fillAmount;
-
 		//キャリーマスク
 		m_workFloat = CarryMaskGauge.fillAmount;
 		CarryMaskGauge.fillAmount = m_player.CarryMask.countGauge / m_player.MaxCarryMaskGauge;
 		MaskGauge.fillAmount = (m_workFloat > CarryMaskGauge.fillAmount) ? CarryMaskGauge.fillAmount : MaskGauge.fillAmount;
+
+		//ウイルスマスク
+		m_workFloat = VirusMaskGauge.fillAmount;
+		VirusMaskGauge.fillAmount = m_player.VirusMask.countGauge / m_player.MaxVirusMaskGauge;
+		MaskGauge.fillAmount = (m_workFloat > VirusMaskGauge.fillAmount) ? VirusMaskGauge.fillAmount : MaskGauge.fillAmount;
 
 		//ミラーマスク
 		m_workFloat = MirrorMaskGauge.fillAmount;
@@ -399,14 +399,14 @@ public class MyButtonCtrl : MyBaseButtonCtrl
 	void GetMaskState()
 	{
 		//マスク獲得済みか
-		VirusMaskCollection.SetActive(m_player.VirusMask.isObtained);
 		CarryMaskCollection.SetActive(m_player.CarryMask.isObtained);
+		VirusMaskCollection.SetActive(m_player.VirusMask.isObtained);
 		MirrorMaskCollection.SetActive(m_player.MirrorMask.isObtained);
 		MagicMaskCollection.SetActive(m_player.MagicMask.isObtained);
 
 		//使用中マスク
-		VirusMaskInUse.enabled = m_player.VirusMask.isUse;
 		CarryMaskInUse.enabled = m_player.CarryMask.isUse;
+		VirusMaskInUse.enabled = m_player.VirusMask.isUse;
 		MirrorMaskInUse.enabled = m_player.MirrorMask.isUse;
 		MagicMaskInUse.enabled = m_player.MagicMask.isUse;
 	}

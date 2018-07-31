@@ -1408,7 +1408,7 @@ public class MyPlayer : MonoBehaviour
 	void Deathblow()
 	{
 		//配達マスクand十字キー左の押下
-		if (m_maskState == MaskAttribute.Carry && m_isPressedCrossKeyLeft)
+		if (m_maskState == MaskAttribute.Carry && m_isPressedCrossKeyUp)
 		{
 			m_wasUseDeathblow = true;
 
@@ -1419,7 +1419,7 @@ public class MyPlayer : MonoBehaviour
 		}
 
 		//毒マスクand十字キー上の押下
-		if (m_maskState == MaskAttribute.Virus && m_isPressedCrossKeyUp)
+		if (m_maskState == MaskAttribute.Virus && m_isPressedCrossKeyLeft)
 		{
 			m_wasUseDeathblow = true;
 
@@ -2021,14 +2021,14 @@ public class MyPlayer : MonoBehaviour
 		if (m_maskState == MaskAttribute.Non)
 		{
 			//十字キーの押下and仮面の使用可能か
-			if (m_isPressedCrossKeyLeft && m_carryMask.isAvailable)
+			if (m_isPressedCrossKeyUp && m_carryMask.isAvailable)
 			{
 				//配達マスク
 				m_maskState = MaskAttribute.Carry;
 				m_carryMask.isUse = true;
 				m_wasUseDeathblow = false;
 			}
-			else if (m_isPressedCrossKeyUp && m_virusMask.isAvailable)
+			else if (m_isPressedCrossKeyLeft && m_virusMask.isAvailable)
 			{
 				//ウイルスマスク
 				m_maskState = MaskAttribute.Virus;

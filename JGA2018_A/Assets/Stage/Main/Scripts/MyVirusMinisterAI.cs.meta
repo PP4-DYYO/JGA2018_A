@@ -1,10 +1,16 @@
 fileFormatVersion: 2
 guid: 0d658535551af4643830a34eed61cab7
-timeCreated: 1525754232
+timeCreated: 1533002386
 licenseType: Free
 MonoImporter:
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - m_playerObject: {instanceID: 0}
+  - m_myGameObject: {instanceID: 0}
+  - m_stageObject: {instanceID: 0}
+  - m_maskPositionObject: {instanceID: 0}
+  - poizonFog: {fileID: 1991344775719112, guid: 8b390c1482fb1bb47a34a54be372bed9,
+      type: 2}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

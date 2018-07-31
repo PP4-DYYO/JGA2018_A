@@ -58,7 +58,6 @@ public class MyBombShot : MonoBehaviour
             force = this.gameObject.transform.forward * ((2 * BOMBSPEED + m_random) / 5);
             bombs.GetComponent<Rigidbody>().AddForce(force);
             bombs.transform.position = m_throwPoint.position;
-            Debug.Log("爆弾転がし!");
         }
 
         else if (num == 1)
@@ -71,7 +70,6 @@ public class MyBombShot : MonoBehaviour
             force = this.gameObject.transform.forward * ((2 * BOMBSPEED + m_randomX) / 5) + this.gameObject.transform.up * ((BOMBSPEED + m_randomY) / 2);
             bombs.GetComponent<Rigidbody>().AddForce(force);
             bombs.transform.position = m_throwPoint.position;
-            Debug.Log("爆弾投げ!");
         }
         else if (num == 2)
         {

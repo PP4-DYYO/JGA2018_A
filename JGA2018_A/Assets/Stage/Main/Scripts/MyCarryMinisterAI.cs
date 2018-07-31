@@ -57,9 +57,9 @@ public class MyCarryMinisterAI : MyAiBoss
     /// <summary>
     /// 移動、行動
     /// </summary>
-    protected override void FixedUpdate()
+    protected override void Update()
     {
-        base.FixedUpdate();
+        base.Update();
         if (m_aimode != AIMode.WAIT)
         {
             m_attackNum = 1;
@@ -110,16 +110,6 @@ public class MyCarryMinisterAI : MyAiBoss
             }
         }
 
-        if (HitPoint < MaxHitPoint / 2 && m_specialAttackCount == 0)
-        {
-            m_specialFlag = true;
-        }
-        else if(HitPoint < MaxHitPoint / 4 && m_specialAttackCount == 1)
-        {
-            m_specialFlag = true;
-
-        }
-
         //状態によって行動を切り替える
         switch (m_aimode)
         {
@@ -129,12 +119,9 @@ public class MyCarryMinisterAI : MyAiBoss
                 //一定時間毎に攻撃をする
                 NomalAttack();
                 break;
-            case AIMode.DEFENSE:
-                break;
-            case AIMode.APPROACH:
             case AIMode.LEAVE:
-                //離れるまたは近づく(ここは同じ)            
-                this.transform.Translate(new Vector3(m_moveX, 0, m_moveZ));
+                //離れる           
+                transform.position = Vector3.MoveTowards(transform.position, m_playerObject.transform.position, -m_step);
                 break;
         }
     }

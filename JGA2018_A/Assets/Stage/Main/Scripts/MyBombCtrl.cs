@@ -50,6 +50,10 @@ public class MyBombCtrl : MonoBehaviour
 	private void Start()
 	{
 		myAiBoss = GameObject.Find("VirusMinister(Clone)").GetComponent<MyAiBoss>();
+        if (myAiBoss == null)
+        {
+            myAiBoss = GameObject.Find("VirusMinister").GetComponent<MyAiBoss>();
+        }
 		myBombShot = GameObject.Find(m_BombPoint).GetComponent<MyBombShot>();
 		myAttackManager = GameObject.Find("AttackManager").GetComponent<MyAttackManager>();
 		myCharacter = myAiBoss.PlayerObject.GetComponent<MyCharacter>();

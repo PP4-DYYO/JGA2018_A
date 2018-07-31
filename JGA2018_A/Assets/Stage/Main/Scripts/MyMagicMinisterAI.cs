@@ -56,9 +56,9 @@ public class MyMagicMinisterAI : MyAiBoss
     /// <summary>
     /// 移動、行動
     /// </summary>
-    protected override void FixedUpdate()
+    protected override void Update()
     {
-        base.FixedUpdate();
+        base.Update();
         if (m_aimode != AIMode.WAIT)
         {
             //距離が0.5より小さければ離れる

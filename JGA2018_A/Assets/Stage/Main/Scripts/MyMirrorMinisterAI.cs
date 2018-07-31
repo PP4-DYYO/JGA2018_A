@@ -68,9 +68,9 @@ public class MyMirrorMinisterAI : MyAiBoss
     /// <summary>
     /// 移動、行動
     /// </summary>
-    protected override void FixedUpdate()
+    protected override void Update()
     {
-        base.FixedUpdate();
+        base.Update();
 
         if (m_aimode != AIMode.WAIT)
         {

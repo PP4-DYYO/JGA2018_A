@@ -18,6 +18,7 @@ public class MyVirusMinisterAI : MyAiBoss
     /// </summary>
     MyBombShot myBombShot;
 
+
     //----------------------------------------------------------------------------------------------------
     /// <summary>
     /// 初期状態設定
@@ -32,7 +33,7 @@ public class MyVirusMinisterAI : MyAiBoss
         m_maskPositionObject = transform.FindChild(MaskPositionObjectName).gameObject;
         m_stageObject = GameObject.Find("Stage");
         m_maxHitPoint = 310;
-        m_attack = 50;
+        m_attack = 25;
         m_perceivedRange = 5;
         m_distance = 100;
         m_isAttacked = false;
@@ -59,9 +60,9 @@ public class MyVirusMinisterAI : MyAiBoss
     /// <summary>
     /// 移動、行動
     /// </summary>
-    protected override void FixedUpdate()
+    protected override void Update()
     {
-        base.FixedUpdate();
+        base.Update();
         if (m_aimode != AIMode.WAIT)
         {
             //距離が５より小さければ離れる
@@ -114,12 +115,14 @@ public class MyVirusMinisterAI : MyAiBoss
         if (m_aimode == AIMode.LEAVE)
         {
             m_attackNum = 0;
-            m_attack = 70;
+            //m_attack = 35;
+            m_attack = 3;
         }
         else
         {
             m_attackNum = 1;
-            m_attack = 50;
+            //m_attack = 25;
+            m_attack = 2;
         }
         //状態によって行動を切り替える
         switch (m_aimode)
@@ -133,19 +136,14 @@ public class MyVirusMinisterAI : MyAiBoss
                     NomalAttack();
                 }
                 break;
-            case AIMode.DEFENSE:
-                break;
-            case AIMode.APPROACH:
-                //近づいてこない
-                break;
             case AIMode.LEAVE:
                 //逃げながら投げる
                 if (m_gameTime >= m_attackInterval)
                 {
                     NomalAttack();
                 }
-                //離れるまたは近づく(ここは同じ)            
-                this.transform.Translate(new Vector3(m_moveX, 0, m_moveZ));
+                //離れる          
+                transform.position = Vector3.MoveTowards(transform.position, m_playerObject.transform.position, -m_step/2);
                 break;
         }
     }

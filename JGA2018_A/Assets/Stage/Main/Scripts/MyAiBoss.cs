@@ -7,6 +7,7 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class MyAiBoss : MonoBehaviour
@@ -59,7 +60,7 @@ public class MyAiBoss : MonoBehaviour
     protected GameObject m_myGameObject;
 
     /// <summary>
-    /// 自分のゲームオブジェクト
+    /// ステージのオブジェクト
     /// </summary>
     [SerializeField]
     protected GameObject m_stageObject;
@@ -115,6 +116,7 @@ public class MyAiBoss : MonoBehaviour
     /// </summary>
     [SerializeField]
     protected int m_attackNum;
+
 
     /// <summary>
     /// 知覚範囲
@@ -192,6 +194,12 @@ public class MyAiBoss : MonoBehaviour
     protected bool m_maskThrow;
 
     /// <summary>
+    /// 毒の霧エフェクトプレファブ
+    /// </summary>
+    [SerializeField]
+    GameObject poizonFog;
+
+    /// <summary>
     /// 自分の状態//
     /// </summary>
     [SerializeField]
@@ -250,43 +258,76 @@ public class MyAiBoss : MonoBehaviour
         //m_aimode = AIMode.WAIT;
         m_hitPoint = m_maxHitPoint;
         myAttackManager = GameObject.Find("AttackManager").GetComponent<MyAttackManager>();
+        poizonFog = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Stage/Main/Prefab/poisonFog.prefab");
     }
 
     //----------------------------------------------------------------------------------------------------
     /// <summary>
     /// AIの基本行動
     /// </summary>
-    protected virtual void FixedUpdate()
+    protected virtual void Update()
     {
         //起動状態の時
         if (m_aimode != AIMode.WAIT)
         {
+            if (Input.GetKeyDown("space"))
+            {
+                ReceiveDamage(30);
+            }
+
+            if (m_distance > 30)
+            {
+                PositionReset();
+            }
+
             if (m_gameTime < m_attackInterval)
             {
                 m_gameTime += Time.deltaTime;
             }
+
+            Vector3 targetPos = m_playerObject.transform.position;
+            // Y座標を固定
+            targetPos.y = m_myGameObject.transform.position.y;
+            //プレイヤーの方を向く
+            m_myGameObject.transform.LookAt(targetPos);
+
             //プレイヤーとの距離
             m_distance = (m_playerObject.transform.position - m_myGameObject.transform.position).magnitude;
 
             //位置関係を確認して、移動の+-を変更する
-            if (m_playerObject.transform.position.x > m_myGameObject.transform.position.x)
+            if (m_playerObject.transform.position.x -m_myGameObject.transform.position.x>0)
             {
-                m_moveX = -m_step;
+                if (m_moveX != m_step)
+                {
+                    m_moveX = m_step;
+                }
             }
-            else
+            else if (m_playerObject.transform.position.x - m_myGameObject.transform.position.x<0)
             {
-                m_moveX = m_step;
+                if (m_moveX != -m_step)
+                {
+                    m_moveX = -m_step;
+                }
             }
 
-            if (m_playerObject.transform.position.z > m_myGameObject.transform.position.z)
+
+            if (m_playerObject.transform.position.z - m_myGameObject.transform.position.z>0)
             {
-                m_moveZ = -m_step;
+                if (m_moveZ != m_step)
+                {
+                    m_moveZ = m_step;
+                }
             }
-            else
+            else if (m_playerObject.transform.position.z - m_myGameObject.transform.position.z<0)
             {
-                m_moveZ = m_step;
+                if (m_moveZ != -m_step)
+                {
+                    m_moveZ = -m_step;
+                }
             }
+
         }
+
         //マスクを捨てる
         if (m_hitPoint < m_maxHitPoint / 2 && m_maskThrow == false)
         {
@@ -339,14 +380,10 @@ public class MyAiBoss : MonoBehaviour
             case "CarryMinister(Clone)":
                 //能力技発動条件
                 if (m_hitPoint < m_maxHitPoint / 2 && m_specialAttackCount == 0 ||
-                   m_hitPoint < m_maxHitPoint / 4 && m_specialAttackCount == 1 ||
-                   m_hitPoint < m_maxHitPoint / 4 && m_attackNum == 1)
+                   m_hitPoint < m_maxHitPoint / 4 && m_specialAttackCount == 1)
                 {
                     SpecialAttack();
-                    if (m_specialAttackCount < m_specialAttackLimit)
-                    {
-                        m_specialAttackCount++;
-                    }
+                    m_specialAttackCount++;
                 }
                 else
                 {
@@ -354,10 +391,14 @@ public class MyAiBoss : MonoBehaviour
                 }
                 m_isAttacked = true;
                 break;
-
+            case "VirusMinister":
             case "VirusMinister(Clone)":
+                Debug.Log(m_hitPoint);
+                Debug.Log(m_maxHitPoint / 4);
                 //HPが一定で制限に達していないとき
-                if (m_hitPoint < m_hitPoint / 4 && m_specialAttackCount < m_specialAttackLimit)
+                if (m_hitPoint < m_maxHitPoint / 2 && m_specialAttackCount ==0||
+                    m_hitPoint < m_maxHitPoint / 4 && m_specialAttackCount == 1||
+                      m_specialAttackCount>1&&m_distance<5)
                 {
                     SpecialAttack();
                 }
@@ -377,16 +418,16 @@ public class MyAiBoss : MonoBehaviour
                     //当たり判定Cube
                     Vector3 attackPoint = GameObject.Find(m_myObjectName).transform.position;
 
-                    float m_length = 0.6f;
+                    float cubeLength = 0.6f;
                     //頂点の位置
-                    Vector3 vLDB = new Vector3(attackPoint.x - m_length, 1 + attackPoint.y - m_length, attackPoint.z - m_length);
-                    Vector3 vLDF = new Vector3(attackPoint.x - m_length, 1 + attackPoint.y - m_length, attackPoint.z + m_length);
-                    Vector3 vLUB = new Vector3(attackPoint.x - m_length, 1 + attackPoint.y + m_length, attackPoint.z - m_length);
-                    Vector3 vLUF = new Vector3(attackPoint.x - m_length, 1 + attackPoint.y + m_length, attackPoint.z + m_length);
-                    Vector3 vRDB = new Vector3(attackPoint.x + m_length, 1 + attackPoint.y - m_length, attackPoint.z - m_length);
-                    Vector3 vRDF = new Vector3(attackPoint.x + m_length, 1 + attackPoint.y - m_length, attackPoint.z + m_length);
-                    Vector3 vRUB = new Vector3(attackPoint.x + m_length, 1 + attackPoint.y + m_length, attackPoint.z - m_length);
-                    Vector3 vRUF = new Vector3(attackPoint.x + m_length, 1 + attackPoint.y + m_length, attackPoint.z + m_length);
+                    Vector3 vLDB = new Vector3(attackPoint.x - cubeLength, 1 + attackPoint.y - cubeLength, attackPoint.z - cubeLength);
+                    Vector3 vLDF = new Vector3(attackPoint.x - cubeLength, 1 + attackPoint.y - cubeLength, attackPoint.z + cubeLength);
+                    Vector3 vLUB = new Vector3(attackPoint.x - cubeLength, 1 + attackPoint.y + cubeLength, attackPoint.z - cubeLength);
+                    Vector3 vLUF = new Vector3(attackPoint.x - cubeLength, 1 + attackPoint.y + cubeLength, attackPoint.z + cubeLength);
+                    Vector3 vRDB = new Vector3(attackPoint.x + cubeLength, 1 + attackPoint.y - cubeLength, attackPoint.z - cubeLength);
+                    Vector3 vRDF = new Vector3(attackPoint.x + cubeLength, 1 + attackPoint.y - cubeLength, attackPoint.z + cubeLength);
+                    Vector3 vRUB = new Vector3(attackPoint.x + cubeLength, 1 + attackPoint.y + cubeLength, attackPoint.z - cubeLength);
+                    Vector3 vRUF = new Vector3(attackPoint.x + cubeLength, 1 + attackPoint.y + cubeLength, attackPoint.z + cubeLength);
 
                     //当たり判定発生
                     MyCube attackRange = new MyCube(vLDB, vRDB, vLDF, vRDF, vLUB, vRUB, vLUF, vRUF);
@@ -416,24 +457,41 @@ public class MyAiBoss : MonoBehaviour
         switch (m_myObjectName)
         {
             case "CarryMinister(Clone)":
-                m_specialAttackCount += 1;
                 Debug.Log("特殊技！！！");
                 break;
             case "VirusMinister(Clone)":
-                m_attack = 30;
-                GameObject.Find("BombPoint").GetComponent<MyBombShot>().Shot(2);
+                m_attack = 5;
+                Vector3 attackPoint = GameObject.Find(m_myObjectName).transform.position;
+
+                GameObject poizonfog = GameObject.Instantiate(poizonFog) as GameObject;
+                poizonfog.transform.position = m_myGameObject.transform.position;
+
+                float cubeLength = 2f;
+                //頂点の位置
+                Vector3 vLDB = new Vector3(attackPoint.x - cubeLength, 1 + attackPoint.y - cubeLength, attackPoint.z - cubeLength);
+                Vector3 vLDF = new Vector3(attackPoint.x - cubeLength, 1 + attackPoint.y - cubeLength, attackPoint.z + cubeLength);
+                Vector3 vLUB = new Vector3(attackPoint.x - cubeLength, 1 + attackPoint.y + cubeLength, attackPoint.z - cubeLength);
+                Vector3 vLUF = new Vector3(attackPoint.x - cubeLength, 1 + attackPoint.y + cubeLength, attackPoint.z + cubeLength);
+                Vector3 vRDB = new Vector3(attackPoint.x + cubeLength, 1 + attackPoint.y - cubeLength, attackPoint.z - cubeLength);
+                Vector3 vRDF = new Vector3(attackPoint.x + cubeLength, 1 + attackPoint.y - cubeLength, attackPoint.z + cubeLength);
+                Vector3 vRUB = new Vector3(attackPoint.x + cubeLength, 1 + attackPoint.y + cubeLength, attackPoint.z - cubeLength);
+                Vector3 vRUF = new Vector3(attackPoint.x + cubeLength, 1 + attackPoint.y + cubeLength, attackPoint.z + cubeLength);
+
+                ////当たり判定発生
+                MyCube attackRange = new MyCube(vLDB, vRDB, vLDF, vRDF, vLUB, vRUB, vLUF, vRUF);
+                myAttackManager.EnemyAttack(attackRange, MaskAttribute.Virus, m_attack, 2);
                 Debug.Log("特殊技！！！");
+                m_attack = 25;
                 break;
             case "MirrorMinister(Clone)":
-                m_specialAttackCount += 1;
                 Debug.Log("特殊技！！！");
                 break;
             case "MagicMinister(Clone)":
-                m_specialAttackCount += 1;
                 Debug.Log("特殊技！！！");
                 break;
         }
         m_gameTime = 0;
+        m_specialAttackCount += 1;
     }
 
     //----------------------------------------------------------------------------------------------------
@@ -445,6 +503,7 @@ public class MyAiBoss : MonoBehaviour
         if (other.tag == AttackManagerTag.PLAYER_ATTACK_RANGE_TAG)
         {
             ReceiveDamage(other.GetComponent<MyAttack>().Power);
+            Debug.Log(other.name);
         }
     }
 
@@ -505,6 +564,11 @@ public class MyAiBoss : MonoBehaviour
         {
             transform.parent.GetComponent<MyAiManager>().CharacterScript.GameScript.ChangeState(StageStatus.BossDestroyed);
         }
+    }
+
+     void PositionReset()
+    {
+       m_myGameObject.transform.position=m_stageObject.GetComponent<MyStage>().CurrentField.BossRoomCenterPos;
     }
 
     //----------------------------------------------------------------------------------------------------

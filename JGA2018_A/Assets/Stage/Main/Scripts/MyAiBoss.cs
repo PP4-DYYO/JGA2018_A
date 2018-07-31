@@ -164,6 +164,17 @@ public class MyAiBoss : MonoBehaviour
     protected float m_moveZ;
 
     /// <summary>
+    /// 攻撃回数カウント
+    /// </summary>
+    [SerializeField]
+    protected int m_attackCount;
+
+    public int AttackCount
+    {
+        get { return m_attackCount; }
+    }
+
+    /// <summary>
     /// 特殊技の使用制限数//
     /// </summary>
     [SerializeField]
@@ -238,7 +249,7 @@ public class MyAiBoss : MonoBehaviour
         /// <summary>
         /// 防御
         /// </summary>
-        DEFENSE,
+        SKILL,
         /// <summary>
         /// 近づく
         /// </summary>
@@ -270,6 +281,7 @@ public class MyAiBoss : MonoBehaviour
         //起動状態の時
         if (m_aimode != AIMode.WAIT)
         {
+            //ステージから落下した場合中央に戻す
             if (m_distance > 30)
             {
                 PositionReset();
@@ -305,7 +317,6 @@ public class MyAiBoss : MonoBehaviour
                 }
             }
 
-
             if (m_playerObject.transform.position.z - m_myGameObject.transform.position.z>0)
             {
                 if (m_moveZ != m_step)
@@ -320,7 +331,6 @@ public class MyAiBoss : MonoBehaviour
                     m_moveZ = -m_step;
                 }
             }
-
         }
 
         //マスクを捨てる
@@ -441,6 +451,7 @@ public class MyAiBoss : MonoBehaviour
                 break;
         }
         m_gameTime = 0;
+        m_attackCount += 1;
     }
 
     //----------------------------------------------------------------------------------------------------
@@ -453,8 +464,8 @@ public class MyAiBoss : MonoBehaviour
         {
             case "CarryMinister(Clone)":
                 float warpPosX, warpPosY, warpPosZ;
-                float randamX = Random.Range(0,4);
-                float randamZ = Random.Range(0, 4);
+                float randamX = Random.Range(-4,4);
+                float randamZ = Random.Range(-4, 4);
                 warpPosX = m_stageObject.GetComponent<MyStage>().CurrentField.BossRoomCenterPos.x+randamX;
                 warpPosY = m_stageObject.GetComponent<MyStage>().CurrentField.BossRoomCenterPos.y+1;
                 warpPosZ = m_stageObject.GetComponent<MyStage>().CurrentField.BossRoomCenterPos.z+ randamZ;

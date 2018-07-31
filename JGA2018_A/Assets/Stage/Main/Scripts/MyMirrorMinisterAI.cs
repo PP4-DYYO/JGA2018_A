@@ -33,7 +33,7 @@ public class MyMirrorMinisterAI : MyAiBoss
         {
             m_maxHitPoint = (m_maxHitPoint * 2 )/ 3;
         }
-        m_attack = 60;
+        m_attack = 10;
         if (m_myObjectName == "MirrorMinister(Clone)(Clone)")
         {
             m_attack = (m_attack * 2) / 3;
@@ -127,8 +127,6 @@ public class MyMirrorMinisterAI : MyAiBoss
                 {
                     NomalAttack();
                 }
-                break;
-            case AIMode.DEFENSE:
                 break;
             case AIMode.APPROACH:
                 //近づく(y座標は固定)            

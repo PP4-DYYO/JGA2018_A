@@ -19,6 +19,31 @@ public class MyCarryMinisterAI : MyAiBoss
     /// </summary>
     MyArrowShot myArrowShot;
 
+    ///<summary>
+    ///ワープ先の座標
+    ///</summary>
+    float warpPosX, warpPosY, warpPosZ;
+
+    /// <summary>
+    /// ワープ兆しオブジェクト
+    /// </summary>
+    GameObject WarpSign;
+
+    /// <summary>
+    /// ワープ兆し
+    /// </summary>
+    int WarpSignFlag;
+
+    /// <summary>
+    /// ワープ用逃げている時間
+    /// </summary>
+    float escapeTime;
+
+    /// <summary>
+    /// ワープ待機時間
+    /// </summary>
+    float waitTime=1;
+
     //----------------------------------------------------------------------------------------------------
     /// <summary>
     /// 初期状態設定
@@ -46,8 +71,10 @@ public class MyCarryMinisterAI : MyAiBoss
         m_playerAttacked = false;
         m_aimode = AIMode.WAIT;
 
-        m_gameTime = m_attackInterval;
+
+        m_gameTime = m_attackInterval/2;
         myArrowShot = GameObject.Find("ArrowPositionObject").GetComponent<MyArrowShot>();
+        WarpSign = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Stage/Main/Prefab/WarpSign.prefab");
 
         base.Start();
     }
@@ -97,6 +124,11 @@ public class MyCarryMinisterAI : MyAiBoss
                 //それ以上離れるとターゲットから外れる
                 m_aimode = MyAiBoss.AIMode.IDLE;
             }
+
+            if (WarpSignFlag>0)
+            {
+                CarryWarp();
+            }
         }
 
         //攻撃時に下がる
@@ -108,6 +140,15 @@ public class MyCarryMinisterAI : MyAiBoss
                 m_isAttacked = false;
                 m_aimode = AIMode.IDLE;
             }
+        }
+        if (WarpSignFlag==0&& AttackCount % 4==1)
+        {
+            WarpSignFlag = 1;
+        }
+
+        if (WarpSignFlag == 3 && AttackCount % 4 == 3)
+        {
+            WarpSignFlag = 0;
         }
 
         //状態によって行動を切り替える
@@ -122,8 +163,42 @@ public class MyCarryMinisterAI : MyAiBoss
             case AIMode.LEAVE:
                 //離れる           
                 transform.position = Vector3.MoveTowards(transform.position, m_playerObject.transform.position, -m_step);
+                escapeTime += Time.deltaTime;
                 break;
         }
     }
 
+    //----------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// ワープ処理
+    /// </summary>
+    void CarryWarp()
+    {
+        if (waitTime<=0&& WarpSignFlag == 2)
+        {
+            //ワープする
+            gameObject.transform.position = new Vector3(warpPosX, warpPosY, warpPosZ);
+            waitTime = 1;
+            WarpSignFlag = 3;
+        }
+
+        if (WarpSignFlag ==1)
+        {
+            //最初に座標を決め、兆しが出現
+            float randamX =UnityEngine.Random.Range(-4, 4);
+            float randamZ = UnityEngine.Random.Range(-4, 4);
+            warpPosX = m_stageObject.GetComponent<MyStage>().CurrentField.BossRoomCenterPos.x + randamX;
+            warpPosY = m_stageObject.GetComponent<MyStage>().CurrentField.BossRoomCenterPos.y ;
+            warpPosZ = m_stageObject.GetComponent<MyStage>().CurrentField.BossRoomCenterPos.z + randamZ;
+
+            GameObject light = GameObject.Instantiate(WarpSign) as GameObject;
+            light.transform.position = new Vector3(warpPosX, warpPosY, warpPosZ);
+            WarpSignFlag = 2;
+        }
+
+        if (WarpSignFlag==2)
+        {
+            waitTime -= Time.deltaTime;
+        }
+    }
 }

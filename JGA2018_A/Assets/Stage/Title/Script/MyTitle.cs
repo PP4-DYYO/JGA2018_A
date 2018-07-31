@@ -171,6 +171,10 @@ public class MyTitle : MonoBehaviour
 	/// </summary>
 	void Update()
     {
+		//データリセット
+		if (Input.GetKeyDown(KeyCode.Escape) && Input.GetKey(KeyCode.Alpha0))
+			MyGameInfo.Instance.ResetData();
+
 		if (!m_isOpening)
 			FirstTitleProcess();
 
@@ -187,10 +191,6 @@ public class MyTitle : MonoBehaviour
 				SecondTitleProcess();
 			else
 				LoadProcess();
-
-		//データリセット
-		if (Input.GetKeyDown(KeyCode.Escape) && Input.GetKey(KeyCode.Alpha0))
-			MyGameInfo.Instance.ResetData();
     }
 
 	//----------------------------------------------------------------------------------------------------

@@ -1178,27 +1178,57 @@ public class MyPlayer : MonoBehaviour
 
 		//マスク関係
 		m_carryMask.attribute = MaskAttribute.Carry;
-		m_carryMask.isObtained = false;
 		m_carryMask.isAvailable = false;
 		m_carryMask.isUse = false;
 		m_carryMask.countGauge = 0;
 		m_virusMask.attribute = MaskAttribute.Virus;
-		m_virusMask.isObtained = false;
 		m_virusMask.isAvailable = false;
 		m_virusMask.isUse = false;
 		m_virusMask.countGauge = 0;
 		m_mirrorMask.attribute = MaskAttribute.Mirror;
-		m_mirrorMask.isObtained = false;
 		m_mirrorMask.isAvailable = false;
 		m_mirrorMask.isUse = false;
 		m_mirrorMask.countGauge = 0;
 		m_magicMask.attribute = MaskAttribute.Magic;
-		m_magicMask.isObtained = false;
 		m_magicMask.isAvailable = false;
 		m_magicMask.isUse = false;
 		m_magicMask.countGauge = 0;
+
+		//マスク獲得のチェック
+		CheckMaskAcquisition();
 	}
 
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// マスク獲得をチェック
+	/// </summary>
+	void CheckMaskAcquisition()
+	{
+		var isGetMask = PlayerPrefs.GetInt(PlayerPrefsKeys.IS_GET_MASK);
+
+		//２進数で保存された取得マスクの取得
+		var bit = 1;
+		for (var i = 0; i < MaskObjects.Length; i++)
+		{
+			//マスク獲得
+			switch (i)
+			{
+				case 0:
+					m_carryMask.isObtained = ((isGetMask & bit) == bit);
+					break;
+				case 1:
+					m_virusMask.isObtained = ((isGetMask & bit) == bit);
+					break;
+				case 2:
+					m_mirrorMask.isObtained = ((isGetMask & bit) == bit);
+					break;
+				case 3:
+					m_magicMask.isObtained = ((isGetMask & bit) == bit);
+					break;
+			}
+			bit *= 2;
+		}
+	}
 	//----------------------------------------------------------------------------------------------------
 	/// <summary>
 	/// フレーム
@@ -1591,17 +1621,21 @@ public class MyPlayer : MonoBehaviour
 		{
 			case MaskAttribute.Carry:
 				m_carryMask.isObtained = true;
+				SaveMaskAcquisition(MaskAttribute.Carry);
 				m_carryMask.countGauge = m_maxCarryMaskGauge;
 				break;
 			case MaskAttribute.Virus:
+				SaveMaskAcquisition(MaskAttribute.Virus);
 				m_virusMask.isObtained = true;
 				m_virusMask.countGauge = m_maxVirusMaskGauge;
 				break;
 			case MaskAttribute.Mirror:
+				SaveMaskAcquisition(MaskAttribute.Mirror);
 				m_mirrorMask.isObtained = true;
 				m_mirrorMask.countGauge = m_maxMirrorMaskGauge;
 				break;
 			case MaskAttribute.Magic:
+				SaveMaskAcquisition(MaskAttribute.Magic);
 				m_magicMask.isObtained = true;
 				m_magicMask.countGauge = m_maxMagicMaskGauge;
 				break;
@@ -1621,6 +1655,17 @@ public class MyPlayer : MonoBehaviour
 		//マスクを手で持つ
 		MaskObj.transform.parent = GripPosTrans;
 		ResetTransform(MaskObj.transform);
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// マスク取得の保存
+	/// </summary>
+	/// <param name="attribute">属性</param>
+	void SaveMaskAcquisition(MaskAttribute attribute)
+	{
+		//マスク取得状態を追加して保存
+		PlayerPrefs.SetInt(PlayerPrefsKeys.IS_GET_MASK, PlayerPrefs.GetInt(PlayerPrefsKeys.IS_GET_MASK) | (int)Mathf.Pow(2, ((int)attribute - 1)));
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -2695,6 +2740,6 @@ public class MyPlayer : MonoBehaviour
 	/// </summary>
 	void DieEvent()
 	{
-		MySceneManager.Instance.ChangeScene(MyScene.Main,1);
+		MySceneManager.Instance.ChangeScene(MyScene.Main, 1);
 	}
 }

@@ -84,6 +84,12 @@ public class MyGameScreen : MonoBehaviour
 	Image BossAssistanceHp;
 
 	/// <summary>
+	/// 十字の方向画像たち
+	/// </summary>
+	[SerializeField]
+	Image[] CrossDirectionImage;
+
+	/// <summary>
 	/// マスクゲージ
 	/// </summary>
 	[SerializeField]
@@ -319,6 +325,29 @@ public class MyGameScreen : MonoBehaviour
 	Color m_possibleColor;
 	#endregion
 
+	#region キーボード関係
+	[Header("キーボード関係")]
+	/// <summary>
+	/// 十字キー上
+	/// </summary>
+	const string CROSS_KEY_UP = "CrossKeyUp";
+
+	/// <summary>
+	/// 十字キー下
+	/// </summary>
+	const string CROSS_KEY_DOWN = "CrossKeyDown";
+
+	/// <summary>
+	/// 十字キー左
+	/// </summary>
+	const string CROSS_KEY_LEFT = "CrossKeyLeft";
+
+	/// <summary>
+	/// 十字キー右
+	/// </summary>
+	const string CROSS_KEY_RIGHT = "CrossKeyRight";
+	#endregion
+
 	#region 作業用
 	/// <summary>
 	/// 作業用Float
@@ -345,6 +374,9 @@ public class MyGameScreen : MonoBehaviour
 	{
 		//HP処理
 		HpProcess();
+
+		//十字方向の処理
+		CrossDirectionProcess();
 
 		//マスクゲージ処理
 		MaskGaugeProcess();
@@ -415,6 +447,18 @@ public class MyGameScreen : MonoBehaviour
 		//アシスタンスHPの減り
 		if (BossAssistanceHp.fillAmount > BossHp.fillAmount)
 			BossAssistanceHp.fillAmount -= m_hpDecreaseSpeed * Time.deltaTime;
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// 十字方向の処理
+	/// </summary>
+	void CrossDirectionProcess()
+	{
+		CrossDirectionImage[0].fillAmount = Input.GetAxis(CROSS_KEY_UP);
+		CrossDirectionImage[1].fillAmount = -Input.GetAxis(CROSS_KEY_LEFT);
+		CrossDirectionImage[2].fillAmount = -Input.GetAxis(CROSS_KEY_DOWN);
+		CrossDirectionImage[3].fillAmount = Input.GetAxis(CROSS_KEY_RIGHT);
 	}
 
 	//----------------------------------------------------------------------------------------------------

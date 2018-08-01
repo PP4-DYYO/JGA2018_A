@@ -451,8 +451,9 @@ public class MyGame : MonoBehaviour
 			SetManipulateMainObject(true);
 			m_countTimeState = 0;
 
-			//カメラの設定とボスのアニメーション
+			//カメラとボスの設定
 			m_initPosCameraState = CameraScript.transform.position;
+			m_boss.transform.LookAt(myStage.CurrentField.BossRoomCenterPos);
 			Debug.Log("ボスの敗北アニメーションスタート");
 
 			m_stageStatePrev = m_stageState;

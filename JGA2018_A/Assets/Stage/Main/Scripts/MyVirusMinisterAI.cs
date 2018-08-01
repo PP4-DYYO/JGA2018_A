@@ -35,7 +35,7 @@ public class MyVirusMinisterAI : MyAiBoss
         m_maxHitPoint = 310;
         m_attack = 25;
         m_perceivedRange = 5;
-        m_distance = 100;
+        m_distance = 30;
         m_isAttacked = false;
         m_attackInterval = 2.0f;
         m_step = 0.03f;
@@ -60,9 +60,9 @@ public class MyVirusMinisterAI : MyAiBoss
     /// <summary>
     /// 移動、行動
     /// </summary>
-    protected override void Update()
+    protected override void FixedUpdate()
     {
-        base.Update();
+        base.FixedUpdate();
         if (m_aimode != AIMode.WAIT)
         {
             //距離が５より小さければ離れる

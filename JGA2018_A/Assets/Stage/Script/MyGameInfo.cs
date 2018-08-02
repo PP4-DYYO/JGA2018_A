@@ -44,6 +44,11 @@ public struct PlayerPrefsKeys
 	/// オープニングを見たか
 	/// </summary>
 	public const string IS_WATCH_OPENING = "IsWatchOpening";
+
+	/// <summary>
+	/// マスクを獲得したか
+	/// </summary>
+	public const string IS_GET_MASK = "IsGetMask";
 }
 
 //----------------------------------------------------------------------------------------------------

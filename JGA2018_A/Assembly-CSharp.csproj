@@ -85,6 +85,7 @@
      <Compile Include="Assets\Stage\Main\Scripts\MyVirusMinisterAI.cs" />
      <Compile Include="Assets\Stage\Main\Scripts\MyWarpManager.cs" />
      <Compile Include="Assets\Stage\Main\Scripts\MyWarpPoint.cs" />
+     <Compile Include="Assets\Stage\Main\Scripts\MyWarpSign.cs" />
      <Compile Include="Assets\Stage\Main\Scripts\MyWeakEnemy.cs" />
      <Compile Include="Assets\Stage\Script\Common\MyBootloader.cs" />
      <Compile Include="Assets\Stage\Script\Common\MyDontDestroyOnLoad.cs" />

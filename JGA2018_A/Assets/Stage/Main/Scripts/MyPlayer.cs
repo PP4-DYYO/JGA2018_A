@@ -1040,6 +1040,11 @@ public class MyPlayer : MonoBehaviour
 	bool m_isPressedP = false;
 
 	/// <summary>
+	/// P軸が押された
+	/// </summary>
+	bool m_isPressedPAxis = false;
+
+	/// <summary>
 	/// 十字キー上が押された
 	/// </summary>
 	bool m_isPressedCrossKeyUp = false;
@@ -1258,8 +1263,9 @@ public class MyPlayer : MonoBehaviour
 			m_isPressedRightClick = true;
 
 		//Pキーの押下
-		if (Input.GetButtonDown(PICK_UP))
+		if (Input.GetButtonDown(PICK_UP) || (Input.GetAxis(PICK_UP) >= 1.0f && !m_isPressedPAxis))
 			m_isPressedP = true;
+		m_isPressedPAxis = (Input.GetAxis(PICK_UP) >= 1.0f);
 
 		//十字キー上の押下
 		if (Input.GetButtonDown(CROSS_KEY_UP) || (Input.GetAxis(CROSS_KEY_UP) >= 1.0f && !m_isPressedCrossKeyAxisUp))
@@ -1675,7 +1681,7 @@ public class MyPlayer : MonoBehaviour
 	void Speed()
 	{
 		//走る
-		m_speed = Input.GetButton(DASH) ? m_runSpeed : m_walkSpeed;
+		m_speed = (Input.GetButton(DASH) || Input.GetAxis(DASH) == -1) ? m_runSpeed : m_walkSpeed;
 
 		//ガード中は速度なし
 		m_speed = m_isGuard ? 0 : m_speed;

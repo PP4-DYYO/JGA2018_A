@@ -50,6 +50,7 @@
      <Compile Include="Assets\Dummy\AssetStore\Particle_Dissolve_Shader\Scripts\PDS_GameController.cs" />
      <Compile Include="Assets\Dummy\AssetStore\Particle_Dissolve_Shader\Scripts\ScrollingUVs_PDS.cs" />
      <Compile Include="Assets\Dummy\Checker.cs" />
+     <Compile Include="Assets\Stage\Ending\Script\MyEnding.cs" />
      <Compile Include="Assets\Stage\Field\Particle Ribbon\Scripts\ReverseNormals.cs" />
      <Compile Include="Assets\Stage\Main\Scripts\MyAiBoss.cs" />
      <Compile Include="Assets\Stage\Main\Scripts\MyAiManager.cs" />

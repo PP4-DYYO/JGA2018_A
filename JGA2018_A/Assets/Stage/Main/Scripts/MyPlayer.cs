@@ -104,6 +104,10 @@ enum BehaviorStatus
 	/// 必殺技の攻撃４の弱い敵用
 	/// </summary>
 	AttackDeathblow4WeadEnemy,
+	/// <summary>
+	/// なし
+	/// </summary>
+	Non,
 }
 
 //----------------------------------------------------------------------------------------------------
@@ -230,6 +234,12 @@ public class MyPlayer : MonoBehaviour
 
 	#region アニメーション
 	[Header("アニメーション")]
+	/// <summary>
+	/// アニメーション遷移時間
+	/// </summary>
+	[SerializeField]
+	float m_animTriggerTime;
+
 	/// <summary>
 	/// 無操作遷移
 	/// </summary>
@@ -364,6 +374,16 @@ public class MyPlayer : MonoBehaviour
 	/// 死の遷移
 	/// </summary>
 	const string TRANS_DIE = "Die";
+
+	/// <summary>
+	/// アニメーション遷移中
+	/// </summary>
+	bool m_isAnimTrigger;
+
+	/// <summary>
+	/// アニメーション遷移後の時間を数える
+	/// </summary>
+	float m_countAnimTriggerTime;
 	#endregion
 
 	#region 状態
@@ -1770,12 +1790,24 @@ public class MyPlayer : MonoBehaviour
 		//状態を調べる
 		CheckState();
 
+		//状態とアニメーションのズレ解消
+		if (!Anim.GetCurrentAnimatorStateInfo(0).IsName(m_behaviorStatePrev.ToString()) && !m_isAnimTrigger)
+			m_behaviorStatePrev = BehaviorStatus.Non;
+
 		//状態変化なし
 		if (m_behaviorState == m_behaviorStatePrev)
 		{
+			//アニメーション遷移時間
+			if(m_countAnimTriggerTime >= m_animTriggerTime)
+			{
+				m_isAnimTrigger = false;
+			}
+			m_countAnimTriggerTime += Time.deltaTime;
+
 			//アイドル状態中andマスクの切り替え
 			if (m_behaviorState == BehaviorStatus.Idle && m_maskState != m_maskStatePrev)
 				Anim.SetTrigger(TRANS_CHANGE_MASK);
+
 			return;
 		}
 
@@ -1951,6 +1983,8 @@ public class MyPlayer : MonoBehaviour
 				Anim.SetTrigger(TRANS_ATTACK_DEATHBLOW4);
 				break;
 		}
+		m_isAnimTrigger = true;
+		m_countAnimTriggerTime = 0;
 	}
 
 	//----------------------------------------------------------------------------------------------------

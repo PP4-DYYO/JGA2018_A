@@ -456,8 +456,8 @@ public class MyGameScreen : MonoBehaviour
 	void CrossDirectionProcess()
 	{
 		CrossDirectionImage[0].fillAmount = Input.GetAxis(CROSS_KEY_UP);
-		CrossDirectionImage[1].fillAmount = -Input.GetAxis(CROSS_KEY_LEFT);
-		CrossDirectionImage[2].fillAmount = -Input.GetAxis(CROSS_KEY_DOWN);
+		CrossDirectionImage[1].fillAmount = Input.GetAxis(CROSS_KEY_LEFT);
+		CrossDirectionImage[2].fillAmount = Input.GetAxis(CROSS_KEY_DOWN);
 		CrossDirectionImage[3].fillAmount = Input.GetAxis(CROSS_KEY_RIGHT);
 	}
 

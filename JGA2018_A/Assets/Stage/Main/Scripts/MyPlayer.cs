@@ -2561,8 +2561,11 @@ public class MyPlayer : MonoBehaviour
 	/// </summary>
 	void Attack2Kind4AEvent()
 	{
-		//ワールド座標でボスの位置とプレイヤーの方向
-		m_workMatrix.SetTRS(myCharacter.GetPosBoss(), transform.rotation, Vector3.one);
+		//ワールド座標で(ボス戦の時)ボスの位置とプレイヤーの方向
+		if (myCharacter.GameScript.StageState == StageStatus.BossGame)
+			m_workMatrix.SetTRS(myCharacter.GetPosBoss(), transform.rotation, Vector3.one);
+		else
+			m_workMatrix.SetTRS(transform.position, transform.rotation, Vector3.one);
 
 		//攻撃範囲頂点の決定
 		for (var i = 0; i < MyCube.NUM_VERTICES; i++)
@@ -2585,8 +2588,11 @@ public class MyPlayer : MonoBehaviour
 	/// </summary>
 	void Attack2Kind4BEvent()
 	{
-		//ワールド座標でボスの位置とプレイヤーの方向
-		m_workMatrix.SetTRS(myCharacter.GetPosBoss(), transform.rotation, Vector3.one);
+		//ワールド座標で(ボス戦の時)ボスの位置とプレイヤーの方向
+		if (myCharacter.GameScript.StageState == StageStatus.BossGame)
+			m_workMatrix.SetTRS(myCharacter.GetPosBoss(), transform.rotation, Vector3.one);
+		else
+			m_workMatrix.SetTRS(transform.position, transform.rotation, Vector3.one);
 
 		//攻撃範囲頂点の決定
 		for (var i = 0; i < MyCube.NUM_VERTICES; i++)
@@ -2609,8 +2615,11 @@ public class MyPlayer : MonoBehaviour
 	/// </summary>
 	void Attack2Kind4CEvent()
 	{
-		//ワールド座標でボスの位置とプレイヤーの方向
-		m_workMatrix.SetTRS(myCharacter.GetPosBoss(), transform.rotation, Vector3.one);
+		//ワールド座標で(ボス戦の時)ボスの位置とプレイヤーの方向
+		if (myCharacter.GameScript.StageState == StageStatus.BossGame)
+			m_workMatrix.SetTRS(myCharacter.GetPosBoss(), transform.rotation, Vector3.one);
+		else
+			m_workMatrix.SetTRS(transform.position, transform.rotation, Vector3.one);
 
 		//攻撃範囲頂点の決定
 		for (var i = 0; i < MyCube.NUM_VERTICES; i++)

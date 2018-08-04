@@ -175,6 +175,7 @@ public class MyAttack : MonoBehaviour
 			//パーティクルの付与
 			m_particle = transform.parent.GetComponent<MyAttackManager>().CharacterScript
 				.GameScript.ParticleManagerScript.CreateParticle(ParticleKind.VirusDethblow);
+			m_particle.transform.parent = transform;
 			m_particle.transform.position = m_pos;
 			if (m_effectiveTime > 0)
 				Destroy(m_particle.gameObject, m_effectiveTime);

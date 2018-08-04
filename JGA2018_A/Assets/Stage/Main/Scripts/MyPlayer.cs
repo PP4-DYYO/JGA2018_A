@@ -1472,6 +1472,10 @@ public class MyPlayer : MonoBehaviour
 			m_behaviorState = BehaviorStatus.AttackDeathblow1;
 			m_isNotChangeBehaviorState = true;
 			m_currentAttackBreakTime = m_attackTempoTime + m_attackBreakTime;
+
+			//ボス戦であればボスを注視
+			if (myCharacter.GameScript.StageState == StageStatus.BossGame)
+				transform.LookAt(myCharacter.BossScript.transform);
 		}
 
 		//毒マスクand十字キー上の押下
@@ -1492,6 +1496,10 @@ public class MyPlayer : MonoBehaviour
 			m_behaviorState = BehaviorStatus.AttackDeathblow3;
 			m_isNotChangeBehaviorState = true;
 			m_currentAttackBreakTime = m_attackTempoTime + m_attackBreakTime;
+
+			//ボス戦であればボスを注視
+			if (myCharacter.GameScript.StageState == StageStatus.BossGame)
+				transform.LookAt(myCharacter.BossScript.transform);
 		}
 
 		//マジックマスクand十字キー右の押下

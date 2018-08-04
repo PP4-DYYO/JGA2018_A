@@ -2367,4 +2367,17 @@ public class MyAttackManager : MonoBehaviour
 		m_bossStateNum = int.MaxValue;
 		m_cameraStateNum = int.MaxValue;
 	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// 攻撃達の初期化
+	/// </summary>
+	public void ResetAttacks()
+	{
+		//全攻撃の削除
+		foreach(Transform child in transform)
+		{
+			Destroy(child.gameObject);
+		}
+	}
 }

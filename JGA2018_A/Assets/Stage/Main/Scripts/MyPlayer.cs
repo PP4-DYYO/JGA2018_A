@@ -688,10 +688,10 @@ public class MyPlayer : MonoBehaviour
 		new Vector3(0.1659906f, 1.311585f, 0.6939639f),
 		new Vector3(-0.6301885f, 0.4820206f, 1.491178f),
 		new Vector3(-0.04720514f, 1.017675f, 0.5212768f),
-		new Vector3(-0.04720514f, 1.017675f, 0.5212768f),
-		new Vector3(-0.04720514f, 1.017675f, 0.5212768f),
-		new Vector3(-0.04720514f, 1.017675f, 0.5212768f),
-		new Vector3(-0.04720514f, 1.017675f, 0.5212768f),
+		new Vector3(0.58698074f, 2.237455f, 1.532429f),
+		new Vector3(0.6659906f, 1.311585f, 0.6939639f),
+		new Vector3(-1.1301885f, 0.4820206f, 1.491178f),
+		new Vector3(-0.54720514f, 1.017675f, 0.5212768f),
 	};
 
 	/// <summary>
@@ -703,9 +703,9 @@ public class MyPlayer : MonoBehaviour
 		new Vector3(0.1558482f, 0.9843702f,0.519088f),
 		new Vector3(1.140949f,1.735734f,1.729904f),
 		new Vector3(0.6208854f,1.634966f,0.604331f),
-		new Vector3(0.6208854f,1.634966f,0.604331f),
-		new Vector3(0.6208854f,1.634966f,0.604331f),
-		new Vector3(0.6208854f,1.634966f,0.604331f),
+		new Vector3(-0.586515f, 0.9399486f, 1.2289284f),
+		new Vector3(0.1558482f, 0.9843702f,0.519088f),
+		new Vector3(0.540949f,1.735734f,1.129904f),
 		new Vector3(0.6208854f,1.634966f,0.604331f),
 	};
 
@@ -731,12 +731,12 @@ public class MyPlayer : MonoBehaviour
 	{
 		new Vector3(0.3140665f,0.9749715f,1.035166f),
 		new Vector3(0.3246632f,1.034966f,-0.009343892f),
-		new Vector3(0.25f,1.330896f,1.93709f),
+		new Vector3(0.0f,1.330896f,1.93709f),
 		new Vector3(0.25f,1.284438f,0.6949587f),
-		new Vector3(0.25f,1.284438f,0.6949587f),
-		new Vector3(0.25f,1.284438f,0.6949587f),
-		new Vector3(0.25f,1.284438f,0.6949587f),
-		new Vector3(0.25f,1.284438f,0.6949587f),
+		new Vector3(-0.3140665f,0.9749715f,1.035166f),
+		new Vector3(-0.3246632f,1.034966f,-0.009343892f),
+		new Vector3(0.0f,1.330896f,1.93709f),
+		new Vector3(-0.25f,1.284438f,0.6949587f),
 	};
 
 	/// <summary>
@@ -746,12 +746,12 @@ public class MyPlayer : MonoBehaviour
 	{
 		new Vector3(0.3140665f,0.9749715f,1.035166f),
 		new Vector3(0.3246632f,1.034966f,-0.009343892f),
-		new Vector3(0.25f,1.330896f,1.93709f),
+		new Vector3(0.0f,1.330896f,1.93709f),
 		new Vector3(0.25f,1.284438f,0.6949587f),
-		new Vector3(0.25f,1.284438f,0.6949587f),
-		new Vector3(0.25f,1.284438f,0.6949587f),
-		new Vector3(0.25f,1.284438f,0.6949587f),
-		new Vector3(0.25f,1.284438f,0.6949587f),
+		new Vector3(-0.3140665f,0.9749715f,1.035166f),
+		new Vector3(-0.3246632f,1.034966f,-0.009343892f),
+		new Vector3(0.0f,1.330896f,1.93709f),
+		new Vector3(-0.25f,1.284438f,0.6949587f),
 	};
 
 	/// <summary>
@@ -761,12 +761,12 @@ public class MyPlayer : MonoBehaviour
 	{
 		new Vector3(0.3140665f,0.9749715f,1.035166f),
 		new Vector3(0.3246632f,1.034966f,-0.009343892f),
-		new Vector3(0.25f,1.330896f,1.93709f),
+		new Vector3(0.0f,1.330896f,1.93709f),
 		new Vector3(0.25f,1.284438f,0.6949587f),
-		new Vector3(0.25f,1.284438f,0.6949587f),
-		new Vector3(0.25f,1.284438f,0.6949587f),
-		new Vector3(0.25f,1.284438f,0.6949587f),
-		new Vector3(0.25f,1.284438f,0.6949587f),
+		new Vector3(-0.3140665f,0.9749715f,1.035166f),
+		new Vector3(-0.3246632f,1.034966f,-0.009343892f),
+		new Vector3(0.0f,1.330896f,1.93709f),
+		new Vector3(-0.25f,1.284438f,0.6949587f),
 	};
 
 	/// <summary>
@@ -776,12 +776,12 @@ public class MyPlayer : MonoBehaviour
 	{
 		new Vector3(0.3140665f,0.9749715f,1.035166f),
 		new Vector3(0.3246632f,1.034966f,-0.009343892f),
-		new Vector3(0.25f,1.330896f,1.93709f),
+		new Vector3(0.0f,1.330896f,1.93709f),
 		new Vector3(0.25f,1.284438f,0.6949587f),
-		new Vector3(0.25f,1.284438f,0.6949587f),
-		new Vector3(0.25f,1.284438f,0.6949587f),
-		new Vector3(0.25f,1.284438f,0.6949587f),
-		new Vector3(0.25f,1.284438f,0.6949587f),
+		new Vector3(-0.3140665f,0.9749715f,1.035166f),
+		new Vector3(-0.3246632f,1.034966f,-0.009343892f),
+		new Vector3(0.0f,1.330896f,1.93709f),
+		new Vector3(-0.25f,1.284438f,0.6949587f),
 	};
 
 	/// <summary>
@@ -790,13 +790,13 @@ public class MyPlayer : MonoBehaviour
 	static readonly Vector3[] ATTACK2_KIND4_A_VERTECES =
 	{
 		new Vector3(0.08698074f, 2.237455f, 1.532429f),
-		new Vector3(0.1659906f, 1.311585f, -0.6939639f),
+		new Vector3(0.1659906f, 1.311585f, 0.6939639f),
 		new Vector3(-0.6301885f, 0.4820206f, 1.491178f),
-		new Vector3(-0.04720514f, 1.017675f, -0.5212768f),
-		new Vector3(-0.04720514f, 1.017675f, -0.5212768f),
-		new Vector3(-0.04720514f, 1.017675f, -0.5212768f),
-		new Vector3(-0.04720514f, 1.017675f, -0.5212768f),
-		new Vector3(-0.04720514f, 1.017675f, -0.5212768f),
+		new Vector3(-0.04720514f, 1.017675f, 0.5212768f),
+		new Vector3(0.58698074f, 2.237455f, 1.532429f),
+		new Vector3(0.6659906f, 1.311585f, 0.6939639f),
+		new Vector3(-1.1301885f, 0.4820206f, 1.491178f),
+		new Vector3(-0.54720514f, 1.017675f, 0.5212768f),
 	};
 
 	/// <summary>
@@ -804,14 +804,14 @@ public class MyPlayer : MonoBehaviour
 	/// </summary>
 	static readonly Vector3[] ATTACK2_KIND4_B_VERTECES =
 	{
-		new Vector3(-1.086515f, 0.9399486f, -0.6289284f),
-		new Vector3(0.1558482f, 0.9843702f,-0.519088f),
+		new Vector3(-1.086515f, 0.9399486f, 0.6289284f),
+		new Vector3(0.1558482f, 0.9843702f,0.519088f),
 		new Vector3(1.140949f,1.735734f,1.729904f),
-		new Vector3(0.6208854f,1.634966f,-0.604331f),
-		new Vector3(0.6208854f,1.634966f,-0.604331f),
-		new Vector3(0.6208854f,1.634966f,-0.604331f),
-		new Vector3(0.6208854f,1.634966f,-0.604331f),
-		new Vector3(0.6208854f,1.634966f,-0.604331f),
+		new Vector3(0.6208854f,1.634966f,0.604331f),
+		new Vector3(-0.586515f, 0.9399486f, 1.2289284f),
+		new Vector3(0.1558482f, 0.9843702f,0.519088f),
+		new Vector3(0.540949f,1.735734f,1.129904f),
+		new Vector3(0.6208854f,1.634966f,0.604331f),
 	};
 
 	/// <summary>
@@ -838,10 +838,10 @@ public class MyPlayer : MonoBehaviour
 		new Vector3(-0.411669f,1.815923f,-0.4555861f),
 		new Vector3(0.6366171f,1.201453f,0.6921799f),
 		new Vector3(1.398f,0.733f,1.528f),
-		new Vector3(1.398f,0.733f,1.528f),
-		new Vector3(1.398f,0.733f,1.528f),
-		new Vector3(1.398f,0.733f,1.528f),
-		new Vector3(1.398f,0.733f,1.528f),
+		new Vector3(-0.1134192f,1.318558f,0.5869702f),
+		new Vector3(-1.011669f,1.515923f,0.5869702f),
+		new Vector3(0.6366171f,1.201453f,0.6921799f),
+		new Vector3(0.0f,0.733f,1.928f),
 	};
 
 	/// <summary>
@@ -850,13 +850,13 @@ public class MyPlayer : MonoBehaviour
 	static readonly Vector3[] ATTACK_DEATHBLOW3_VERTECES =
 	{
 		new Vector3(0.2333967f,1.539274f,0.7515599f),
-		new Vector3(0.4046411f,1.45876f,1.996258f),
+		new Vector3(0.0f,1.45876f,1.996258f),
 		new Vector3(0.4942979f,1.551066f,-0.7345253f),
 		new Vector3(0.3399217f,1.475883f,0.6992293f),
-		new Vector3(0.3399217f,1.475883f,0.6992293f),
-		new Vector3(0.3399217f,1.475883f,0.6992293f),
-		new Vector3(0.3399217f,1.475883f,0.6992293f),
-		new Vector3(0.3399217f,1.475883f,0.6992293f),
+		new Vector3(-0.2333967f,1.539274f,0.7515599f),
+		new Vector3(0.0f,1.45876f,1.996258f),
+		new Vector3(-0.4942979f,1.551066f,-0.7345253f),
+		new Vector3(-0.3399217f,1.475883f,0.6992293f),
 	};
 
 	/// <summary>
@@ -1806,7 +1806,11 @@ public class MyPlayer : MonoBehaviour
 
 			//アイドル状態中andマスクの切り替え
 			if (m_behaviorState == BehaviorStatus.Idle && m_maskState != m_maskStatePrev)
+			{
 				Anim.SetTrigger(TRANS_CHANGE_MASK);
+				m_isAnimTrigger = true;
+				m_countAnimTriggerTime = 0;
+			}
 
 			return;
 		}

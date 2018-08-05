@@ -81,11 +81,22 @@ public class MyStartUp : MonoBehaviour
 
 	//----------------------------------------------------------------------------------------------------
 	/// <summary>
+	/// フレーム
+	/// </summary>
+	void Update()
+	{
+		//データリセット
+		if (Input.GetKeyDown(KeyCode.Escape) && Input.GetKey(KeyCode.Alpha0))
+			MyGameInfo.Instance.ResetData();
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
 	/// 定期フレーム
 	/// </summary>
 	void FixedUpdate()
 	{
-		switch(m_displayState)
+		switch (m_displayState)
 		{
 			case DisplayStatus.appearance:
 				AppearanceLogo();

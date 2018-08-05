@@ -176,10 +176,6 @@ public class MyTitle : MonoBehaviour
 	/// </summary>
 	void Update()
 	{
-		//データリセット
-		if (Input.GetKeyDown(KeyCode.Escape) && Input.GetKey(KeyCode.Alpha0))
-			MyGameInfo.Instance.ResetData();
-
 		//点滅
 		m_count = m_count + Time.deltaTime;
 		if (m_count >= m_second)

@@ -35,7 +35,8 @@ public class MyAiBoss : MonoBehaviour
     {
         get { return myCharacter; }
     }
-	
+
+
     /// <summary>
     /// MyAttackManagerクラス
     /// </summary>
@@ -55,12 +56,6 @@ public class MyAiBoss : MonoBehaviour
     /// </summary>
     [SerializeField]
     protected string m_myObjectName;
-
-    /// <summary>
-    /// 自分のゲームオブジェクト
-    /// </summary>
-    [SerializeField]
-    protected GameObject m_myGameObject;
 
     /// <summary>
     /// ステージのオブジェクト
@@ -190,10 +185,10 @@ public class MyAiBoss : MonoBehaviour
     protected int m_specialAttackCount;
 
     ///<summary>
-    ///マジック用カウンターフラグ
+    ///マジック用カウンターフラグ// 0:発動抽選中 1：発動中 2:カウンター攻撃待機 
     ///</summary>>
     [SerializeField]
-    protected bool m_counterAttackFlag;
+    protected int m_counterAttackFlag;
 
     /// <summary>
     /// プレイヤーが攻撃してきたフラグ
@@ -236,6 +231,17 @@ public class MyAiBoss : MonoBehaviour
     /// </summary>
     [SerializeField]
     protected float m_gameTime;
+
+    /// <summary>
+    /// 毒計算用時間
+    /// </summary>
+    float m_poizonTime;
+
+    /// <summary>
+    /// 毒間隔
+    /// </summary>
+    [SerializeField]
+    float m_poizonDamageTime = 6.0f;
 
     /// <summary>
     /// AIの行動タイプ
@@ -307,22 +313,22 @@ public class MyAiBoss : MonoBehaviour
 
             Vector3 targetPos = myPlayer.transform.position;
             // Y座標を固定
-            targetPos.y = m_myGameObject.transform.position.y;
+            targetPos.y = transform.position.y;
             //プレイヤーの方を向く
-            m_myGameObject.transform.LookAt(targetPos);
+            transform.LookAt(targetPos);
 
             //プレイヤーとの距離
-            m_distance = (myPlayer.transform.position - m_myGameObject.transform.position).magnitude;
+            m_distance = (myPlayer.transform.position - transform.position).magnitude;
 
             //位置関係を確認して、移動の+-を変更する
-            if (myPlayer.transform.position.x -m_myGameObject.transform.position.x>0)
+            if (myPlayer.transform.position.x -transform.position.x>0)
             {
                 if (m_moveX != m_step)
                 {
                     m_moveX = m_step;
                 }
             }
-            else if (myPlayer.transform.position.x - m_myGameObject.transform.position.x<0)
+            else if (myPlayer.transform.position.x - transform.position.x<0)
             {
                 if (m_moveX != -m_step)
                 {
@@ -330,14 +336,14 @@ public class MyAiBoss : MonoBehaviour
                 }
             }
 
-            if (myPlayer.transform.position.z - m_myGameObject.transform.position.z>0)
+            if (myPlayer.transform.position.z - transform.position.z>0)
             {
                 if (m_moveZ != m_step)
                 {
                     m_moveZ = m_step;
                 }
             }
-            else if (myPlayer.transform.position.z - m_myGameObject.transform.position.z<0)
+            else if (myPlayer.transform.position.z - transform.position.z<0)
             {
                 if (m_moveZ != -m_step)
                 {
@@ -393,8 +399,6 @@ public class MyAiBoss : MonoBehaviour
     /// </summary>
     public void NomalAttack()
     {
-        Debug.Log("koko");
-
         switch (m_myObjectName)
         {
             case "CarryMinister(Clone)":
@@ -413,8 +417,6 @@ public class MyAiBoss : MonoBehaviour
                 break;
             case "VirusMinister":
             case "VirusMinister(Clone)":
-                Debug.Log(m_hitPoint);
-                Debug.Log(m_maxHitPoint / 4);
                 //HPが一定で制限に達していないとき
                 if (m_hitPoint < m_maxHitPoint / 2 && m_specialAttackCount ==0||
                     m_hitPoint < m_maxHitPoint / 4 && m_specialAttackCount == 1||
@@ -492,7 +494,7 @@ public class MyAiBoss : MonoBehaviour
                 Vector3 attackPoint = GameObject.Find(m_myObjectName).transform.position;
 
                 GameObject poizonfog = GameObject.Instantiate(poizonFog) as GameObject;
-                poizonfog.transform.position = m_myGameObject.transform.position;
+                poizonfog.transform.position = transform.position;
 
                 float cubeLength = 2f;
                 //頂点の位置
@@ -529,10 +531,43 @@ public class MyAiBoss : MonoBehaviour
     {
         if (other.tag == AttackManagerTag.PLAYER_ATTACK_RANGE_TAG)
         {
-            ReceiveDamage(other.GetComponent<MyAttack>().Power);
+            var attack = other.GetComponent<MyAttack>();
+            if (attack.Attribute == MaskAttribute.Virus)
+            {
+                return;
+            }
+            else if(attack.Attribute == MaskAttribute.Carry)
+            {
+                PositionReset();
+                ReceiveDamage(other.GetComponent<MyAttack>().Power);
+            }
+            else
+            {
+                ReceiveDamage(other.GetComponent<MyAttack>().Power);
+            }
         }
     }
 
+
+    //----------------------------------------------------------------------------------------------------
+    /// <summary>
+    ///毒ダメージ用
+    /// </summary>
+    public void OnTriggerStay(Collider other)
+    {
+        if (other.tag == AttackManagerTag.PLAYER_ATTACK_RANGE_TAG)
+        {
+            if (other.GetComponent<MyAttack>().Attribute == MaskAttribute.Virus)
+            {
+                m_poizonTime += Time.deltaTime;
+                if(m_poizonTime> m_poizonDamageTime)
+                {
+                    m_poizonTime = 0;
+                    ReceiveDamage(other.GetComponent<MyAttack>().Power/2);
+                }
+            }
+        }
+    }
 
     //----------------------------------------------------------------------------------------------------
     /// <summary>
@@ -552,23 +587,10 @@ public class MyAiBoss : MonoBehaviour
             m_specialFlag = false;
         }
         //マジックのカウンター攻撃
-        else if (m_myObjectName == "MagicMinister(Clone)"&&m_counterAttackFlag==true)
+        else if (m_myObjectName == "MagicMinister(Clone)"&&m_counterAttackFlag==1)
         {
-            float m_length = 0.6f;
 
-            Vector3 vLDB = new Vector3(m_myGameObject.transform.position.x - m_length, m_myGameObject.transform.position.y - m_length, m_myGameObject.transform.position.z - m_length);
-            Vector3 vLDF = new Vector3(m_myGameObject.transform.position.x - m_length, m_myGameObject.transform.position.y - m_length, m_myGameObject.transform.position.z + m_length);
-            Vector3 vLUB = new Vector3(m_myGameObject.transform.position.x - m_length, m_myGameObject.transform.position.y + m_length, m_myGameObject.transform.position.z - m_length);
-            Vector3 vLUF = new Vector3(m_myGameObject.transform.position.x - m_length, m_myGameObject.transform.position.y + m_length, m_myGameObject.transform.position.z + m_length);
-            Vector3 vRDB = new Vector3(m_myGameObject.transform.position.x + m_length, m_myGameObject.transform.position.y - m_length, m_myGameObject.transform.position.z - m_length);
-            Vector3 vRDF = new Vector3(m_myGameObject.transform.position.x + m_length, m_myGameObject.transform.position.y - m_length, m_myGameObject.transform.position.z + m_length);
-            Vector3 vRUB = new Vector3(m_myGameObject.transform.position.x + m_length, m_myGameObject.transform.position.y + m_length, m_myGameObject.transform.position.z - m_length);
-            Vector3 vRUF = new Vector3(m_myGameObject.transform.position.x + m_length, m_myGameObject.transform.position.y + m_length, m_myGameObject.transform.position.z + m_length);
-
-            //当たり判定発生と攻撃
-            MyCube attackRange = new MyCube(vLDB, vRDB, vLDF, vRDF, vLUB, vRUB, vLUF, vRUF);
-            myAttackManager.EnemyAttack(attackRange, MaskAttribute.Non, 0, 0.1f);
-            m_counterAttackFlag = false;
+            m_counterAttackFlag = 2;
         }
 
         //HP0で死ぬ
@@ -580,7 +602,7 @@ public class MyAiBoss : MonoBehaviour
 
      void PositionReset()
     {
-       m_myGameObject.transform.position= myStage.CurrentField.BossRoomCenterPos;
+       transform.position= myStage.CurrentField.BossRoomCenterPos;
     }
 
     //----------------------------------------------------------------------------------------------------

@@ -51,7 +51,6 @@ public class MyCarryMinisterAI : MyAiBoss
     protected override void Start()
     {
         m_myObjectName = this.gameObject.name;
-        m_myGameObject = this.gameObject;
         m_maskPositionObject = transform.FindChild(MaskPositionObjectName).gameObject;
         m_maxHitPoint = 230;
         m_attack = 60;

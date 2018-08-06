@@ -27,7 +27,6 @@ public class MyMagicMinisterAI : MyAiBoss
         m_attackNum = 0;
 
         m_myObjectName = this.gameObject.name;
-        m_myGameObject = gameObject;
         m_maskPositionObject = transform.FindChild(MaskPositionObjectName).gameObject;
         m_hitPoint = 450;
         m_attack = 65;
@@ -44,6 +43,7 @@ public class MyMagicMinisterAI : MyAiBoss
         m_specialAttackCount = 0;
         m_playerAttacked = false;
         m_aimode = AIMode.WAIT;
+        
 
         m_gameTime = m_attackInterval;
 
@@ -59,18 +59,14 @@ public class MyMagicMinisterAI : MyAiBoss
         base.FixedUpdate();
         if (m_aimode != AIMode.WAIT)
         {
-            //距離が0.5より小さければ離れる
-            if (m_distance < 0.5)
-            {
-                    m_aimode = AIMode.LEAVE;
-            }
+
         }
 
         //状態によって行動を切り替える
         switch (m_aimode)
         {
             case AIMode.IDLE:
-                if (!m_counterAttackFlag)
+                if (m_counterAttackFlag == 0)
                 {
                     GetReadyCounterAttack();
                 }
@@ -82,13 +78,45 @@ public class MyMagicMinisterAI : MyAiBoss
                 transform.position = Vector3.MoveTowards(transform.position, myPlayer.transform.position, -m_step);
                 break;
         }
-       
+
+        if (m_counterAttackFlag==2)
+        {
+            CounterAttack();
+        }
+        if (m_counterAttackFlag == 0)
+        {
+            Debug.Log("発動前");
+        }
+        else if (m_counterAttackFlag == 1)
+        {
+            Debug.Log("発動中");
+
+        }
+        else if (m_counterAttackFlag == 2)
+        {
+            Debug.Log("発動！！");
+
+        }
+
     }
     
     void CounterAttack()
     {
-        Debug.Log("カウンター攻撃");
-        m_counterAttackFlag = false;
+        float m_length = 0.6f;
+
+        Vector3 vLDB = new Vector3(transform.position.x - m_length, transform.position.y - m_length, transform.position.z - m_length);
+        Vector3 vLDF = new Vector3(transform.position.x - m_length, transform.position.y - m_length, transform.position.z + m_length);
+        Vector3 vLUB = new Vector3(transform.position.x - m_length, transform.position.y + m_length, transform.position.z - m_length);
+        Vector3 vLUF = new Vector3(transform.position.x - m_length, transform.position.y + m_length, transform.position.z + m_length);
+        Vector3 vRDB = new Vector3(transform.position.x + m_length, transform.position.y - m_length, transform.position.z - m_length);
+        Vector3 vRDF = new Vector3(transform.position.x + m_length, transform.position.y - m_length, transform.position.z + m_length);
+        Vector3 vRUB = new Vector3(transform.position.x + m_length, transform.position.y + m_length, transform.position.z - m_length);
+        Vector3 vRUF = new Vector3(transform.position.x + m_length, transform.position.y + m_length, transform.position.z + m_length);
+
+        //当たり判定発生と攻撃
+        MyCube attackRange = new MyCube(vLDB, vRDB, vLDF, vRDF, vLUB, vRUB, vLUF, vRUF);
+        AttackManagerScript.EnemyAttack(attackRange, MaskAttribute.Non, 0, 0.1f);
+        m_counterAttackFlag = 0;
     }
 
     void GetReadyCounterAttack()
@@ -99,8 +127,7 @@ public class MyMagicMinisterAI : MyAiBoss
             Debug.Log(rand);
             if (rand > 0.3)
             {
-                Debug.Log("カウンター起動");
-                m_counterAttackFlag = true;
+                m_counterAttackFlag = 1;
             }
             m_gameTime = 0;
         }

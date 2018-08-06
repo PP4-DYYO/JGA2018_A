@@ -19,6 +19,9 @@ public class MyArrowShot : MonoBehaviour
     /// </summary>
     public GameObject m_arrow;
 
+    [SerializeField]
+    MyCarryMinisterAI myCarryMinisterAI;
+
     /// <summary>
     // 発射点//
     /// </summary>
@@ -50,7 +53,11 @@ public class MyArrowShot : MonoBehaviour
         //遠距離
         if (num == 1)
         {
-            GameObject arrows = GameObject.Instantiate(m_arrow) as GameObject;
+            Debug.Log(myCarryMinisterAI);
+
+            GameObject arrows = Instantiate(m_arrow) as GameObject;
+            arrows.transform.parent = myCarryMinisterAI.AttackManagerScript.transform;
+            
             arrows.transform.position = gameObject.transform.position;
             Vector3 force;
             //力は斜め上に,ランダム性を持たせる
@@ -61,7 +68,8 @@ public class MyArrowShot : MonoBehaviour
         //近距離
         else
         {
-            GameObject arrows = GameObject.Instantiate(m_arrow) as GameObject;
+            GameObject arrows = Instantiate(m_arrow) as GameObject;
+            arrows.transform.parent = myCarryMinisterAI.AttackManagerScript.transform;
             arrows.transform.position = gameObject.transform.position;
             Vector3 force;
             //力は横だけ

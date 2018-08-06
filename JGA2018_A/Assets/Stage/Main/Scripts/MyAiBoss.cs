@@ -12,15 +12,10 @@ using UnityEngine;
 
 public class MyAiBoss : MonoBehaviour
 {
-    /// <summary>
-    /// プレイヤーのオブジェクト
-    /// </summary>
-    [SerializeField]
-    protected GameObject m_playerObject;
-    public GameObject PlayerObject
-    {
-        get { return m_playerObject; }
-    }
+
+    protected MyPlayer myPlayer;
+
+    MyAiManager myAiManager;
 
     /// <summary>
     /// プレイヤーオブジェクトの名前
@@ -36,11 +31,19 @@ public class MyAiBoss : MonoBehaviour
 	/// MyCharacterクラス
 	/// </summary>
     MyCharacter myCharacter;
+    public MyCharacter CharacterScript
+    {
+        get { return myCharacter; }
+    }
 	
     /// <summary>
     /// MyAttackManagerクラス
     /// </summary>
     MyAttackManager myAttackManager;
+    public MyAttackManager AttackManagerScript
+    {
+        get { return myAttackManager; }
+    }
 
     /// <summary>
     /// 自分のタグ名
@@ -63,7 +66,7 @@ public class MyAiBoss : MonoBehaviour
     /// ステージのオブジェクト
     /// </summary>
     [SerializeField]
-    protected GameObject m_stageObject;
+    protected MyStage myStage;
 
     /// <summary>
     /// マスクの位置用ゲームオブジェクトの名前
@@ -186,6 +189,12 @@ public class MyAiBoss : MonoBehaviour
     [SerializeField]
     protected int m_specialAttackCount;
 
+    ///<summary>
+    ///マジック用カウンターフラグ
+    ///</summary>>
+    [SerializeField]
+    protected bool m_counterAttackFlag;
+
     /// <summary>
     /// プレイヤーが攻撃してきたフラグ
     /// </summary>
@@ -268,8 +277,12 @@ public class MyAiBoss : MonoBehaviour
     {
         //m_aimode = AIMode.WAIT;
         m_hitPoint = m_maxHitPoint;
-        myAttackManager = GameObject.Find("AttackManager").GetComponent<MyAttackManager>();
         poizonFog = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Stage/Main/Prefab/poisonFog.prefab");
+        myAiManager = transform.parent.GetComponent<MyAiManager>();
+        myAttackManager = myAiManager.CharacterScript.AttackManagerScript;
+        myStage = myAiManager.CharacterScript.GameScript.StageScript;
+        myPlayer = myAiManager.CharacterScript.PlayerScript;
+        myCharacter = myAiManager.CharacterScript;
     }
 
     //----------------------------------------------------------------------------------------------------
@@ -287,29 +300,29 @@ public class MyAiBoss : MonoBehaviour
                 PositionReset();
             }
 
-            if (m_gameTime < m_attackInterval)
+            if (m_gameTime <= m_attackInterval)
             {
                 m_gameTime += Time.deltaTime;
             }
 
-            Vector3 targetPos = m_playerObject.transform.position;
+            Vector3 targetPos = myPlayer.transform.position;
             // Y座標を固定
             targetPos.y = m_myGameObject.transform.position.y;
             //プレイヤーの方を向く
             m_myGameObject.transform.LookAt(targetPos);
 
             //プレイヤーとの距離
-            m_distance = (m_playerObject.transform.position - m_myGameObject.transform.position).magnitude;
+            m_distance = (myPlayer.transform.position - m_myGameObject.transform.position).magnitude;
 
             //位置関係を確認して、移動の+-を変更する
-            if (m_playerObject.transform.position.x -m_myGameObject.transform.position.x>0)
+            if (myPlayer.transform.position.x -m_myGameObject.transform.position.x>0)
             {
                 if (m_moveX != m_step)
                 {
                     m_moveX = m_step;
                 }
             }
-            else if (m_playerObject.transform.position.x - m_myGameObject.transform.position.x<0)
+            else if (myPlayer.transform.position.x - m_myGameObject.transform.position.x<0)
             {
                 if (m_moveX != -m_step)
                 {
@@ -317,14 +330,14 @@ public class MyAiBoss : MonoBehaviour
                 }
             }
 
-            if (m_playerObject.transform.position.z - m_myGameObject.transform.position.z>0)
+            if (myPlayer.transform.position.z - m_myGameObject.transform.position.z>0)
             {
                 if (m_moveZ != m_step)
                 {
                     m_moveZ = m_step;
                 }
             }
-            else if (m_playerObject.transform.position.z - m_myGameObject.transform.position.z<0)
+            else if (myPlayer.transform.position.z - m_myGameObject.transform.position.z<0)
             {
                 if (m_moveZ != -m_step)
                 {
@@ -343,22 +356,22 @@ public class MyAiBoss : MonoBehaviour
                 case "CarryMinister(Clone)":
                     transform.parent.GetComponent<MyAiManager>().
                         ThrowAwayBossMask(MaskAttribute.Carry, new Vector3(m_maskPositionObject.transform.position.x, m_maskPositionObject.transform.position.y, m_maskPositionObject.transform.position.z),
-                        m_stageObject.GetComponent<MyStage>().CurrentField.BossRoomCenterPos);
+                        myStage.CurrentField.BossRoomCenterPos);
                     break;
                 case "VirusMinister(Clone)":
                     transform.parent.GetComponent<MyAiManager>().
                         ThrowAwayBossMask(MaskAttribute.Virus, new Vector3(m_maskPositionObject.transform.position.x, m_maskPositionObject.transform.position.y, m_maskPositionObject.transform.position.z),
-                        m_stageObject.GetComponent<MyStage>().CurrentField.BossRoomCenterPos);
+                        myStage.CurrentField.BossRoomCenterPos);
                     break;
                 case "MirrorMinister(Clone)":
                     transform.parent.GetComponent<MyAiManager>().
                         ThrowAwayBossMask(MaskAttribute.Mirror, new Vector3(m_maskPositionObject.transform.position.x, m_maskPositionObject.transform.position.y, m_maskPositionObject.transform.position.z),
-                        m_stageObject.GetComponent<MyStage>().CurrentField.BossRoomCenterPos);
+                       myStage.CurrentField.BossRoomCenterPos);
                     break;
                 case "MagicMinister(Clone)":
                     transform.parent.GetComponent<MyAiManager>().
                         ThrowAwayBossMask(MaskAttribute.Magic, new Vector3(m_maskPositionObject.transform.position.x, m_maskPositionObject.transform.position.y, m_maskPositionObject.transform.position.z),
-                        m_stageObject.GetComponent<MyStage>().CurrentField.BossRoomCenterPos);
+                       myStage.CurrentField.BossRoomCenterPos);
                     break;
             }
             m_maskThrow = true;
@@ -380,6 +393,8 @@ public class MyAiBoss : MonoBehaviour
     /// </summary>
     public void NomalAttack()
     {
+        Debug.Log("koko");
+
         switch (m_myObjectName)
         {
             case "CarryMinister(Clone)":
@@ -441,6 +456,7 @@ public class MyAiBoss : MonoBehaviour
                 }
                 m_isAttacked = true;
                 break;
+            case "MagicMinister":
             case "MagicMinister(Clone)":
                 //HPが一定で制限に達していないとき
                 if (m_hitPoint < m_hitPoint / 4 && m_specialAttackCount < m_specialAttackLimit)
@@ -466,10 +482,10 @@ public class MyAiBoss : MonoBehaviour
                 float warpPosX, warpPosY, warpPosZ;
                 float randamX = Random.Range(-4,4);
                 float randamZ = Random.Range(-4, 4);
-                warpPosX = m_stageObject.GetComponent<MyStage>().CurrentField.BossRoomCenterPos.x+randamX;
-                warpPosY = m_stageObject.GetComponent<MyStage>().CurrentField.BossRoomCenterPos.y+1;
-                warpPosZ = m_stageObject.GetComponent<MyStage>().CurrentField.BossRoomCenterPos.z+ randamZ;
-                m_playerObject.transform.position = new Vector3(warpPosX, warpPosY, warpPosZ);
+                warpPosX = myStage.CurrentField.BossRoomCenterPos.x+randamX;
+                warpPosY = myStage.CurrentField.BossRoomCenterPos.y+1;
+                warpPosZ = myStage.CurrentField.BossRoomCenterPos.z+ randamZ;
+                myPlayer.transform.position = new Vector3(warpPosX, warpPosY, warpPosZ);
                 break;
             case "VirusMinister(Clone)":
                 m_attack = 5;
@@ -536,7 +552,7 @@ public class MyAiBoss : MonoBehaviour
             m_specialFlag = false;
         }
         //マジックのカウンター攻撃
-        else if (m_myObjectName == "MagicMinister(Clone)")
+        else if (m_myObjectName == "MagicMinister(Clone)"&&m_counterAttackFlag==true)
         {
             float m_length = 0.6f;
 
@@ -552,6 +568,7 @@ public class MyAiBoss : MonoBehaviour
             //当たり判定発生と攻撃
             MyCube attackRange = new MyCube(vLDB, vRDB, vLDF, vRDF, vLUB, vRUB, vLUF, vRUF);
             myAttackManager.EnemyAttack(attackRange, MaskAttribute.Non, 0, 0.1f);
+            m_counterAttackFlag = false;
         }
 
         //HP0で死ぬ
@@ -563,7 +580,7 @@ public class MyAiBoss : MonoBehaviour
 
      void PositionReset()
     {
-       m_myGameObject.transform.position=m_stageObject.GetComponent<MyStage>().CurrentField.BossRoomCenterPos;
+       m_myGameObject.transform.position= myStage.CurrentField.BossRoomCenterPos;
     }
 
     //----------------------------------------------------------------------------------------------------

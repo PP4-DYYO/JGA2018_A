@@ -27,8 +27,8 @@ public class MyArrow : MonoBehaviour {
     /// 初期設定
     /// </summary>
     void Start () {
-        myAttackManager = GameObject.Find("AttackManager").GetComponent<MyAttackManager>();
-        myAiBoss = GameObject.Find("CarryMinister(Clone)").GetComponent<MyAiBoss>();
+        myAttackManager = transform.parent.GetComponent<MyAttackManager>();
+        myAiBoss = myAttackManager.CharacterScript.BossScript;
     }
 
 

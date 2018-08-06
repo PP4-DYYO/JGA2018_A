@@ -24,10 +24,7 @@ public class MyMirrorMinisterAI : MyAiBoss
     {
         m_attackNum = 0;
         m_myObjectName = this.gameObject.name;
-        m_myGameObject= GameObject.Find(m_myObjectName);
         m_maskPositionObject = transform.FindChild(MaskPositionObjectName).gameObject;
-        m_playerObject = GameObject.Find(PLAYER_OBJECT_NAME);
-        m_stageObject = GameObject.Find("Stage");
         m_maxHitPoint = 400;
         if(m_myObjectName== "MirrorMinister(Clone)(Clone)")
         {
@@ -132,14 +129,14 @@ public class MyMirrorMinisterAI : MyAiBoss
                 //近づく(y座標は固定)            
                 this.transform.position = Vector3.MoveTowards(
                    new Vector3(this.transform.position.x, this.transform.position.y, this.transform.position.z),
-                   new Vector3(m_playerObject.transform.position.x, this.transform.position.y, m_playerObject.transform.position.z),
+                   new Vector3(myPlayer.transform.position.x, this.transform.position.y, myPlayer.transform.position.z),
                    m_step);
                 break;
             case AIMode.LEAVE:
                 //離れる            
                 this.transform.position = Vector3.MoveTowards(
                                   new Vector3(this.transform.position.x, this.transform.position.y, this.transform.position.z),
-                                  new Vector3(m_playerObject.transform.position.x, this.transform.position.y, m_playerObject.transform.position.z),
+                                  new Vector3(myPlayer.transform.position.x, this.transform.position.y, myPlayer.transform.position.z),
                                   -m_step); break;
         }
     }

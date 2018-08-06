@@ -28,10 +28,7 @@ public class MyVirusMinisterAI : MyAiBoss
         m_attackNum = 1;
 
         m_myObjectName = this.gameObject.name;
-        m_myGameObject = GameObject.Find(m_myObjectName);
-        m_playerObject = GameObject.Find(PLAYER_OBJECT_NAME);
         m_maskPositionObject = transform.FindChild(MaskPositionObjectName).gameObject;
-        m_stageObject = GameObject.Find("Stage");
         m_maxHitPoint = 310;
         m_attack = 25;
         m_perceivedRange = 5;
@@ -143,7 +140,7 @@ public class MyVirusMinisterAI : MyAiBoss
                     NomalAttack();
                 }
                 //離れる          
-                transform.position = Vector3.MoveTowards(transform.position, m_playerObject.transform.position, -m_step/2);
+                transform.position = Vector3.MoveTowards(transform.position, myPlayer.transform.position, -m_step/2);
                 break;
         }
     }

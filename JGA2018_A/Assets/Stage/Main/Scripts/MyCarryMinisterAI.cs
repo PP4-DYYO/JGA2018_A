@@ -51,10 +51,8 @@ public class MyCarryMinisterAI : MyAiBoss
     protected override void Start()
     {
         m_myObjectName = this.gameObject.name;
-        m_playerObject = GameObject.Find(PLAYER_OBJECT_NAME);
         m_myGameObject = this.gameObject;
         m_maskPositionObject = transform.FindChild(MaskPositionObjectName).gameObject;
-        m_stageObject = GameObject.Find("Stage");
         m_maxHitPoint = 230;
         m_attack = 60;
         m_perceivedRange = 30;
@@ -162,7 +160,7 @@ public class MyCarryMinisterAI : MyAiBoss
                 break;
             case AIMode.LEAVE:
                 //離れる           
-                transform.position = Vector3.MoveTowards(transform.position, m_playerObject.transform.position, -m_step);
+                transform.position = Vector3.MoveTowards(transform.position, myPlayer.transform.position, -m_step);
                 escapeTime += Time.deltaTime;
                 break;
         }
@@ -187,9 +185,9 @@ public class MyCarryMinisterAI : MyAiBoss
             //最初に座標を決め、兆しが出現
             float randamX =UnityEngine.Random.Range(-4, 4);
             float randamZ = UnityEngine.Random.Range(-4, 4);
-            warpPosX = m_stageObject.GetComponent<MyStage>().CurrentField.BossRoomCenterPos.x + randamX;
-            warpPosY = m_stageObject.GetComponent<MyStage>().CurrentField.BossRoomCenterPos.y ;
-            warpPosZ = m_stageObject.GetComponent<MyStage>().CurrentField.BossRoomCenterPos.z + randamZ;
+            warpPosX = myStage.CurrentField.BossRoomCenterPos.x + randamX;
+            warpPosY = myStage.CurrentField.BossRoomCenterPos.y ;
+            warpPosZ = myStage.CurrentField.BossRoomCenterPos.z + randamZ;
 
             GameObject light = GameObject.Instantiate(WarpSign) as GameObject;
             light.transform.position = new Vector3(warpPosX, warpPosY, warpPosZ);

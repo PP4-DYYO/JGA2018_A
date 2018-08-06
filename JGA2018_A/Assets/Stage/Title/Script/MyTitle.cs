@@ -239,7 +239,7 @@ public class MyTitle : MonoBehaviour
 				OnClickLoadButton();
 			}
 		}
-		float HorizontalKeyInput = Input.GetAxis("HorizontalKey") + Input.GetAxis("CrossKeyLeft") + Input.GetAxis("CrossKeyRight");
+		float HorizontalKeyInput = Input.GetAxis("HorizontalKey") + Input.GetAxis("Horizontal") + Input.GetAxis("CrossKeyLeft") + Input.GetAxis("CrossKeyRight");
 
 		if (HorizontalKeyInput <= -0.1f && m_changeFlag == false)
 		{
@@ -313,7 +313,7 @@ public class MyTitle : MonoBehaviour
 		}
 
 		//選択
-		var HorizontalKeyInput = Input.GetAxis("HorizontalKey") + Input.GetAxis("CrossKeyLeft") + Input.GetAxis("CrossKeyRight");
+		var HorizontalKeyInput = Input.GetAxis("HorizontalKey") + Input.GetAxis("Horizontal") + Input.GetAxis("CrossKeyLeft") + Input.GetAxis("CrossKeyRight");
 
 		if (HorizontalKeyInput <= -0.1f && m_changeFlag == false)
 		{

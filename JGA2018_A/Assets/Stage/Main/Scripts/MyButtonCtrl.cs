@@ -586,6 +586,24 @@ public class MyButtonCtrl : MyBaseButtonCtrl
 				}
                 SelectMask();
             }
+			else
+			{
+				//入力の初期化
+				if (Input.GetKeyDown("right") || m_inputRightStick == true || m_inputRightCrossKey == true)
+				{
+					m_inputRightStick = false;
+					m_waitRightStick = true;
+					m_inputRightCrossKey = false;
+					m_waitRightCrossKey = true;
+				}
+				if (Input.GetKeyDown("left") || m_inputLeftStick == true || m_inputLeftCrossKey == true)
+				{
+					m_inputLeftStick = false;
+					m_waitLeftStick = true;
+					m_inputLeftCrossKey = false;
+					m_waitLeftCrossKey = true;
+				}
+			}
 
             //キー入力時
             if (Input.GetKeyDown("up") || m_inputUpCrossKey == true || m_inputUpStick == true)

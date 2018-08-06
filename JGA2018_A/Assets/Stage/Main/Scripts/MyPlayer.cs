@@ -1260,6 +1260,10 @@ public class MyPlayer : MonoBehaviour
 	/// </summary>
 	void Update()
 	{
+		//時が止まると入力を受け付けない
+		if (Time.timeScale <= 0)
+			return;
+
 		//キーの状態を調べる
 		CheckKeyStatus();
 	}

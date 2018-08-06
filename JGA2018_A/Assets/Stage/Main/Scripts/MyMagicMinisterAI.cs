@@ -5,6 +5,7 @@
 //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
+using System.Collections;
 using UnityEngine;
 
 ///<summary>
@@ -27,15 +28,13 @@ public class MyMagicMinisterAI : MyAiBoss
 
         m_myObjectName = this.gameObject.name;
         m_myGameObject = gameObject;
-        m_playerObject = GameObject.Find(PLAYER_OBJECT_NAME);
         m_maskPositionObject = transform.FindChild(MaskPositionObjectName).gameObject;
-        m_stageObject = GameObject.Find("Stage");
         m_hitPoint = 450;
         m_attack = 65;
         m_perceivedRange = 30;
         m_distance = 30;
         m_isAttacked = false;
-        m_attackInterval = 0.5f;
+        m_attackInterval = 3.0f;
         m_step = 0.06f;
         m_moveX = 0;
         m_moveZ = 0;
@@ -51,7 +50,6 @@ public class MyMagicMinisterAI : MyAiBoss
         base.Start();
     }
 
-
     //----------------------------------------------------------------------------------------------------
     /// <summary>
     /// 移動、行動
@@ -65,7 +63,6 @@ public class MyMagicMinisterAI : MyAiBoss
             if (m_distance < 0.5)
             {
                     m_aimode = AIMode.LEAVE;
-
             }
         }
 
@@ -73,13 +70,39 @@ public class MyMagicMinisterAI : MyAiBoss
         switch (m_aimode)
         {
             case AIMode.IDLE:
+                if (!m_counterAttackFlag)
+                {
+                    GetReadyCounterAttack();
+                }
                 break;
             case AIMode.ATTACK:
                 break;
             case AIMode.LEAVE:
                 //離れる            
-                transform.position = Vector3.MoveTowards(transform.position, m_playerObject.transform.position, -m_step);
+                transform.position = Vector3.MoveTowards(transform.position, myPlayer.transform.position, -m_step);
                 break;
+        }
+       
+    }
+    
+    void CounterAttack()
+    {
+        Debug.Log("カウンター攻撃");
+        m_counterAttackFlag = false;
+    }
+
+    void GetReadyCounterAttack()
+    {
+        if (m_gameTime >= 3)
+        {
+            float rand= Random.Range(0.0f, 1.0f);
+            Debug.Log(rand);
+            if (rand > 0.3)
+            {
+                Debug.Log("カウンター起動");
+                m_counterAttackFlag = true;
+            }
+            m_gameTime = 0;
         }
     }
 }

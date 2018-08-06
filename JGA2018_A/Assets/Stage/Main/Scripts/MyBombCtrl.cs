@@ -56,7 +56,7 @@ public class MyBombCtrl : MonoBehaviour
         }
 		myBombShot = GameObject.Find(m_BombPoint).GetComponent<MyBombShot>();
 		myAttackManager = GameObject.Find("AttackManager").GetComponent<MyAttackManager>();
-		myCharacter = myAiBoss.PlayerObject.GetComponent<MyCharacter>();
+        myCharacter = myAiBoss.CharacterScript;
 		m_effectPoint = this.gameObject.transform;
 	}
 

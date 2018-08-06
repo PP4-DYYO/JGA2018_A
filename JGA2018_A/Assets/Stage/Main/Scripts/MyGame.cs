@@ -245,6 +245,8 @@ public class MyGame : MonoBehaviour
 
 		//ステージの変更
 		AddvanceStage();
+
+		m_conditionAfterEndOfDeathblow = StageStatus.Non;
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -256,6 +258,9 @@ public class MyGame : MonoBehaviour
 		//ステージ変更
 		if (myStage.ChangeStage(++m_stageNum))
 		{
+			//攻撃のリセット
+			myCharacter.AttackManagerScript.ResetAttacks();
+
 			//プレイヤーとカメラの位置と向き
 			m_player.transform.position = myStage.CurrentField.StartPos;
 			myCamera.SetPosition(myStage.CurrentField.RelativePosCamera);

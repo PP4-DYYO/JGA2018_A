@@ -13,43 +13,43 @@ using UnityEngine.UI;
 
 public class MyTitle : MonoBehaviour
 {
-    /// <summary>
-    /// オープニング
-    /// </summary>
-    [SerializeField]
-    MyOpening myOpening;
+	/// <summary>
+	/// オープニング
+	/// </summary>
+	[SerializeField]
+	MyOpening myOpening;
 
-    /// <summary>
-    /// 二つ目のタイトル
-    /// </summary>
-    [SerializeField]
-    GameObject SecondTitle;
+	/// <summary>
+	/// 二つ目のタイトル
+	/// </summary>
+	[SerializeField]
+	GameObject SecondTitle;
 
-    /// <summary>
-    /// 何か押してください
-    /// </summary>
-    [SerializeField]
-    Text PleaseAnyKey;
+	/// <summary>
+	/// 何か押してください
+	/// </summary>
+	[SerializeField]
+	Text PleaseAnyKey;
 
-    [SerializeField]
-    Image select1;
+	[SerializeField]
+	Image select1;
 
-    [SerializeField]
-    Image select2;
+	[SerializeField]
+	Image select2;
 
-    int m_selectNum;
+	int m_selectNum;
 
-    /// <summary>
-    /// オープニングフラグ
-    /// </summary>
-    bool m_isOpening;
+	/// <summary>
+	/// オープニングフラグ
+	/// </summary>
+	bool m_isOpening;
 
-    bool m_changeFlag;
+	bool m_changeFlag;
 
-    float m_count;
+	float m_count;
 
-    [SerializeField]
-    float m_second;
+	[SerializeField]
+	float m_second;
 
 	/// <summary>
 	/// ロードフラグ
@@ -96,20 +96,25 @@ public class MyTitle : MonoBehaviour
 	/// </summary>
 	bool m_isEnterGuard;
 
+	/// <summary>
+	/// 点滅フラグ
+	/// </summary>
+	bool m_isFlash;
+
 	//----------------------------------------------------------------------------------------------------
 	/// <summary>
 	/// 初期
 	/// </summary>
 	void Start()
-    {
-        m_selectNum = 1;
+	{
+		m_selectNum = 1;
 
 		//部屋場音号を読み込む
 		ReadRoomNum();
 
 		//取得アイテム
 		ReadGetItem();
-    }
+	}
 
 	//----------------------------------------------------------------------------------------------------
 	/// <summary>
@@ -150,14 +155,14 @@ public class MyTitle : MonoBehaviour
 		var isGetItem = PlayerPrefs.GetInt(PlayerPrefsKeys.IS_GET_ITEM);
 
 		//非表示
-		foreach(var item in Items)
+		foreach (var item in Items)
 		{
 			item.SetActive(false);
 		}
 
 		//２進数で保存された取得アイテムの表示
 		var bit = 1;
-		for(var i = 0; i < Items.Length; i++)
+		for (var i = 0; i < Items.Length; i++)
 		{
 			if ((isGetItem & bit) == bit)
 				Items[i].SetActive(true);
@@ -170,16 +175,20 @@ public class MyTitle : MonoBehaviour
 	/// フレーム
 	/// </summary>
 	void Update()
-    {
-		//データリセット
-		if (Input.GetKeyDown(KeyCode.Escape) && Input.GetKey(KeyCode.Alpha0))
-			MyGameInfo.Instance.ResetData();
+	{
+		//点滅
+		m_count = m_count + Time.deltaTime;
+		if (m_count >= m_second)
+		{
+			m_isFlash = !m_isFlash;
+			m_count = 0;
+		}
 
 		if (!m_isOpening)
 			FirstTitleProcess();
 
 		//エンターガード
-		if(m_isEnterGuard)
+		if (m_isEnterGuard)
 		{
 			if (!Input.anyKey)
 				m_isEnterGuard = false;
@@ -191,7 +200,7 @@ public class MyTitle : MonoBehaviour
 				SecondTitleProcess();
 			else
 				LoadProcess();
-    }
+	}
 
 	//----------------------------------------------------------------------------------------------------
 	/// <summary>
@@ -199,20 +208,7 @@ public class MyTitle : MonoBehaviour
 	/// </summary>
 	void FirstTitleProcess()
 	{
-		m_count = m_count + Time.deltaTime;
-
-		if (m_count >= m_second)
-		{
-			if (PleaseAnyKey.enabled)
-			{
-				PleaseAnyKey.enabled = false;
-			}
-			else
-			{
-				PleaseAnyKey.enabled = true;
-			}
-			m_count = 0;
-		}
+		PleaseAnyKey.enabled = m_isFlash;
 
 		if (!m_isOpening)
 		{
@@ -271,13 +267,13 @@ public class MyTitle : MonoBehaviour
 		}
 		if (m_selectNum == 1)
 		{
-			select1.enabled = true;
+			select1.enabled = m_isFlash;
 			select2.enabled = false;
 		}
 		else if (m_selectNum == 2)
 		{
 			select1.enabled = false;
-			select2.enabled = true;
+			select2.enabled = m_isFlash;
 		}
 		if (HorizontalKeyInput <= 0.1 && HorizontalKeyInput >= -0.1)
 		{
@@ -295,7 +291,7 @@ public class MyTitle : MonoBehaviour
 		if (Input.GetKeyDown(KeyCode.Joystick1Button0) || Input.GetKeyDown(KeyCode.Return))
 		{
 			//選択番号
-			switch(m_loadSelectNum)
+			switch (m_loadSelectNum)
 			{
 				case 0:
 					OnClickStartButton();
@@ -331,9 +327,12 @@ public class MyTitle : MonoBehaviour
 		}
 
 		//表示非表示
-		foreach(var select in LoadSelects)
+		foreach (var select in LoadSelects)
 		{
-			select.enabled = (select == LoadSelects[m_loadSelectNum]);
+			if (!m_isFlash)
+				select.enabled = false;
+			else
+				select.enabled = (select == LoadSelects[m_loadSelectNum]);
 		}
 
 		//選択不可
@@ -343,10 +342,10 @@ public class MyTitle : MonoBehaviour
 		}
 	}
 
-    public void OnClickStartButton()
-    {
-        MySceneManager.Instance.ChangeScene(MyScene.Main);
-    }
+	public void OnClickStartButton()
+	{
+		MySceneManager.Instance.ChangeScene(MyScene.Main);
+	}
 
 	//----------------------------------------------------------------------------------------------------
 	/// <summary>

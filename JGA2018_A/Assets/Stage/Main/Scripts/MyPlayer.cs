@@ -104,6 +104,10 @@ enum BehaviorStatus
 	/// 必殺技の攻撃４の弱い敵用
 	/// </summary>
 	AttackDeathblow4WeadEnemy,
+	/// <summary>
+	/// なし
+	/// </summary>
+	Non,
 }
 
 //----------------------------------------------------------------------------------------------------
@@ -230,6 +234,12 @@ public class MyPlayer : MonoBehaviour
 
 	#region アニメーション
 	[Header("アニメーション")]
+	/// <summary>
+	/// アニメーション遷移時間
+	/// </summary>
+	[SerializeField]
+	float m_animTriggerTime;
+
 	/// <summary>
 	/// 無操作遷移
 	/// </summary>
@@ -364,6 +374,16 @@ public class MyPlayer : MonoBehaviour
 	/// 死の遷移
 	/// </summary>
 	const string TRANS_DIE = "Die";
+
+	/// <summary>
+	/// アニメーション遷移中
+	/// </summary>
+	bool m_isAnimTrigger;
+
+	/// <summary>
+	/// アニメーション遷移後の時間を数える
+	/// </summary>
+	float m_countAnimTriggerTime;
 	#endregion
 
 	#region 状態
@@ -668,10 +688,10 @@ public class MyPlayer : MonoBehaviour
 		new Vector3(0.1659906f, 1.311585f, 0.6939639f),
 		new Vector3(-0.6301885f, 0.4820206f, 1.491178f),
 		new Vector3(-0.04720514f, 1.017675f, 0.5212768f),
-		new Vector3(-0.04720514f, 1.017675f, 0.5212768f),
-		new Vector3(-0.04720514f, 1.017675f, 0.5212768f),
-		new Vector3(-0.04720514f, 1.017675f, 0.5212768f),
-		new Vector3(-0.04720514f, 1.017675f, 0.5212768f),
+		new Vector3(0.58698074f, 2.237455f, 1.532429f),
+		new Vector3(0.6659906f, 1.311585f, 0.6939639f),
+		new Vector3(-1.1301885f, 0.4820206f, 1.491178f),
+		new Vector3(-0.54720514f, 1.017675f, 0.5212768f),
 	};
 
 	/// <summary>
@@ -683,9 +703,9 @@ public class MyPlayer : MonoBehaviour
 		new Vector3(0.1558482f, 0.9843702f,0.519088f),
 		new Vector3(1.140949f,1.735734f,1.729904f),
 		new Vector3(0.6208854f,1.634966f,0.604331f),
-		new Vector3(0.6208854f,1.634966f,0.604331f),
-		new Vector3(0.6208854f,1.634966f,0.604331f),
-		new Vector3(0.6208854f,1.634966f,0.604331f),
+		new Vector3(-0.586515f, 0.9399486f, 1.2289284f),
+		new Vector3(0.1558482f, 0.9843702f,0.519088f),
+		new Vector3(0.540949f,1.735734f,1.129904f),
 		new Vector3(0.6208854f,1.634966f,0.604331f),
 	};
 
@@ -711,12 +731,12 @@ public class MyPlayer : MonoBehaviour
 	{
 		new Vector3(0.3140665f,0.9749715f,1.035166f),
 		new Vector3(0.3246632f,1.034966f,-0.009343892f),
-		new Vector3(0.25f,1.330896f,1.93709f),
+		new Vector3(0.0f,1.330896f,1.93709f),
 		new Vector3(0.25f,1.284438f,0.6949587f),
-		new Vector3(0.25f,1.284438f,0.6949587f),
-		new Vector3(0.25f,1.284438f,0.6949587f),
-		new Vector3(0.25f,1.284438f,0.6949587f),
-		new Vector3(0.25f,1.284438f,0.6949587f),
+		new Vector3(-0.3140665f,0.9749715f,1.035166f),
+		new Vector3(-0.3246632f,1.034966f,-0.009343892f),
+		new Vector3(0.0f,1.330896f,1.93709f),
+		new Vector3(-0.25f,1.284438f,0.6949587f),
 	};
 
 	/// <summary>
@@ -726,12 +746,12 @@ public class MyPlayer : MonoBehaviour
 	{
 		new Vector3(0.3140665f,0.9749715f,1.035166f),
 		new Vector3(0.3246632f,1.034966f,-0.009343892f),
-		new Vector3(0.25f,1.330896f,1.93709f),
+		new Vector3(0.0f,1.330896f,1.93709f),
 		new Vector3(0.25f,1.284438f,0.6949587f),
-		new Vector3(0.25f,1.284438f,0.6949587f),
-		new Vector3(0.25f,1.284438f,0.6949587f),
-		new Vector3(0.25f,1.284438f,0.6949587f),
-		new Vector3(0.25f,1.284438f,0.6949587f),
+		new Vector3(-0.3140665f,0.9749715f,1.035166f),
+		new Vector3(-0.3246632f,1.034966f,-0.009343892f),
+		new Vector3(0.0f,1.330896f,1.93709f),
+		new Vector3(-0.25f,1.284438f,0.6949587f),
 	};
 
 	/// <summary>
@@ -741,12 +761,12 @@ public class MyPlayer : MonoBehaviour
 	{
 		new Vector3(0.3140665f,0.9749715f,1.035166f),
 		new Vector3(0.3246632f,1.034966f,-0.009343892f),
-		new Vector3(0.25f,1.330896f,1.93709f),
+		new Vector3(0.0f,1.330896f,1.93709f),
 		new Vector3(0.25f,1.284438f,0.6949587f),
-		new Vector3(0.25f,1.284438f,0.6949587f),
-		new Vector3(0.25f,1.284438f,0.6949587f),
-		new Vector3(0.25f,1.284438f,0.6949587f),
-		new Vector3(0.25f,1.284438f,0.6949587f),
+		new Vector3(-0.3140665f,0.9749715f,1.035166f),
+		new Vector3(-0.3246632f,1.034966f,-0.009343892f),
+		new Vector3(0.0f,1.330896f,1.93709f),
+		new Vector3(-0.25f,1.284438f,0.6949587f),
 	};
 
 	/// <summary>
@@ -756,12 +776,12 @@ public class MyPlayer : MonoBehaviour
 	{
 		new Vector3(0.3140665f,0.9749715f,1.035166f),
 		new Vector3(0.3246632f,1.034966f,-0.009343892f),
-		new Vector3(0.25f,1.330896f,1.93709f),
+		new Vector3(0.0f,1.330896f,1.93709f),
 		new Vector3(0.25f,1.284438f,0.6949587f),
-		new Vector3(0.25f,1.284438f,0.6949587f),
-		new Vector3(0.25f,1.284438f,0.6949587f),
-		new Vector3(0.25f,1.284438f,0.6949587f),
-		new Vector3(0.25f,1.284438f,0.6949587f),
+		new Vector3(-0.3140665f,0.9749715f,1.035166f),
+		new Vector3(-0.3246632f,1.034966f,-0.009343892f),
+		new Vector3(0.0f,1.330896f,1.93709f),
+		new Vector3(-0.25f,1.284438f,0.6949587f),
 	};
 
 	/// <summary>
@@ -770,13 +790,13 @@ public class MyPlayer : MonoBehaviour
 	static readonly Vector3[] ATTACK2_KIND4_A_VERTECES =
 	{
 		new Vector3(0.08698074f, 2.237455f, 1.532429f),
-		new Vector3(0.1659906f, 1.311585f, -0.6939639f),
+		new Vector3(0.1659906f, 1.311585f, 0.6939639f),
 		new Vector3(-0.6301885f, 0.4820206f, 1.491178f),
-		new Vector3(-0.04720514f, 1.017675f, -0.5212768f),
-		new Vector3(-0.04720514f, 1.017675f, -0.5212768f),
-		new Vector3(-0.04720514f, 1.017675f, -0.5212768f),
-		new Vector3(-0.04720514f, 1.017675f, -0.5212768f),
-		new Vector3(-0.04720514f, 1.017675f, -0.5212768f),
+		new Vector3(-0.04720514f, 1.017675f, 0.5212768f),
+		new Vector3(0.58698074f, 2.237455f, 1.532429f),
+		new Vector3(0.6659906f, 1.311585f, 0.6939639f),
+		new Vector3(-1.1301885f, 0.4820206f, 1.491178f),
+		new Vector3(-0.54720514f, 1.017675f, 0.5212768f),
 	};
 
 	/// <summary>
@@ -784,14 +804,14 @@ public class MyPlayer : MonoBehaviour
 	/// </summary>
 	static readonly Vector3[] ATTACK2_KIND4_B_VERTECES =
 	{
-		new Vector3(-1.086515f, 0.9399486f, -0.6289284f),
-		new Vector3(0.1558482f, 0.9843702f,-0.519088f),
+		new Vector3(-1.086515f, 0.9399486f, 0.6289284f),
+		new Vector3(0.1558482f, 0.9843702f,0.519088f),
 		new Vector3(1.140949f,1.735734f,1.729904f),
-		new Vector3(0.6208854f,1.634966f,-0.604331f),
-		new Vector3(0.6208854f,1.634966f,-0.604331f),
-		new Vector3(0.6208854f,1.634966f,-0.604331f),
-		new Vector3(0.6208854f,1.634966f,-0.604331f),
-		new Vector3(0.6208854f,1.634966f,-0.604331f),
+		new Vector3(0.6208854f,1.634966f,0.604331f),
+		new Vector3(-0.586515f, 0.9399486f, 1.2289284f),
+		new Vector3(0.1558482f, 0.9843702f,0.519088f),
+		new Vector3(0.540949f,1.735734f,1.129904f),
+		new Vector3(0.6208854f,1.634966f,0.604331f),
 	};
 
 	/// <summary>
@@ -818,10 +838,10 @@ public class MyPlayer : MonoBehaviour
 		new Vector3(-0.411669f,1.815923f,-0.4555861f),
 		new Vector3(0.6366171f,1.201453f,0.6921799f),
 		new Vector3(1.398f,0.733f,1.528f),
-		new Vector3(1.398f,0.733f,1.528f),
-		new Vector3(1.398f,0.733f,1.528f),
-		new Vector3(1.398f,0.733f,1.528f),
-		new Vector3(1.398f,0.733f,1.528f),
+		new Vector3(-0.1134192f,1.318558f,0.5869702f),
+		new Vector3(-1.011669f,1.515923f,0.5869702f),
+		new Vector3(0.6366171f,1.201453f,0.6921799f),
+		new Vector3(0.0f,0.733f,1.928f),
 	};
 
 	/// <summary>
@@ -830,13 +850,13 @@ public class MyPlayer : MonoBehaviour
 	static readonly Vector3[] ATTACK_DEATHBLOW3_VERTECES =
 	{
 		new Vector3(0.2333967f,1.539274f,0.7515599f),
-		new Vector3(0.4046411f,1.45876f,1.996258f),
+		new Vector3(0.0f,1.45876f,1.996258f),
 		new Vector3(0.4942979f,1.551066f,-0.7345253f),
 		new Vector3(0.3399217f,1.475883f,0.6992293f),
-		new Vector3(0.3399217f,1.475883f,0.6992293f),
-		new Vector3(0.3399217f,1.475883f,0.6992293f),
-		new Vector3(0.3399217f,1.475883f,0.6992293f),
-		new Vector3(0.3399217f,1.475883f,0.6992293f),
+		new Vector3(-0.2333967f,1.539274f,0.7515599f),
+		new Vector3(0.0f,1.45876f,1.996258f),
+		new Vector3(-0.4942979f,1.551066f,-0.7345253f),
+		new Vector3(-0.3399217f,1.475883f,0.6992293f),
 	};
 
 	/// <summary>
@@ -1038,6 +1058,11 @@ public class MyPlayer : MonoBehaviour
 	/// Pキーを押された
 	/// </summary>
 	bool m_isPressedP = false;
+
+	/// <summary>
+	/// P軸が押された
+	/// </summary>
+	bool m_isPressedPAxis = false;
 
 	/// <summary>
 	/// 十字キー上が押された
@@ -1258,8 +1283,9 @@ public class MyPlayer : MonoBehaviour
 			m_isPressedRightClick = true;
 
 		//Pキーの押下
-		if (Input.GetButtonDown(PICK_UP))
+		if (Input.GetButtonDown(PICK_UP) || (Input.GetAxis(PICK_UP) >= 1.0f && !m_isPressedPAxis))
 			m_isPressedP = true;
+		m_isPressedPAxis = (Input.GetAxis(PICK_UP) >= 1.0f);
 
 		//十字キー上の押下
 		if (Input.GetButtonDown(CROSS_KEY_UP) || (Input.GetAxis(CROSS_KEY_UP) >= 1.0f && !m_isPressedCrossKeyAxisUp))
@@ -1446,6 +1472,10 @@ public class MyPlayer : MonoBehaviour
 			m_behaviorState = BehaviorStatus.AttackDeathblow1;
 			m_isNotChangeBehaviorState = true;
 			m_currentAttackBreakTime = m_attackTempoTime + m_attackBreakTime;
+
+			//ボス戦であればボスを注視
+			if (myCharacter.GameScript.StageState == StageStatus.BossGame)
+				transform.LookAt(myCharacter.BossScript.transform);
 		}
 
 		//毒マスクand十字キー上の押下
@@ -1466,6 +1496,10 @@ public class MyPlayer : MonoBehaviour
 			m_behaviorState = BehaviorStatus.AttackDeathblow3;
 			m_isNotChangeBehaviorState = true;
 			m_currentAttackBreakTime = m_attackTempoTime + m_attackBreakTime;
+
+			//ボス戦であればボスを注視
+			if (myCharacter.GameScript.StageState == StageStatus.BossGame)
+				transform.LookAt(myCharacter.BossScript.transform);
 		}
 
 		//マジックマスクand十字キー右の押下
@@ -1675,7 +1709,7 @@ public class MyPlayer : MonoBehaviour
 	void Speed()
 	{
 		//走る
-		m_speed = Input.GetButton(DASH) ? m_runSpeed : m_walkSpeed;
+		m_speed = (Input.GetButton(DASH) || Input.GetAxis(DASH) == -1) ? m_runSpeed : m_walkSpeed;
 
 		//ガード中は速度なし
 		m_speed = m_isGuard ? 0 : m_speed;
@@ -1764,12 +1798,28 @@ public class MyPlayer : MonoBehaviour
 		//状態を調べる
 		CheckState();
 
+		//状態とアニメーションのズレ解消
+		if (!Anim.GetCurrentAnimatorStateInfo(0).IsName(m_behaviorStatePrev.ToString()) && !m_isAnimTrigger)
+			m_behaviorStatePrev = BehaviorStatus.Non;
+
 		//状態変化なし
 		if (m_behaviorState == m_behaviorStatePrev)
 		{
+			//アニメーション遷移時間
+			if(m_countAnimTriggerTime >= m_animTriggerTime)
+			{
+				m_isAnimTrigger = false;
+			}
+			m_countAnimTriggerTime += Time.deltaTime;
+
 			//アイドル状態中andマスクの切り替え
 			if (m_behaviorState == BehaviorStatus.Idle && m_maskState != m_maskStatePrev)
+			{
 				Anim.SetTrigger(TRANS_CHANGE_MASK);
+				m_isAnimTrigger = true;
+				m_countAnimTriggerTime = 0;
+			}
+
 			return;
 		}
 
@@ -1945,6 +1995,8 @@ public class MyPlayer : MonoBehaviour
 				Anim.SetTrigger(TRANS_ATTACK_DEATHBLOW4);
 				break;
 		}
+		m_isAnimTrigger = true;
+		m_countAnimTriggerTime = 0;
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -2555,8 +2607,11 @@ public class MyPlayer : MonoBehaviour
 	/// </summary>
 	void Attack2Kind4AEvent()
 	{
-		//ワールド座標でボスの位置とプレイヤーの方向
-		m_workMatrix.SetTRS(myCharacter.GetPosBoss(), transform.rotation, Vector3.one);
+		//ワールド座標で(ボス戦の時)ボスの位置とプレイヤーの方向
+		if (myCharacter.GameScript.StageState == StageStatus.BossGame)
+			m_workMatrix.SetTRS(myCharacter.GetPosBoss(), transform.rotation, Vector3.one);
+		else
+			m_workMatrix.SetTRS(transform.position, transform.rotation, Vector3.one);
 
 		//攻撃範囲頂点の決定
 		for (var i = 0; i < MyCube.NUM_VERTICES; i++)
@@ -2579,8 +2634,11 @@ public class MyPlayer : MonoBehaviour
 	/// </summary>
 	void Attack2Kind4BEvent()
 	{
-		//ワールド座標でボスの位置とプレイヤーの方向
-		m_workMatrix.SetTRS(myCharacter.GetPosBoss(), transform.rotation, Vector3.one);
+		//ワールド座標で(ボス戦の時)ボスの位置とプレイヤーの方向
+		if (myCharacter.GameScript.StageState == StageStatus.BossGame)
+			m_workMatrix.SetTRS(myCharacter.GetPosBoss(), transform.rotation, Vector3.one);
+		else
+			m_workMatrix.SetTRS(transform.position, transform.rotation, Vector3.one);
 
 		//攻撃範囲頂点の決定
 		for (var i = 0; i < MyCube.NUM_VERTICES; i++)
@@ -2603,8 +2661,11 @@ public class MyPlayer : MonoBehaviour
 	/// </summary>
 	void Attack2Kind4CEvent()
 	{
-		//ワールド座標でボスの位置とプレイヤーの方向
-		m_workMatrix.SetTRS(myCharacter.GetPosBoss(), transform.rotation, Vector3.one);
+		//ワールド座標で(ボス戦の時)ボスの位置とプレイヤーの方向
+		if (myCharacter.GameScript.StageState == StageStatus.BossGame)
+			m_workMatrix.SetTRS(myCharacter.GetPosBoss(), transform.rotation, Vector3.one);
+		else
+			m_workMatrix.SetTRS(transform.position, transform.rotation, Vector3.one);
 
 		//攻撃範囲頂点の決定
 		for (var i = 0; i < MyCube.NUM_VERTICES; i++)

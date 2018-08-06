@@ -81,6 +81,7 @@ public class MyGameInfo : MySingleton<MyGameInfo>
 		PlayerPrefs.SetInt(PlayerPrefsKeys.STAGE_NUM, 0);
 		PlayerPrefs.SetInt(PlayerPrefsKeys.IS_GET_ITEM, 0);
 		PlayerPrefs.SetInt(PlayerPrefsKeys.IS_WATCH_OPENING, 0);
+		PlayerPrefs.SetInt(PlayerPrefsKeys.IS_GET_MASK, 0);
 
 		//変数のリセット
 		m_stageNum = 0;

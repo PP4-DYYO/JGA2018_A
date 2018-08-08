@@ -61,7 +61,7 @@ public class MyEndingCamera : MonoBehaviour
 	void FixedUpdate()
 	{
 		//移動時間
-		if (m_countMovingTime <= m_movingTimes[m_posNum])
+		if (m_posNum < m_startPoss.Length && m_countMovingTime <= m_movingTimes[m_posNum])
 		{
 			//カメラの位置
 			transform.position = m_startPoss[m_posNum] + (m_targetPoss[m_posNum] - m_startPoss[m_posNum]) * (m_countMovingTime / m_movingTimes[m_posNum]);
@@ -71,7 +71,7 @@ public class MyEndingCamera : MonoBehaviour
 
 			m_countMovingTime += Time.deltaTime;
 		}
-		else if(m_posNum < m_startPoss.Length)
+		else if(m_posNum < m_startPoss.Length - 1)
 		{
 			//移動番号の繰り上げ
 			m_posNum++;

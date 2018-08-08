@@ -56,6 +56,10 @@ public class MyMirrorMinisterAI : MyAiBoss
         {
             m_aimode = AIMode.IDLE;
         }
+        if (m_myObjectName == "MirrorMinister(Clone)(Clone)")
+        {
+            m_isFakeBody = true;
+        }
 
         base.Start();
     }
@@ -114,8 +118,8 @@ public class MyMirrorMinisterAI : MyAiBoss
                 //一定時間毎に攻撃をする
                 if (m_hitPoint < (m_maxHitPoint * 3) / 4 && m_specialAttackCount < m_specialAttackLimit)
                 {
-                    GameObject dop = GameObject.Instantiate(gameObject) as GameObject;
-					dop.transform.parent = transform;
+                    GameObject dop = Instantiate(gameObject) as GameObject;
+                    dop.transform.parent = myAiManager.transform;
                     dop.transform.position = new Vector3(gameObject.transform.position.x + 3f, gameObject.transform.position.y, gameObject.transform.position.z+3f);
 
                     m_specialAttackCount += 1;

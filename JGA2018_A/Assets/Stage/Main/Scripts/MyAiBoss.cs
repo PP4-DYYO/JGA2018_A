@@ -15,7 +15,7 @@ public class MyAiBoss : MonoBehaviour
 
     protected MyPlayer myPlayer;
 
-    MyAiManager myAiManager;
+    protected MyAiManager myAiManager;
 
     /// <summary>
     /// プレイヤーオブジェクトの名前
@@ -244,6 +244,12 @@ public class MyAiBoss : MonoBehaviour
     float m_poizonDamageTime = 6.0f;
 
     /// <summary>
+    /// 自身が本物かどうか
+    /// </summary>
+    /// [SerializeField]
+    protected bool m_isFakeBody;
+
+    /// <summary>
     /// AIの行動タイプ
     /// </summary>
     [SerializeField]
@@ -440,7 +446,7 @@ public class MyAiBoss : MonoBehaviour
                     //当たり判定Cube
                     Vector3 attackPoint = GameObject.Find(m_myObjectName).transform.position;
 
-                    float cubeLength = 0.6f;
+                    float cubeLength = 1f;
                     //頂点の位置
                     Vector3 vLDB = new Vector3(attackPoint.x - cubeLength, 1 + attackPoint.y - cubeLength, attackPoint.z - cubeLength);
                     Vector3 vLDF = new Vector3(attackPoint.x - cubeLength, 1 + attackPoint.y - cubeLength, attackPoint.z + cubeLength);
@@ -596,7 +602,14 @@ public class MyAiBoss : MonoBehaviour
         //HP0で死ぬ
         if (m_hitPoint <= 0)
         {
-            transform.parent.GetComponent<MyAiManager>().CharacterScript.GameScript.ChangeState(StageStatus.BossDestroyed);
+            if (m_isFakeBody)
+            {
+                Destroy(gameObject);
+            }
+            else
+            {
+                transform.parent.GetComponent<MyAiManager>().CharacterScript.GameScript.ChangeState(StageStatus.BossDestroyed);
+            }
         }
     }
 

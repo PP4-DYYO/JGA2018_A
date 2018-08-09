@@ -106,6 +106,7 @@ public class MyTrajectory : MonoBehaviour
 		TrajectoryMeshRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
 		TrajectoryMeshRenderer.receiveShadows = false;
 		TrajectoryMeshRenderer.material = TrajectoryMaterial;
+		TrajectoryMeshRenderer.enabled = m_isDisplay;
 	}
 
 	//----------------------------------------------------------------------------------------------------

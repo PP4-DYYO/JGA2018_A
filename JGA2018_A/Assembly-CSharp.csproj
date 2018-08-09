@@ -81,6 +81,7 @@
      <Compile Include="Assets\Stage\Main\Scripts\MyParticleManager.cs" />
      <Compile Include="Assets\Stage\Main\Scripts\MyPlayer.cs" />
      <Compile Include="Assets\Stage\Main\Scripts\MyPositionRotate.cs" />
+     <Compile Include="Assets\Stage\Main\Scripts\MyRecoveryWhirlpool.cs" />
      <Compile Include="Assets\Stage\Main\Scripts\MyShadowMagicMinisterAI.cs" />
      <Compile Include="Assets\Stage\Main\Scripts\MyStage.cs" />
      <Compile Include="Assets\Stage\Main\Scripts\MyTrajectory.cs" />

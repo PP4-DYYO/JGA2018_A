@@ -2431,6 +2431,9 @@ public class MyPlayer : MonoBehaviour
 
 		//攻撃範囲の生成
 		myCharacter.AttackManagerScript.PlayerAttack(m_workMyCube, MaskAttribute.Non, m_powerAttack1, m_effectiveAttackTime);
+
+		//剣の軌跡表示
+		myCharacter.GameScript.ParticleManagerScript.GetComponent<MyTrajectory>().Display();
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -2455,6 +2458,9 @@ public class MyPlayer : MonoBehaviour
 
 		//攻撃範囲の生成
 		myCharacter.AttackManagerScript.PlayerAttack(m_workMyCube, MaskAttribute.Non, m_powerAttack1, m_effectiveAttackTime);
+
+		//剣の軌跡表示
+		myCharacter.GameScript.ParticleManagerScript.GetComponent<MyTrajectory>().Display();
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -2479,6 +2485,9 @@ public class MyPlayer : MonoBehaviour
 
 		//攻撃範囲の生成
 		myCharacter.AttackManagerScript.PlayerAttack(m_workMyCube, MaskAttribute.Non, m_powerAttack1, m_effectiveAttackTime);
+
+		//剣の軌跡表示
+		myCharacter.GameScript.ParticleManagerScript.GetComponent<MyTrajectory>().Display();
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -2503,6 +2512,9 @@ public class MyPlayer : MonoBehaviour
 
 		//攻撃範囲の生成
 		myCharacter.AttackManagerScript.PlayerAttack(m_workMyCube, m_maskState, m_powerAttack2, m_effectiveAttackTime);
+
+		//剣の軌跡表示
+		myCharacter.GameScript.ParticleManagerScript.GetComponent<MyTrajectory>().Display();
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -2527,6 +2539,9 @@ public class MyPlayer : MonoBehaviour
 
 		//攻撃範囲の生成
 		myCharacter.AttackManagerScript.PlayerAttack(m_workMyCube, m_maskState, m_powerAttack2, m_effectiveAttackTime);
+
+		//剣の軌跡表示
+		myCharacter.GameScript.ParticleManagerScript.GetComponent<MyTrajectory>().Display();
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -2551,6 +2566,9 @@ public class MyPlayer : MonoBehaviour
 
 		//攻撃範囲の生成
 		myCharacter.AttackManagerScript.PlayerAttack(m_workMyCube, m_maskState, m_powerAttack2, m_effectiveAttackTime);
+
+		//剣の軌跡表示
+		myCharacter.GameScript.ParticleManagerScript.GetComponent<MyTrajectory>().Display();
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -2575,6 +2593,9 @@ public class MyPlayer : MonoBehaviour
 
 		//攻撃範囲の生成
 		myCharacter.AttackManagerScript.PlayerAttack(m_workMyCube, m_maskState, m_powerAttack2, m_effectiveAttackTime);
+
+		//剣の軌跡表示
+		myCharacter.GameScript.ParticleManagerScript.GetComponent<MyTrajectory>().Display();
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -2599,6 +2620,9 @@ public class MyPlayer : MonoBehaviour
 
 		//攻撃範囲の生成
 		myCharacter.AttackManagerScript.PlayerAttack(m_workMyCube, m_maskState, m_powerAttack2 / 3, m_effectiveAttackTime);
+
+		//剣の軌跡表示
+		myCharacter.GameScript.ParticleManagerScript.GetComponent<MyTrajectory>().Display();
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -2626,6 +2650,9 @@ public class MyPlayer : MonoBehaviour
 
 		//攻撃範囲の生成
 		myCharacter.AttackManagerScript.PlayerAttack(m_workMyCube, m_maskState, m_powerAttack2MagicMask, m_effectiveAttackTime);
+
+		//剣の軌跡表示
+		myCharacter.GameScript.ParticleManagerScript.GetComponent<MyTrajectory>().Display();
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -2653,6 +2680,9 @@ public class MyPlayer : MonoBehaviour
 
 		//攻撃範囲の生成
 		myCharacter.AttackManagerScript.PlayerAttack(m_workMyCube, m_maskState, m_powerAttack2MagicMask, m_effectiveAttackTime);
+
+		//剣の軌跡表示
+		myCharacter.GameScript.ParticleManagerScript.GetComponent<MyTrajectory>().Display();
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -2680,6 +2710,9 @@ public class MyPlayer : MonoBehaviour
 
 		//攻撃範囲の生成
 		myCharacter.AttackManagerScript.PlayerAttack(m_workMyCube, m_maskState, m_powerAttack2MagicMask, m_effectiveAttackTime);
+
+		//剣の軌跡表示
+		myCharacter.GameScript.ParticleManagerScript.GetComponent<MyTrajectory>().Display();
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -2704,6 +2737,9 @@ public class MyPlayer : MonoBehaviour
 
 		//攻撃範囲の生成
 		myCharacter.AttackManagerScript.PlayerAttack(m_workMyCube, m_maskState, m_powerAttackDeathblow1PerBlow, m_effectiveAttackTime, true);
+
+		//剣の軌跡表示
+		myCharacter.GameScript.ParticleManagerScript.GetComponent<MyTrajectory>().Display();
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -2713,6 +2749,9 @@ public class MyPlayer : MonoBehaviour
 	void AttackDeathblow1AEvent()
 	{
 		myCharacter.BossScript.ReceiveDamage(m_powerAttackDeathblow1PerBlow);
+
+		//剣の軌跡表示
+		myCharacter.GameScript.ParticleManagerScript.GetComponent<MyTrajectory>().Display();
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -2727,6 +2766,9 @@ public class MyPlayer : MonoBehaviour
 		//攻撃範囲の生成
 		myCharacter.AttackManagerScript.PlayerAttack(m_workMyPrism12, transform.position, m_maskState, m_powerAttackDeathblow2, m_effectiveDethblow2Time,
 			false, m_extensionTimeDeathblow2, m_extensionDistanceDeathblow2);
+
+		//剣の軌跡表示
+		myCharacter.GameScript.ParticleManagerScript.GetComponent<MyTrajectory>().Display();
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -2751,6 +2793,9 @@ public class MyPlayer : MonoBehaviour
 
 		//攻撃範囲の生成
 		myCharacter.AttackManagerScript.PlayerAttack(m_workMyCube, m_maskState, m_powerAttackDeathblow3PerBlow, m_effectiveAttackTime, true);
+
+		//剣の軌跡表示
+		myCharacter.GameScript.ParticleManagerScript.GetComponent<MyTrajectory>().Display();
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -2760,6 +2805,9 @@ public class MyPlayer : MonoBehaviour
 	void AttackDeathblow3AEvent()
 	{
 		myCharacter.BossScript.ReceiveDamage(m_powerAttackDeathblow3PerBlow);
+
+		//剣の軌跡表示
+		myCharacter.GameScript.ParticleManagerScript.GetComponent<MyTrajectory>().Display();
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -2784,6 +2832,9 @@ public class MyPlayer : MonoBehaviour
 
 		//攻撃範囲の生成
 		myCharacter.AttackManagerScript.PlayerAttack(m_workMyCube, m_maskState, m_powerAttackDeathblow4, m_effectiveAttackTime, true);
+
+		//剣の軌跡表示
+		myCharacter.GameScript.ParticleManagerScript.GetComponent<MyTrajectory>().Display();
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -2793,6 +2844,9 @@ public class MyPlayer : MonoBehaviour
 	void AttackDeathblow4AEvent()
 	{
 		myCharacter.BossScript.ReceiveDamage(m_powerAttackDeathblow4);
+
+		//剣の軌跡表示
+		myCharacter.GameScript.ParticleManagerScript.GetComponent<MyTrajectory>().Display();
 	}
 
 	//----------------------------------------------------------------------------------------------------

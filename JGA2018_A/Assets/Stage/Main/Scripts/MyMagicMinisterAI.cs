@@ -6,6 +6,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 using System.Collections;
+using UnityEditor;
 using UnityEngine;
 
 ///<summary>
@@ -13,11 +14,12 @@ using UnityEngine;
 ///</summary>
 public class MyMagicMinisterAI : MyAiBoss
 {
-    /// <summary>
-    ///影武者制御
-    /// </summary>
-    public static int s_shadowCount;
-
+    [SerializeField]
+    GameObject m_shadowMagicMinister;
+    
+   public GameObject m_AppearingshadowMagicMinister;
+    public  bool m_isApproach;
+    public bool m_appearReset;
     //----------------------------------------------------------------------------------------------------
     /// <summary>
     /// 初期状態設定
@@ -25,7 +27,6 @@ public class MyMagicMinisterAI : MyAiBoss
     protected override void Start()
     {
         m_attackNum = 0;
-
         m_myObjectName = this.gameObject.name;
         m_maskPositionObject = transform.FindChild(MaskPositionObjectName).gameObject;
         m_maxHitPoint = 450;
@@ -34,7 +35,7 @@ public class MyMagicMinisterAI : MyAiBoss
         m_distance = 30;
         m_isAttacked = false;
         m_attackInterval = 3.0f;
-        m_step = 0.06f;
+        m_step = 0.12f;
         m_moveX = 0;
         m_moveZ = 0;
         m_movingX = false;
@@ -43,9 +44,7 @@ public class MyMagicMinisterAI : MyAiBoss
         m_specialAttackCount = 0;
         m_playerAttacked = false;
         m_aimode = AIMode.WAIT;
-        
-
-        m_gameTime = m_attackInterval;
+        m_isApproach=false;
 
         base.Start();
     }
@@ -57,9 +56,32 @@ public class MyMagicMinisterAI : MyAiBoss
     protected override void FixedUpdate()
     {
         base.FixedUpdate();
-        if (m_aimode != AIMode.WAIT)
+        if (m_AppearingshadowMagicMinister != null)
         {
+            m_isShadowApper = true;
+        }
+        else
+        {
+            m_isShadowApper = false;
+        }
 
+        if (m_appearReset)
+        {
+            m_counterAttackFlag = 0;
+            m_gameTime = 0;
+            m_appearReset = false;
+        }
+
+        if (m_isApproach)
+        {
+            if (m_distance < 1)
+            {
+                m_aimode = AIMode.ATTACK;
+            }
+            else
+            {
+                m_aimode = AIMode.APPROACH;
+            }
         }
 
         //状態によって行動を切り替える
@@ -72,6 +94,12 @@ public class MyMagicMinisterAI : MyAiBoss
                 }
                 break;
             case AIMode.ATTACK:
+                NomalAttack();
+                m_isApproach = false;
+                m_counterAttackFlag = 0;
+                break;
+            case AIMode.APPROACH:
+                transform.position = Vector3.MoveTowards(transform.position, myPlayer.transform.position, m_step);
                 break;
             case AIMode.LEAVE:
                 //離れる            
@@ -85,24 +113,43 @@ public class MyMagicMinisterAI : MyAiBoss
         }
         if (m_counterAttackFlag == 0)
         {
-            Debug.Log("発動前");
         }
         else if (m_counterAttackFlag == 1)
         {
-            Debug.Log("発動中");
-
+            if (!m_isShadowApper)
+            {
+                MakeShadow();
+            }
         }
         else if (m_counterAttackFlag == 2)
         {
-            Debug.Log("カウンター発動！！");
             CounterAttack();
         }
-
     }
-    
+
+    //----------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// 影武者召喚
+    /// </summary>
+    void MakeShadow()
+    {
+       GameObject shadow= Instantiate(m_shadowMagicMinister) as GameObject;
+        float randX = Random.Range(1,10);
+        float randZ = Random.Range(1, 10);
+        shadow.transform.position = new Vector3(myStage.CurrentField.BossRoomCenterPos.x+ randX,
+            transform.position.y,
+            myStage.CurrentField.BossRoomCenterPos.z+ randZ);
+        m_isShadowApper = true;
+        m_AppearingshadowMagicMinister = shadow;
+    }
+
+    //----------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// カウンター攻撃当たり判定
+    /// </summary>
     void CounterAttack()
     {
-        float m_length = 0.6f;
+        float m_length = 0.8f;
 
         Vector3 vLDB = new Vector3(transform.position.x - m_length, 1+transform.position.y - m_length, transform.position.z - m_length);
         Vector3 vLDF = new Vector3(transform.position.x - m_length, 1 + transform.position.y - m_length, transform.position.z + m_length);
@@ -119,12 +166,15 @@ public class MyMagicMinisterAI : MyAiBoss
         m_counterAttackFlag = 0;
     }
 
+    //----------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// カウンター攻撃準備状態へ移行
+    /// </summary>
     void GetReadyCounterAttack()
     {
         if (m_gameTime >= 3)
         {
             float rand= Random.Range(0.0f, 1.0f);
-            Debug.Log(rand);
             if (rand > 0.3)
             {
                 m_counterAttackFlag = 1;

@@ -22,27 +22,23 @@ public class MyCarryMinisterAI : MyAiBoss
     ///<summary>
     ///ワープ先の座標
     ///</summary>
-    float warpPosX, warpPosY, warpPosZ;
+    float m_warpPosX, m_warpPosY, m_warpPosZ;
 
     /// <summary>
     /// ワープ兆しオブジェクト
     /// </summary>
-    GameObject WarpSign;
+    GameObject m_warpSign;
 
     /// <summary>
     /// ワープ兆し
     /// </summary>
-    int WarpSignFlag;
+    int m_warpSignFlag;
 
-    /// <summary>
-    /// ワープ用逃げている時間
-    /// </summary>
-    float escapeTime;
 
     /// <summary>
     /// ワープ待機時間
     /// </summary>
-    float waitTime=1;
+    float m_waitTime =1;
 
     //----------------------------------------------------------------------------------------------------
     /// <summary>
@@ -68,10 +64,9 @@ public class MyCarryMinisterAI : MyAiBoss
         m_playerAttacked = false;
         m_aimode = AIMode.WAIT;
 
-
         m_gameTime = m_attackInterval/2;
         myArrowShot = GameObject.Find("ArrowPositionObject").GetComponent<MyArrowShot>();
-        WarpSign = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Stage/Main/Prefab/WarpSign.prefab");
+        m_warpSign = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Stage/Main/Prefab/WarpSign.prefab");
 
         base.Start();
     }
@@ -122,7 +117,7 @@ public class MyCarryMinisterAI : MyAiBoss
                 m_aimode = MyAiBoss.AIMode.IDLE;
             }
 
-            if (WarpSignFlag>0)
+            if (m_warpSignFlag>0)
             {
                 CarryWarp();
             }
@@ -138,14 +133,14 @@ public class MyCarryMinisterAI : MyAiBoss
                 m_aimode = AIMode.IDLE;
             }
         }
-        if (WarpSignFlag==0&& AttackCount % 4==1)
+        if (m_warpSignFlag==0&& AttackCount % 4==1)
         {
-            WarpSignFlag = 1;
+            m_warpSignFlag = 1;
         }
 
-        if (WarpSignFlag == 3 && AttackCount % 4 == 3)
+        if (m_warpSignFlag == 3 && AttackCount % 4 == 3)
         {
-            WarpSignFlag = 0;
+            m_warpSignFlag = 0;
         }
 
         //状態によって行動を切り替える
@@ -160,7 +155,6 @@ public class MyCarryMinisterAI : MyAiBoss
             case AIMode.LEAVE:
                 //離れる           
                 transform.position = Vector3.MoveTowards(transform.position, myPlayer.transform.position, -m_step);
-                escapeTime += Time.deltaTime;
                 break;
         }
     }
@@ -171,31 +165,31 @@ public class MyCarryMinisterAI : MyAiBoss
     /// </summary>
     void CarryWarp()
     {
-        if (waitTime<=0&& WarpSignFlag == 2)
+        if (m_waitTime<=0&& m_warpSignFlag == 2)
         {
             //ワープする
-            gameObject.transform.position = new Vector3(warpPosX, warpPosY, warpPosZ);
-            waitTime = 1;
-            WarpSignFlag = 3;
+            gameObject.transform.position = new Vector3(m_warpPosX, m_warpPosY, m_warpPosZ);
+            m_waitTime = 1;
+            m_warpSignFlag = 3;
         }
 
-        if (WarpSignFlag ==1)
+        if (m_warpSignFlag ==1)
         {
             //最初に座標を決め、兆しが出現
             float randamX =UnityEngine.Random.Range(-4, 4);
             float randamZ = UnityEngine.Random.Range(-4, 4);
-            warpPosX = myStage.CurrentField.BossRoomCenterPos.x + randamX;
-            warpPosY = myStage.CurrentField.BossRoomCenterPos.y ;
-            warpPosZ = myStage.CurrentField.BossRoomCenterPos.z + randamZ;
+            m_warpPosX = myStage.CurrentField.BossRoomCenterPos.x + randamX;
+            m_warpPosY = myStage.CurrentField.BossRoomCenterPos.y ;
+            m_warpPosZ = myStage.CurrentField.BossRoomCenterPos.z + randamZ;
 
-            GameObject light = GameObject.Instantiate(WarpSign) as GameObject;
-            light.transform.position = new Vector3(warpPosX, warpPosY, warpPosZ);
-            WarpSignFlag = 2;
+            GameObject light = GameObject.Instantiate(m_warpSign) as GameObject;
+            light.transform.position = new Vector3(m_warpPosX, m_warpPosY, m_warpPosZ);
+            m_warpSignFlag = 2;
         }
 
-        if (WarpSignFlag==2)
+        if (m_warpSignFlag==2)
         {
-            waitTime -= Time.deltaTime;
+            m_waitTime -= Time.deltaTime;
         }
     }
 }

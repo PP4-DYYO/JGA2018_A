@@ -5,26 +5,33 @@
 //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class MyShadowMagicMinisterAI : MonoBehaviour {
+public class MyShadowMagicMinisterAI : MyAiBoss
+{
+    [SerializeField]
+     float m_WaitingTime;
 
-    MyMagicMinisterAI myMagicMinisterAI;
-	// Use this for initialization
-	void Start () {
-        myMagicMinisterAI = GameObject.Find("MagicMinister").GetComponent<MyMagicMinisterAI>();
-        MyMagicMinisterAI.s_shadowCount = 1;
+   protected override void Start()
+    {
+        m_myObjectName =gameObject.name;
+        m_maxHitPoint = 1;
+        m_WaitingTime = 0;
+        m_isFakeBody = true;
     }
 
     //----------------------------------------------------------------------------------------------------
     /// <summary>
-    /// 消えるとき
+    /// 移動、行動
     /// </summary>
-    void Dead()
+    protected override void FixedUpdate()
     {
-        MyMagicMinisterAI.s_shadowCount = 0;
-        //解除状態へ移行させる;
+        m_WaitingTime += Time.deltaTime;
+        if (m_WaitingTime > 7)
+        {
+            GameObject.Find("MagicMinister(Clone)").GetComponent<MyMagicMinisterAI>().m_isApproach = true;
+            GameObject.Find("MagicMinister(Clone)").GetComponent<MyMagicMinisterAI>().m_appearReset = true;
+            Destroy(gameObject);
+        }
     }
 }

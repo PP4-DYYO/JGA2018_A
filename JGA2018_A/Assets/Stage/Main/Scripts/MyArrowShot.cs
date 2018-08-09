@@ -30,7 +30,7 @@ public class MyArrowShot : MonoBehaviour
     /// <summary>
     // 弾の速度//
     /// </summary>
-    const float ARROWSPEED = 500;
+    const float ARROWSPEED = 250;
 
 
     //----------------------------------------------------------------------------------------------------
@@ -59,6 +59,7 @@ public class MyArrowShot : MonoBehaviour
             arrows.transform.parent = myCarryMinisterAI.AttackManagerScript.transform;
             
             arrows.transform.position = gameObject.transform.position;
+            arrows.transform.rotation = gameObject.transform.rotation;
             Vector3 force;
             //力は斜め上に,ランダム性を持たせる
             float m_random = UnityEngine.Random.Range(15, 30) / 10;
@@ -71,6 +72,7 @@ public class MyArrowShot : MonoBehaviour
             GameObject arrows = Instantiate(m_arrow) as GameObject;
             arrows.transform.parent = myCarryMinisterAI.AttackManagerScript.transform;
             arrows.transform.position = gameObject.transform.position;
+            arrows.transform.rotation = gameObject.transform.rotation;
             Vector3 force;
             //力は横だけ
             force = this.gameObject.transform.forward * ((2 * ARROWSPEED) / 5);

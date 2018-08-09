@@ -28,7 +28,7 @@ public class MyMagicMinisterAI : MyAiBoss
 
         m_myObjectName = this.gameObject.name;
         m_maskPositionObject = transform.FindChild(MaskPositionObjectName).gameObject;
-        m_hitPoint = 450;
+        m_maxHitPoint = 450;
         m_attack = 65;
         m_perceivedRange = 30;
         m_distance = 30;
@@ -94,8 +94,8 @@ public class MyMagicMinisterAI : MyAiBoss
         }
         else if (m_counterAttackFlag == 2)
         {
-            Debug.Log("発動！！");
-
+            Debug.Log("カウンター発動！！");
+            CounterAttack();
         }
 
     }
@@ -104,18 +104,18 @@ public class MyMagicMinisterAI : MyAiBoss
     {
         float m_length = 0.6f;
 
-        Vector3 vLDB = new Vector3(transform.position.x - m_length, transform.position.y - m_length, transform.position.z - m_length);
-        Vector3 vLDF = new Vector3(transform.position.x - m_length, transform.position.y - m_length, transform.position.z + m_length);
-        Vector3 vLUB = new Vector3(transform.position.x - m_length, transform.position.y + m_length, transform.position.z - m_length);
-        Vector3 vLUF = new Vector3(transform.position.x - m_length, transform.position.y + m_length, transform.position.z + m_length);
-        Vector3 vRDB = new Vector3(transform.position.x + m_length, transform.position.y - m_length, transform.position.z - m_length);
-        Vector3 vRDF = new Vector3(transform.position.x + m_length, transform.position.y - m_length, transform.position.z + m_length);
-        Vector3 vRUB = new Vector3(transform.position.x + m_length, transform.position.y + m_length, transform.position.z - m_length);
-        Vector3 vRUF = new Vector3(transform.position.x + m_length, transform.position.y + m_length, transform.position.z + m_length);
+        Vector3 vLDB = new Vector3(transform.position.x - m_length, 1+transform.position.y - m_length, transform.position.z - m_length);
+        Vector3 vLDF = new Vector3(transform.position.x - m_length, 1 + transform.position.y - m_length, transform.position.z + m_length);
+        Vector3 vLUB = new Vector3(transform.position.x - m_length, 1 + transform.position.y + m_length, transform.position.z - m_length);
+        Vector3 vLUF = new Vector3(transform.position.x - m_length, 1 + transform.position.y + m_length, transform.position.z + m_length);
+        Vector3 vRDB = new Vector3(transform.position.x + m_length, 1 + transform.position.y - m_length, transform.position.z - m_length);
+        Vector3 vRDF = new Vector3(transform.position.x + m_length, 1 + transform.position.y - m_length, transform.position.z + m_length);
+        Vector3 vRUB = new Vector3(transform.position.x + m_length, 1 + transform.position.y + m_length, transform.position.z - m_length);
+        Vector3 vRUF = new Vector3(transform.position.x + m_length, 1 + transform.position.y + m_length, transform.position.z + m_length);
 
         //当たり判定発生と攻撃
         MyCube attackRange = new MyCube(vLDB, vRDB, vLDF, vRDF, vLUB, vRUB, vLUF, vRUF);
-        AttackManagerScript.EnemyAttack(attackRange, MaskAttribute.Non, 0, 0.1f);
+        AttackManagerScript.EnemyAttack(attackRange, MaskAttribute.Non, m_attack, 0.1f);
         m_counterAttackFlag = 0;
     }
 

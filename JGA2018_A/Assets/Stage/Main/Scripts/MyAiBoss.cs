@@ -464,15 +464,6 @@ public class MyAiBoss : MonoBehaviour
                 }
                 m_isAttacked = true;
                 break;
-            case "MagicMinister":
-            case "MagicMinister(Clone)":
-                //HPが一定で制限に達していないとき
-                if (m_hitPoint < m_hitPoint / 4 && m_specialAttackCount < m_specialAttackLimit)
-                {
-                    SpecialAttack();
-                }
-                m_isAttacked = true;
-                break;
         }
         m_gameTime = 0;
         m_attackCount += 1;
@@ -592,10 +583,10 @@ public class MyAiBoss : MonoBehaviour
             SpecialAttack();
             m_specialFlag = false;
         }
+
         //マジックのカウンター攻撃
         else if (m_myObjectName == "MagicMinister(Clone)"&&m_counterAttackFlag==1)
         {
-
             m_counterAttackFlag = 2;
         }
 

@@ -16,8 +16,10 @@ public class MyVirusMinisterAI : MyAiBoss
     /// <summary>
     /// スクリプト
     /// </summary>
+    [SerializeField]
     MyBombShot myBombShot;
 
+    bool m_throw;
 
     //----------------------------------------------------------------------------------------------------
     /// <summary>
@@ -46,8 +48,6 @@ public class MyVirusMinisterAI : MyAiBoss
         m_aimode = AIMode.WAIT;
 
         m_gameTime = m_attackInterval;
-
-        myBombShot = GameObject.Find("BombPoint").GetComponent<MyBombShot>();
 
         base.Start();
     }
@@ -125,23 +125,55 @@ public class MyVirusMinisterAI : MyAiBoss
         switch (m_aimode)
         {
             case AIMode.IDLE:
+                m_behaviorState = MinisterBehaviorStatus.Idle;
                 break;
             case AIMode.ATTACK:
                 //一定時間毎に攻撃をする
                 if (m_gameTime >= m_attackInterval)
                 {
-                    NomalAttack();
+                    m_throw = true;
+                    m_behaviorState = MinisterBehaviorStatus.Throw;
+                }
+                else
+                {
+                    m_behaviorState = MinisterBehaviorStatus.Non;
                 }
                 break;
             case AIMode.LEAVE:
                 //逃げながら投げる
                 if (m_gameTime >= m_attackInterval)
                 {
-                    NomalAttack();
+                    m_throw = true;
+                    m_behaviorState = MinisterBehaviorStatus.Throw;
+                }
+                else
+                {
+                    m_behaviorState = MinisterBehaviorStatus.Non;
                 }
                 //離れる          
                 transform.position = Vector3.MoveTowards(transform.position, myPlayer.transform.position, -m_step/2);
                 break;
         }
     }
+
+    //----------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// 爆弾を投げる処理
+    /// </summary>
+    void ThrowAnimation()
+    {
+        if (m_throw)
+        {
+            NomalAttack();
+            if (m_hitPoint < m_maxHitPoint / 2 && m_specialAttackCount == 0 ||
+          m_hitPoint < m_maxHitPoint / 4 && m_specialAttackCount == 1 ||
+            m_specialAttackCount > 1 && m_distance < 5)
+            {
+                SpecialAttack();
+            }
+            myBombShot.Shot(m_attackNum);
+            m_throw = false;
+        }
+    }
+
 }

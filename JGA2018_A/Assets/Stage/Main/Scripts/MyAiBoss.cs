@@ -10,8 +10,83 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
+//----------------------------------------------------------------------------------------------------
+/// <summary>
+/// 大臣の行動状態
+/// </summary>
+public enum MinisterBehaviorStatus
+{
+    /// <summary>
+    /// 待機
+    /// </summary>
+    Idle,
+    /// <summary>
+    /// 徒歩
+    /// </summary>
+    Walk,
+    /// <summary>
+    /// 攻撃前
+    /// </summary>
+    BeforeAttack,
+    /// <summary>
+    /// 攻撃
+    /// </summary>
+    Attack,
+    /// <summary>
+    /// 死ぬ
+    /// </summary>
+    Die,
+    /// <summary>
+    /// 投げる
+    /// </summary>
+    Throw,
+    /// <summary>
+    /// なし
+    /// </summary>
+    Non,
+}
+
 public class MyAiBoss : MonoBehaviour
 {
+    /// <summary>
+	/// 状態
+	/// </summary>
+	protected MinisterBehaviorStatus m_behaviorState;
+
+    /// <summary>
+    /// 弱い敵のアニメーション
+    /// </summary>
+    const string MINISTER_ANIM = "MinisterAnimation";
+
+    /// <summary>
+    /// アニメーションのレイヤー
+    /// </summary>
+    const string ANIM_LAYER = "Base Layer.";
+
+    /// <summary>
+	/// 待機状態
+	/// </summary>
+	const string ANIM_IDLE = "Idle";
+
+    /// <summary>
+    /// 歩く遷移
+    /// </summary>
+    const string ANIM_WALK = "Walk";
+
+    /// <summary>
+    /// 攻撃遷移
+    /// </summary>
+    const string ANIM_ATTACK = "Attack";
+
+    /// <summary>
+    /// 投げる遷移
+    /// </summary>
+    const string ANIM_THROW = "Throw";
+
+    /// <summary>
+    /// 死ぬ遷移
+    /// </summary>
+    const string ANIM_DIE = "Die";
 
     protected MyPlayer myPlayer;
 
@@ -250,6 +325,18 @@ public class MyAiBoss : MonoBehaviour
     protected bool m_isFakeBody;
 
     /// <summary>
+    /// 影武者出現中かどうか
+    /// </summary>
+    [SerializeField]
+    protected bool m_isShadowApper ;
+
+    /// <summary>
+    /// アニメーター
+    /// </summary>
+    [SerializeField]
+    protected Animator Anim;
+
+    /// <summary>
     /// AIの行動タイプ
     /// </summary>
     [SerializeField]
@@ -280,6 +367,8 @@ public class MyAiBoss : MonoBehaviour
         /// </summary>
         LEAVE
     }
+
+
 
     //----------------------------------------------------------------------------------------------------
     /// <summary>
@@ -388,6 +477,7 @@ public class MyAiBoss : MonoBehaviour
             }
             m_maskThrow = true;
         }
+        Animation();
     }
 
     //----------------------------------------------------------------------------------------------------
@@ -419,19 +509,10 @@ public class MyAiBoss : MonoBehaviour
                 {
                     GameObject.Find("ArrowPoint").GetComponent<MyArrowShot>().Shot(m_attackNum);
                 }
-                m_isAttacked = true;
                 break;
-            case "VirusMinister":
             case "VirusMinister(Clone)":
                 //HPが一定で制限に達していないとき
-                if (m_hitPoint < m_maxHitPoint / 2 && m_specialAttackCount ==0||
-                    m_hitPoint < m_maxHitPoint / 4 && m_specialAttackCount == 1||
-                      m_specialAttackCount>1&&m_distance<5)
-                {
-                    SpecialAttack();
-                }
-                GameObject.Find("BombPoint").GetComponent<MyBombShot>().Shot(m_attackNum);
-                m_isAttacked = true;
+  
                 break;
             case "MirrorMinister(Clone)":
             case "MirrorMinister(Clone)(Clone)":
@@ -443,30 +524,44 @@ public class MyAiBoss : MonoBehaviour
                 }
                 else
                 {
-                    //当たり判定Cube
-                    Vector3 attackPoint = GameObject.Find(m_myObjectName).transform.position;
-
-                    float cubeLength = 1f;
-                    //頂点の位置
-                    Vector3 vLDB = new Vector3(attackPoint.x - cubeLength, 1 + attackPoint.y - cubeLength, attackPoint.z - cubeLength);
-                    Vector3 vLDF = new Vector3(attackPoint.x - cubeLength, 1 + attackPoint.y - cubeLength, attackPoint.z + cubeLength);
-                    Vector3 vLUB = new Vector3(attackPoint.x - cubeLength, 1 + attackPoint.y + cubeLength, attackPoint.z - cubeLength);
-                    Vector3 vLUF = new Vector3(attackPoint.x - cubeLength, 1 + attackPoint.y + cubeLength, attackPoint.z + cubeLength);
-                    Vector3 vRDB = new Vector3(attackPoint.x + cubeLength, 1 + attackPoint.y - cubeLength, attackPoint.z - cubeLength);
-                    Vector3 vRDF = new Vector3(attackPoint.x + cubeLength, 1 + attackPoint.y - cubeLength, attackPoint.z + cubeLength);
-                    Vector3 vRUB = new Vector3(attackPoint.x + cubeLength, 1 + attackPoint.y + cubeLength, attackPoint.z - cubeLength);
-                    Vector3 vRUF = new Vector3(attackPoint.x + cubeLength, 1 + attackPoint.y + cubeLength, attackPoint.z + cubeLength);
-
-                    //当たり判定発生
-                    MyCube attackRange = new MyCube(vLDB, vRDB, vLDF, vRDF, vLUB, vRUB, vLUF, vRUF);
-                    myAttackManager.EnemyAttack(attackRange, MaskAttribute.Non, m_attack, 1);
-                    Debug.Log("攻撃");
+                    MakeAttackRange();
                 }
-                m_isAttacked = true;
+                break;
+
+            case "MagicMinister(Clone)":
+                MakeAttackRange();
+                m_isShadowApper = false;
+                                m_aimode = AIMode.IDLE;
+                m_counterAttackFlag = 0;
                 break;
         }
+        m_isAttacked = true;
         m_gameTime = 0;
         m_attackCount += 1;
+    }
+
+    //----------------------------------------------------------------------------------------------------
+    ///<summary>
+    ///攻撃当たり範囲作成//
+    ///</summary>
+    void MakeAttackRange()
+    {
+        Vector3 attackPoint = GameObject.Find(m_myObjectName).transform.position;
+
+        float cubeLength = 1f;
+        //頂点の位置
+        Vector3 vLDB = new Vector3(attackPoint.x - cubeLength, 1 + attackPoint.y - cubeLength, attackPoint.z - cubeLength);
+        Vector3 vLDF = new Vector3(attackPoint.x - cubeLength, 1 + attackPoint.y - cubeLength, attackPoint.z + cubeLength);
+        Vector3 vLUB = new Vector3(attackPoint.x - cubeLength, 1 + attackPoint.y + cubeLength, attackPoint.z - cubeLength);
+        Vector3 vLUF = new Vector3(attackPoint.x - cubeLength, 1 + attackPoint.y + cubeLength, attackPoint.z + cubeLength);
+        Vector3 vRDB = new Vector3(attackPoint.x + cubeLength, 1 + attackPoint.y - cubeLength, attackPoint.z - cubeLength);
+        Vector3 vRDF = new Vector3(attackPoint.x + cubeLength, 1 + attackPoint.y - cubeLength, attackPoint.z + cubeLength);
+        Vector3 vRUB = new Vector3(attackPoint.x + cubeLength, 1 + attackPoint.y + cubeLength, attackPoint.z - cubeLength);
+        Vector3 vRUF = new Vector3(attackPoint.x + cubeLength, 1 + attackPoint.y + cubeLength, attackPoint.z + cubeLength);
+
+        //当たり判定発生
+        MyCube attackRange = new MyCube(vLDB, vRDB, vLDF, vRDF, vLUB, vRUB, vLUF, vRUF);
+        myAttackManager.EnemyAttack(attackRange, MaskAttribute.Non, m_attack, 1);
     }
 
     //----------------------------------------------------------------------------------------------------
@@ -528,6 +623,11 @@ public class MyAiBoss : MonoBehaviour
     {
         if (other.tag == AttackManagerTag.PLAYER_ATTACK_RANGE_TAG)
         {
+            if (m_myObjectName == "ShadowMagicMinister(Clone)")
+            {
+                GameObject.Find("MagicMinister(Clone)").GetComponent<MyMagicMinisterAI>().m_appearReset = true;
+                Destroy(gameObject);
+            }
             var attack = other.GetComponent<MyAttack>();
             if (attack.Attribute == MaskAttribute.Virus)
             {
@@ -574,7 +674,6 @@ public class MyAiBoss : MonoBehaviour
     {
         m_hitPoint = m_hitPoint - damage;
         ReceiveDamageAnimation();
-        Debug.Log("プレイヤーは" +m_myObjectName+"に"+ damage + "を与えた");
 
         //キャリーは被ダメ時に特殊技
         if (m_myObjectName == "CarryMinister(Clone)" && m_hitPoint < m_maxHitPoint/2 &&m_specialAttackCount==0||
@@ -604,7 +703,39 @@ public class MyAiBoss : MonoBehaviour
         }
     }
 
-     void PositionReset()
+    //----------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// アニメーション
+    /// </summary>
+    void Animation()
+    {
+        //状態遷移済み
+        if ((int)m_behaviorState == Anim.GetInteger(MINISTER_ANIM))
+        {
+            Anim.SetInteger(MINISTER_ANIM, (int)EnemyBehaviorStatus.Non);
+            return;
+        }
+
+
+        //状態とアニメーションが一緒
+        if (m_behaviorState == MinisterBehaviorStatus.Idle && Anim.GetCurrentAnimatorStateInfo(0).IsName(ANIM_LAYER + ANIM_IDLE)
+            || m_behaviorState == MinisterBehaviorStatus.Walk && Anim.GetCurrentAnimatorStateInfo(0).IsName(ANIM_LAYER + ANIM_WALK)
+            || m_behaviorState == MinisterBehaviorStatus.Attack && Anim.GetCurrentAnimatorStateInfo(0).IsName(ANIM_LAYER + ANIM_ATTACK)
+            || m_behaviorState == MinisterBehaviorStatus.Throw && Anim.GetCurrentAnimatorStateInfo(0).IsName(ANIM_LAYER + ANIM_THROW)
+            || m_behaviorState == MinisterBehaviorStatus.Die && Anim.GetCurrentAnimatorStateInfo(0).IsName(ANIM_LAYER + ANIM_DIE))
+            return;
+
+        //状態変更
+        Anim.SetInteger(MINISTER_ANIM, (int)m_behaviorState);
+    }
+
+
+
+    //----------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// ポジションを戻す
+    /// </summary>
+    void PositionReset()
     {
        transform.position= myStage.CurrentField.BossRoomCenterPos;
     }
@@ -615,6 +746,6 @@ public class MyAiBoss : MonoBehaviour
     /// </summary>
     public void ReceiveDamageAnimation()
     {
-        Debug.Log("被ダメアニメーション");
+        //Debug.Log("被ダメアニメーション");
     }
 }

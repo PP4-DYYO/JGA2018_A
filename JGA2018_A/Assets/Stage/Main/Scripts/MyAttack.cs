@@ -263,4 +263,13 @@ public class MyAttack : MonoBehaviour
 			}
 		}
 	}
+
+    //----------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// 拡張しているか
+    /// </summary>
+    public bool IsExpansion()
+    {
+        return m_countTimeExpansion < m_expansionTime;
+    }
 }

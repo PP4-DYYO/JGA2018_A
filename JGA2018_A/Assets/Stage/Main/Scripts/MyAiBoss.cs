@@ -10,8 +10,83 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
+//----------------------------------------------------------------------------------------------------
+/// <summary>
+/// 大臣の行動状態
+/// </summary>
+public enum MinisterBehaviorStatus
+{
+    /// <summary>
+    /// 待機
+    /// </summary>
+    Idle,
+    /// <summary>
+    /// 徒歩
+    /// </summary>
+    Walk,
+    /// <summary>
+    /// 攻撃前
+    /// </summary>
+    BeforeAttack,
+    /// <summary>
+    /// 攻撃
+    /// </summary>
+    Attack,
+    /// <summary>
+    /// 死ぬ
+    /// </summary>
+    Die,
+    /// <summary>
+    /// 投げる
+    /// </summary>
+    Throw,
+    /// <summary>
+    /// なし
+    /// </summary>
+    Non,
+}
+
 public class MyAiBoss : MonoBehaviour
 {
+    /// <summary>
+	/// 状態
+	/// </summary>
+	protected MinisterBehaviorStatus m_behaviorState;
+
+    /// <summary>
+    /// 弱い敵のアニメーション
+    /// </summary>
+    const string MINISTER_ANIM = "MinisterAnimation";
+
+    /// <summary>
+    /// アニメーションのレイヤー
+    /// </summary>
+    const string ANIM_LAYER = "Base Layer.";
+
+    /// <summary>
+	/// 待機状態
+	/// </summary>
+	const string ANIM_IDLE = "Idle";
+
+    /// <summary>
+    /// 歩く遷移
+    /// </summary>
+    const string ANIM_WALK = "Walk";
+
+    /// <summary>
+    /// 攻撃遷移
+    /// </summary>
+    const string ANIM_ATTACK = "Attack";
+
+    /// <summary>
+    /// 投げる遷移
+    /// </summary>
+    const string ANIM_THROW = "Throw";
+
+    /// <summary>
+    /// 死ぬ遷移
+    /// </summary>
+    const string ANIM_DIE = "Die";
 
     protected MyPlayer myPlayer;
 
@@ -256,6 +331,12 @@ public class MyAiBoss : MonoBehaviour
     protected bool m_isShadowApper ;
 
     /// <summary>
+    /// アニメーター
+    /// </summary>
+    [SerializeField]
+    protected Animator Anim;
+
+    /// <summary>
     /// AIの行動タイプ
     /// </summary>
     [SerializeField]
@@ -286,6 +367,8 @@ public class MyAiBoss : MonoBehaviour
         /// </summary>
         LEAVE
     }
+
+
 
     //----------------------------------------------------------------------------------------------------
     /// <summary>
@@ -394,6 +477,7 @@ public class MyAiBoss : MonoBehaviour
             }
             m_maskThrow = true;
         }
+        Animation();
     }
 
     //----------------------------------------------------------------------------------------------------
@@ -428,13 +512,7 @@ public class MyAiBoss : MonoBehaviour
                 break;
             case "VirusMinister(Clone)":
                 //HPが一定で制限に達していないとき
-                if (m_hitPoint < m_maxHitPoint / 2 && m_specialAttackCount ==0||
-                    m_hitPoint < m_maxHitPoint / 4 && m_specialAttackCount == 1||
-                      m_specialAttackCount>1&&m_distance<5)
-                {
-                    SpecialAttack();
-                }
-                GameObject.Find("BombPoint").GetComponent<MyBombShot>().Shot(m_attackNum);
+  
                 break;
             case "MirrorMinister(Clone)":
             case "MirrorMinister(Clone)(Clone)":
@@ -625,7 +703,39 @@ public class MyAiBoss : MonoBehaviour
         }
     }
 
-     void PositionReset()
+    //----------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// アニメーション
+    /// </summary>
+    void Animation()
+    {
+        //状態遷移済み
+        if ((int)m_behaviorState == Anim.GetInteger(MINISTER_ANIM))
+        {
+            Anim.SetInteger(MINISTER_ANIM, (int)EnemyBehaviorStatus.Non);
+            return;
+        }
+
+
+        //状態とアニメーションが一緒
+        if (m_behaviorState == MinisterBehaviorStatus.Idle && Anim.GetCurrentAnimatorStateInfo(0).IsName(ANIM_LAYER + ANIM_IDLE)
+            || m_behaviorState == MinisterBehaviorStatus.Walk && Anim.GetCurrentAnimatorStateInfo(0).IsName(ANIM_LAYER + ANIM_WALK)
+            || m_behaviorState == MinisterBehaviorStatus.Attack && Anim.GetCurrentAnimatorStateInfo(0).IsName(ANIM_LAYER + ANIM_ATTACK)
+            || m_behaviorState == MinisterBehaviorStatus.Throw && Anim.GetCurrentAnimatorStateInfo(0).IsName(ANIM_LAYER + ANIM_THROW)
+            || m_behaviorState == MinisterBehaviorStatus.Die && Anim.GetCurrentAnimatorStateInfo(0).IsName(ANIM_LAYER + ANIM_DIE))
+            return;
+
+        //状態変更
+        Anim.SetInteger(MINISTER_ANIM, (int)m_behaviorState);
+    }
+
+
+
+    //----------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// ポジションを戻す
+    /// </summary>
+    void PositionReset()
     {
        transform.position= myStage.CurrentField.BossRoomCenterPos;
     }

@@ -34,6 +34,12 @@ public class MyMask : MonoBehaviour
 	Rigidbody RB;
 
 	/// <summary>
+	/// 高さ
+	/// </summary>
+	[SerializeField]
+	float m_height;
+
+	/// <summary>
 	/// マスク属性
 	/// </summary>
 	MaskAttribute m_attribute;
@@ -103,7 +109,7 @@ public class MyMask : MonoBehaviour
 			{
 				//落ちた
 				m_isMove = false;
-				transform.position = m_targetPos;
+				transform.position = m_targetPos + Vector3.up * m_height;
 				transform.rotation = Quaternion.identity;
 				GetComponent<BoxCollider>().enabled = true;
 				GetComponent<SphereCollider>().enabled = true;

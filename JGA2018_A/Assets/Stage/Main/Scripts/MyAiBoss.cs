@@ -7,7 +7,6 @@
 
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 
 //----------------------------------------------------------------------------------------------------
@@ -384,7 +383,6 @@ public class MyAiBoss : MonoBehaviour
     {
         //m_aimode = AIMode.WAIT;
         m_hitPoint = m_maxHitPoint;
-        poizonFog = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Stage/Main/Prefab/poisonFog.prefab");
         myAiManager = transform.parent.GetComponent<MyAiManager>();
         myAttackManager = myAiManager.CharacterScript.AttackManagerScript;
         myStage = myAiManager.CharacterScript.GameScript.StageScript;
@@ -637,7 +635,14 @@ public class MyAiBoss : MonoBehaviour
             var attack = other.GetComponent<MyAttack>();
             if (attack.Attribute == MaskAttribute.Virus)
             {
-                return;
+                if (!attack.IsExpansion())
+                {
+                    ReceiveDamage(other.GetComponent<MyAttack>().Power);
+                }
+                else
+                {
+                    return;
+                }
             }
             else if(attack.Attribute == MaskAttribute.Carry)
             {

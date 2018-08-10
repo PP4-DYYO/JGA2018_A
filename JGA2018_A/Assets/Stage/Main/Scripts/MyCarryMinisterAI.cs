@@ -6,7 +6,6 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 using System;
-using UnityEditor;
 using UnityEngine;
 
 ///<summary>
@@ -27,6 +26,7 @@ public class MyCarryMinisterAI : MyAiBoss
     /// <summary>
     /// ワープ兆しオブジェクト
     /// </summary>
+    [SerializeField]
     GameObject m_warpSign;
 
     /// <summary>
@@ -66,7 +66,6 @@ public class MyCarryMinisterAI : MyAiBoss
 
         m_gameTime = m_attackInterval/2;
         myArrowShot = GameObject.Find("ArrowPositionObject").GetComponent<MyArrowShot>();
-        m_warpSign = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Stage/Main/Prefab/WarpSign.prefab");
 
         base.Start();
     }

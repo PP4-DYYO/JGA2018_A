@@ -139,6 +139,7 @@ public class MyMagicMinisterAI : MyAiBoss
         shadow.transform.position = new Vector3(myStage.CurrentField.BossRoomCenterPos.x+ randX,
             transform.position.y,
             myStage.CurrentField.BossRoomCenterPos.z+ randZ);
+        shadow.transform.parent = myAiManager.transform;
         m_isShadowApper = true;
         m_AppearingshadowMagicMinister = shadow;
     }

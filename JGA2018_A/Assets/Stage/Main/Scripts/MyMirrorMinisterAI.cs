@@ -16,6 +16,11 @@ using UnityEngine;
 public class MyMirrorMinisterAI : MyAiBoss
 {
 
+    /// <summary>
+    /// ドッペルゲンガーのゲームオブジェクト
+    /// </summary>
+    GameObject Doppelganger;
+
     //----------------------------------------------------------------------------------------------------
     /// <summary>
     /// 初期状態設定
@@ -118,9 +123,9 @@ public class MyMirrorMinisterAI : MyAiBoss
                 //一定時間毎に攻撃をする
                 if (m_hitPoint < (m_maxHitPoint * 3) / 4 && m_specialAttackCount < m_specialAttackLimit)
                 {
-                    GameObject dop = Instantiate(gameObject) as GameObject;
-                    dop.transform.parent = myAiManager.transform;
-                    dop.transform.position = new Vector3(gameObject.transform.position.x + 3f, gameObject.transform.position.y, gameObject.transform.position.z+3f);
+                    Doppelganger = Instantiate(gameObject) as GameObject;
+                    Doppelganger.transform.parent = myAiManager.transform;
+                    Doppelganger.transform.position = new Vector3(gameObject.transform.position.x + 3f, gameObject.transform.position.y, gameObject.transform.position.z+3f);
 
                     m_specialAttackCount += 1;
                 }
@@ -144,5 +149,12 @@ public class MyMirrorMinisterAI : MyAiBoss
                                   -m_step); break;
         }
     }
-
+   public override void ReceiveDamage(int damage)
+    {
+        base.ReceiveDamage(damage);
+        if (m_hitPoint <= 0)
+        {
+            Destroy(Doppelganger);
+        }
+    }
 }

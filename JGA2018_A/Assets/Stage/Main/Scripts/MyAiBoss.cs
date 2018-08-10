@@ -133,7 +133,7 @@ public class MyAiBoss : MonoBehaviour
     protected string m_myObjectName;
 
     /// <summary>
-    /// ステージのオブジェクト
+    /// ステージのスクリプト
     /// </summary>
     [SerializeField]
     protected MyStage myStage;
@@ -323,6 +323,12 @@ public class MyAiBoss : MonoBehaviour
     /// </summary>
     /// [SerializeField]
     protected bool m_isFakeBody;
+
+    /// <summary>
+    /// ドッペルゲンガーが出現中かどうか
+    /// </summary>
+    /// [SerializeField]
+    protected bool m_isDopApper;
 
     /// <summary>
     /// 影武者出現中かどうか
@@ -574,11 +580,11 @@ public class MyAiBoss : MonoBehaviour
         {
             case "CarryMinister(Clone)":
                 float warpPosX, warpPosY, warpPosZ;
-                float randamX = Random.Range(-4,4);
+                float randamX = Random.Range(-4, 4);
                 float randamZ = Random.Range(-4, 4);
-                warpPosX = myStage.CurrentField.BossRoomCenterPos.x+randamX;
-                warpPosY = myStage.CurrentField.BossRoomCenterPos.y+1;
-                warpPosZ = myStage.CurrentField.BossRoomCenterPos.z+ randamZ;
+                warpPosX = myStage.CurrentField.BossRoomCenterPos.x + randamX;
+                warpPosY = myStage.CurrentField.BossRoomCenterPos.y + 1;
+                warpPosZ = myStage.CurrentField.BossRoomCenterPos.z + randamZ;
                 myPlayer.transform.position = new Vector3(warpPosX, warpPosY, warpPosZ);
                 break;
             case "VirusMinister(Clone)":
@@ -670,7 +676,7 @@ public class MyAiBoss : MonoBehaviour
     /// <summary>
     ///damage分のダメージを受ける
     /// </summary>
-    public void ReceiveDamage(int damage)
+    public virtual void ReceiveDamage(int damage)
     {
         m_hitPoint = m_hitPoint - damage;
         ReceiveDamageAnimation();
@@ -679,8 +685,11 @@ public class MyAiBoss : MonoBehaviour
         if (m_myObjectName == "CarryMinister(Clone)" && m_hitPoint < m_maxHitPoint/2 &&m_specialAttackCount==0||
            m_myObjectName == "CarryMinister(Clone)" && m_hitPoint < m_maxHitPoint / 4 && m_specialAttackCount == 1)
         {
-            SpecialAttack();
-            m_specialFlag = false;
+            if (enabled)
+            {
+                SpecialAttack();
+                m_specialFlag = false;
+            }
         }
 
         //マジックのカウンター攻撃

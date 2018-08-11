@@ -88,5 +88,8 @@ public class MyBombShot : MonoBehaviour
         }
         //発射点を戻す
         this.transform.Translate(new Vector3(0, 0, -0.5f));
-    }
+
+		//SEを再生
+		MySoundManager.Instance.Play(SeCollection.ThrowBomb, true, transform.position.x, transform.position.y, transform.position.z);
+	}
 }

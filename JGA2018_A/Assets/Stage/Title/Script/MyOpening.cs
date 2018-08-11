@@ -365,6 +365,10 @@ public class MyOpening : MonoBehaviour
 		if (m_isPressedMenu)
 			EndOfMovingProcess();
 
+		//SEの再生
+		if (m_isPressedOk || m_isPressedMenu)
+			MySoundManager.Instance.Play(SeCollection.DecideItem);
+
 		//キー状態のリセット
 		ResetKeyStatus();
 	}
@@ -678,6 +682,9 @@ public class MyOpening : MonoBehaviour
 		gameObject.SetActive(false);
 		m_isEnd = true;
 		PlayerPrefs.SetInt(PlayerPrefsKeys.IS_WATCH_OPENING, PlayerPrefsKeys.TRUE);
+
+		//BGMをタイトルに戻す
+		MySoundManager.Instance.Play(BgmCollection.Title);
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -715,5 +722,8 @@ public class MyOpening : MonoBehaviour
 		m_openingState = OpeningStatus.Moving;
 		m_openingStatePrev = OpeningStatus.NotOpening;
 		m_isEnd = false;
+
+		//BGMの再生
+		MySoundManager.Instance.Play(BgmCollection.Openning);
 	}
 }

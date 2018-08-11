@@ -114,5 +114,8 @@ public class MyBombCtrl : MonoBehaviour
 
 		//爆弾削除
 		Destroy(this.gameObject);
+
+		//SEの再生
+		MySoundManager.Instance.Play(SeCollection.Explosion, true, transform.position.x, transform.position.y, transform.position.z);
 	}
 }

@@ -28,10 +28,16 @@ public class MyEnding : MonoBehaviour
 	RectTransform StaffRoll;
 
 	/// <summary>
-	/// 指示文
+	/// 指示文1
 	/// </summary>
 	[SerializeField]
-	Text Directive;
+	Text Directive1;
+
+	/// <summary>
+	/// 指示文2
+	/// </summary>
+	[SerializeField]
+	Text Directive2;
 
 	/// <summary>
 	/// 文字の速度
@@ -84,6 +90,19 @@ public class MyEnding : MonoBehaviour
 
 	//----------------------------------------------------------------------------------------------------
 	/// <summary>
+	/// 初期
+	/// </summary>
+	void Start()
+	{
+		Directive1.enabled = false;
+		Directive2.enabled = false;
+
+		//BGMの再生
+		MySoundManager.Instance.Play(BgmCollection.Ending);
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
 	/// フレーム
 	/// </summary>
 	void Update()
@@ -103,7 +122,8 @@ public class MyEnding : MonoBehaviour
 	void FixedUpdate()
 	{
 		//点滅
-		Directive.enabled = m_isFlash;
+		Directive1.enabled = !m_endFlag && m_isFlash;
+		Directive2.enabled = m_endFlag && m_isFlash;
 		m_countFlashTime += Time.deltaTime;
 		if (m_countFlashTime >= m_flashTime)
 		{
@@ -121,7 +141,17 @@ public class MyEnding : MonoBehaviour
 		if (m_endFlag)
 		{
 			if (m_isPressedMenu)
+			{
 				MySceneManager.Instance.ChangeScene(MyScene.Title);
+				MySoundManager.Instance.Play(SeCollection.DecideItem);
+			}
+			//BGMの速度
+			MySoundManager.Instance.BgmPitch = 1f;
+		}
+		else
+		{
+			//BGMの速度
+			MySoundManager.Instance.BgmPitch = (m_isKeepPressedOK) ? (m_speed + m_additionalSpeed) / m_speed : 1f;
 		}
 
 		m_isPressedMenu = false;

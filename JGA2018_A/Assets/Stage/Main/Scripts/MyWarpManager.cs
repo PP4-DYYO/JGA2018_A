@@ -273,5 +273,9 @@ public class MyWarpManager : MonoBehaviour
 			player.GetComponent<MyPlayer>().StartAnimIdle();
 			player.GetComponent<Rigidbody>().velocity = Vector3.zero;
         }
+
+		//SEの再生
+		MySoundManager.Instance.Play(SeCollection.Warp,
+			true, player.transform.position.x, player.transform.position.y, player.transform.position.z);
     }
 }

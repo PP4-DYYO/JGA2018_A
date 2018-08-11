@@ -862,7 +862,7 @@ public class MyAttackManager : MonoBehaviour
 	/// </summary>
 	[SerializeField]
 	float m_cameraAngleHitDeathblow4;
-	
+
 	/// <summary>
 	/// 必殺技４の時間
 	/// </summary>
@@ -1038,6 +1038,10 @@ public class MyAttackManager : MonoBehaviour
 
 		//影武者の生存時間
 		Destroy(m_shadowWarrior, survivalTime);
+
+		//SEの再生
+		MySoundManager.Instance.Play(SeCollection.Divide,
+			true, m_player.transform.position.x, m_player.transform.position.y, m_player.transform.position.z);
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -1185,6 +1189,10 @@ public class MyAttackManager : MonoBehaviour
 					m_player.StartAnimAttackDeathblow1A();
 					break;
 			}
+
+			//SEの再生
+			MySoundManager.Instance.Play(SeCollection.Warp,
+				true, m_player.transform.position.x, m_player.transform.position.y, m_player.transform.position.z);
 		}
 
 		//毎フレーム
@@ -2375,7 +2383,7 @@ public class MyAttackManager : MonoBehaviour
 	public void ResetAttacks()
 	{
 		//全攻撃の削除
-		foreach(Transform child in transform)
+		foreach (Transform child in transform)
 		{
 			Destroy(child.gameObject);
 		}

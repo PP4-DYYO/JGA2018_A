@@ -79,5 +79,8 @@ public class MyArrowShot : MonoBehaviour
             arrows.GetComponent<Rigidbody>().AddForce(force);
         }
         transform.Translate(new Vector3(0, 0, -0.5f));
-    }
+
+		//SEの再生
+		MySoundManager.Instance.Play(SeCollection.ShootAnArrow, true, transform.position.x, transform.position.y, transform.position.z);
+	}
 }

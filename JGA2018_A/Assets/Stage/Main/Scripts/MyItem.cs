@@ -49,6 +49,9 @@ public class MyItem : MonoBehaviour
 			//アイテムを2進数で保存
 			PlayerPrefs.SetInt(PlayerPrefsKeys.IS_GET_ITEM, PlayerPrefs.GetInt(PlayerPrefsKeys.IS_GET_ITEM) | (int)Mathf.Pow(2, m_itemNum));
 			Destroy(gameObject);
+
+			//SEの再生
+			MySoundManager.Instance.Play(SeCollection.AcquisitionOfCoins, true, transform.position.x, transform.position.y, transform.position.z);
 		}
 	}
 }

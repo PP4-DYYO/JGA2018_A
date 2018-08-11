@@ -170,7 +170,10 @@ public class MyCarryMinisterAI : MyAiBoss
             gameObject.transform.position = new Vector3(m_warpPosX, m_warpPosY, m_warpPosZ);
             m_waitTime = 1;
             m_warpSignFlag = 3;
-        }
+
+			//SEの再生
+			MySoundManager.Instance.Play(SeCollection.Warp,	true, transform.position.x, transform.position.y, transform.position.z);
+		}
 
         if (m_warpSignFlag ==1)
         {
@@ -191,4 +194,23 @@ public class MyCarryMinisterAI : MyAiBoss
             m_waitTime -= Time.deltaTime;
         }
     }
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// ダメージを受ける音
+	/// </summary>
+	protected override void SoundToBeDamaged()
+	{
+		MySoundManager.Instance.Play(SeCollection.CarryMinisterIsDamaged, true, transform.position.x, transform.position.y, transform.position.z);
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// 死ぬ音
+	/// </summary>
+	protected override void SoundToDie()
+	{
+		//SEの再生
+		MySoundManager.Instance.Play(SeCollection.CarryMinisterDied, true, transform.position.x, transform.position.y, transform.position.z);
+	}
 }

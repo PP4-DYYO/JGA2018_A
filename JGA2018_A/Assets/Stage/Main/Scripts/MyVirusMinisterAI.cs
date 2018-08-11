@@ -176,4 +176,22 @@ public class MyVirusMinisterAI : MyAiBoss
         }
     }
 
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// ダメージを受ける音
+	/// </summary>
+	protected override void SoundToBeDamaged()
+	{
+		MySoundManager.Instance.Play(SeCollection.VirusMinisterIsDamaged, true, transform.position.x, transform.position.y, transform.position.z);
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// 死ぬ音
+	/// </summary>
+	protected override void SoundToDie()
+	{
+		//SEの再生
+		MySoundManager.Instance.Play(SeCollection.VirusMinisterDied, true, transform.position.x, transform.position.y, transform.position.z);
+	}
 }

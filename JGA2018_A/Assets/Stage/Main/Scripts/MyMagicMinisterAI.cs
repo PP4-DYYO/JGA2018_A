@@ -123,8 +123,11 @@ public class MyMagicMinisterAI : MyAiBoss
         else if (m_counterAttackFlag == 2)
         {
             CounterAttack();
-        }
-    }
+
+			//SEの再生
+			MySoundManager.Instance.Play(SeCollection.SwordAttack, true, transform.position.x, transform.position.y, transform.position.z);
+		}
+	}
 
     //----------------------------------------------------------------------------------------------------
     /// <summary>
@@ -141,13 +144,16 @@ public class MyMagicMinisterAI : MyAiBoss
         shadow.transform.parent = myAiManager.transform;
         m_isShadowApper = true;
         m_AppearingshadowMagicMinister = shadow;
-    }
 
-    //----------------------------------------------------------------------------------------------------
-    /// <summary>
-    /// カウンター攻撃当たり判定
-    /// </summary>
-    void CounterAttack()
+		//SEの再生
+		MySoundManager.Instance.Play(SeCollection.Divide, true, transform.position.x, transform.position.y, transform.position.z);
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// カウンター攻撃当たり判定
+	/// </summary>
+	void CounterAttack()
     {
         float m_length = 0.8f;
 
@@ -182,4 +188,23 @@ public class MyMagicMinisterAI : MyAiBoss
             m_gameTime = 0;
         }
     }
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// ダメージを受ける音
+	/// </summary>
+	protected override void SoundToBeDamaged()
+	{
+		MySoundManager.Instance.Play(SeCollection.MagicMinisterIsDamaged, true, transform.position.x, transform.position.y, transform.position.z);
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// 死ぬ音
+	/// </summary>
+	protected override void SoundToDie()
+	{
+		//SEの再生
+		MySoundManager.Instance.Play(SeCollection.MagicMinisterDied, true, transform.position.x, transform.position.y, transform.position.z);
+	}
 }

@@ -24,6 +24,9 @@ public class MyRecoveryWhirlpool : MonoBehaviour
 		{
 			other.GetComponent<MyPlayer>().RecoveryHp();
 			Destroy(gameObject);
+
+			//SEの再生
+			MySoundManager.Instance.Play(SeCollection.HpRecovery, true, transform.position.x, transform.position.y, transform.position.z);
 		}
 	}
 }

@@ -543,6 +543,15 @@ public class MyWeakEnemy : MonoBehaviour
 
 	//----------------------------------------------------------------------------------------------------
 	/// <summary>
+	/// 足音
+	/// </summary>
+	void Footsteps()
+	{
+		MySoundManager.Instance.Play(SeCollection.Footsteps, true, transform.position.x, transform.position.y, transform.position.z);
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
 	/// 攻撃の攻撃
 	/// </summary>
 	void AttackEvent()
@@ -563,5 +572,18 @@ public class MyWeakEnemy : MonoBehaviour
 
 		//攻撃範囲の生成
 		myAiManager.CharacterScript.AttackManagerScript.EnemyAttack(m_workMyCube, MaskAttribute.Non, m_powerAttack, m_effectiveAttackTime);
+
+		//SEの再生
+		MySoundManager.Instance.Play(SeCollection.SwordAttack, true, transform.position.x, transform.position.y, transform.position.z);
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// 死ぬ音
+	/// </summary>
+	void SoundToDie()
+	{
+		//SEの再生
+		MySoundManager.Instance.Play(SeCollection.WeakEnemyDied, true, transform.position.x, transform.position.y, transform.position.z);
 	}
 }

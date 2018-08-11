@@ -228,6 +228,11 @@ public class MyMaskEnemy : MonoBehaviour
 		//目的地到着
 		if (Vector3.Cross((m_targetPos - transform.position), transform.right).y <= 0)
 			m_state = MaskEnemyStatus.Idle;
+
+		//SEの再生
+		if (Mathf.Abs(Mathf.Sin(m_countMovingTime * m_shakeSpeed)) <= m_shakeWidth)
+			MySoundManager.Instance.Play(SeCollection.StrangeVoiceOfTheMask,
+				true, transform.position.x, transform.position.y, transform.position.z);
 	}
 
 	//----------------------------------------------------------------------------------------------------

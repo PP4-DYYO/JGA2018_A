@@ -1560,7 +1560,10 @@ public class MyPlayer : MonoBehaviour
 			{
 				//ジャンプしきった時、ジャンプ終了を許可
 				if (m_jumpForceCountTime >= m_jumpForceTime)
+				{
 					m_jumpForceCountTime = -1;
+					Footsteps();
+				}
 				return;
 			}
 		}
@@ -2247,6 +2250,9 @@ public class MyPlayer : MonoBehaviour
 			transform.LookAt(Vector3.Scale(attack.CenterPosVertices, (Vector3.right + Vector3.forward))
 				+ Vector3.Scale(transform.position, Vector3.up));
 			RB.AddForce(-transform.forward * m_powerAddGuard);
+
+			//SEの再生
+			MySoundManager.Instance.Play(SeCollection.Guard, true, transform.position.x, transform.position.y, transform.position.z);
 		}
 
 		//死亡
@@ -2336,6 +2342,9 @@ public class MyPlayer : MonoBehaviour
 					//ダメージ
 					m_damageAccumulationTime = 0;
 					Damage(attack);
+
+					//SEの再生
+					MySoundManager.Instance.Play(SeCollection.InvadedByPoison, true, transform.position.x, transform.position.y, transform.position.z);
 				}
 				break;
 		}
@@ -2420,6 +2429,15 @@ public class MyPlayer : MonoBehaviour
 
 	//----------------------------------------------------------------------------------------------------
 	/// <summary>
+	/// 足音
+	/// </summary>
+	void Footsteps()
+	{
+		MySoundManager.Instance.Play(SeCollection.Footsteps, true, transform.position.x,transform.position.y,transform.position.z);
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
 	/// 攻撃１のAパターンの攻撃
 	/// </summary>
 	void Attack1AEvent()
@@ -2443,6 +2461,9 @@ public class MyPlayer : MonoBehaviour
 
 		//剣の軌跡表示
 		myCharacter.GameScript.ParticleManagerScript.GetComponent<MyTrajectory>().Display();
+
+		//SEの再生
+		MySoundManager.Instance.Play(SeCollection.SwordAttack, true, transform.position.x, transform.position.y, transform.position.z);
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -2470,6 +2491,9 @@ public class MyPlayer : MonoBehaviour
 
 		//剣の軌跡表示
 		myCharacter.GameScript.ParticleManagerScript.GetComponent<MyTrajectory>().Display();
+
+		//SEの再生
+		MySoundManager.Instance.Play(SeCollection.SwordAttack, true, transform.position.x, transform.position.y, transform.position.z);
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -2497,6 +2521,9 @@ public class MyPlayer : MonoBehaviour
 
 		//剣の軌跡表示
 		myCharacter.GameScript.ParticleManagerScript.GetComponent<MyTrajectory>().Display();
+
+		//SEの再生
+		MySoundManager.Instance.Play(SeCollection.SwordAttack, true, transform.position.x, transform.position.y, transform.position.z);
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -2524,6 +2551,9 @@ public class MyPlayer : MonoBehaviour
 
 		//剣の軌跡表示
 		myCharacter.GameScript.ParticleManagerScript.GetComponent<MyTrajectory>().Display();
+
+		//SEの再生
+		MySoundManager.Instance.Play(SeCollection.SwordAttack, true, transform.position.x, transform.position.y, transform.position.z);
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -2551,6 +2581,9 @@ public class MyPlayer : MonoBehaviour
 
 		//剣の軌跡表示
 		myCharacter.GameScript.ParticleManagerScript.GetComponent<MyTrajectory>().Display();
+
+		//SEの再生
+		MySoundManager.Instance.Play(SeCollection.CarrySwordAttack, true, transform.position.x, transform.position.y, transform.position.z);
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -2578,6 +2611,9 @@ public class MyPlayer : MonoBehaviour
 
 		//剣の軌跡表示
 		myCharacter.GameScript.ParticleManagerScript.GetComponent<MyTrajectory>().Display();
+
+		//SEの再生
+		MySoundManager.Instance.Play(SeCollection.VirusSwordAttack, true, transform.position.x, transform.position.y, transform.position.z);
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -2605,6 +2641,9 @@ public class MyPlayer : MonoBehaviour
 
 		//剣の軌跡表示
 		myCharacter.GameScript.ParticleManagerScript.GetComponent<MyTrajectory>().Display();
+
+		//SEの再生
+		MySoundManager.Instance.Play(SeCollection.MirrorSwordAttack, true, transform.position.x, transform.position.y, transform.position.z);
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -2632,6 +2671,9 @@ public class MyPlayer : MonoBehaviour
 
 		//剣の軌跡表示
 		myCharacter.GameScript.ParticleManagerScript.GetComponent<MyTrajectory>().Display();
+
+		//SEの再生
+		MySoundManager.Instance.Play(SeCollection.MirrorSwordAttack, true, transform.position.x, transform.position.y, transform.position.z);
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -2662,6 +2704,9 @@ public class MyPlayer : MonoBehaviour
 
 		//剣の軌跡表示
 		myCharacter.GameScript.ParticleManagerScript.GetComponent<MyTrajectory>().Display();
+
+		//SEの再生
+		MySoundManager.Instance.Play(SeCollection.MagicSwordAttack, true, transform.position.x, transform.position.y, transform.position.z);
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -2692,6 +2737,9 @@ public class MyPlayer : MonoBehaviour
 
 		//剣の軌跡表示
 		myCharacter.GameScript.ParticleManagerScript.GetComponent<MyTrajectory>().Display();
+
+		//SEの再生
+		MySoundManager.Instance.Play(SeCollection.MagicSwordAttack, true, transform.position.x, transform.position.y, transform.position.z);
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -2722,6 +2770,18 @@ public class MyPlayer : MonoBehaviour
 
 		//剣の軌跡表示
 		myCharacter.GameScript.ParticleManagerScript.GetComponent<MyTrajectory>().Display();
+
+		//SEの再生
+		MySoundManager.Instance.Play(SeCollection.MagicSwordAttack, true, transform.position.x, transform.position.y, transform.position.z);
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// 力を集める音
+	/// </summary>
+	void SoundThatCollectsPower()
+	{
+		MySoundManager.Instance.Play(SeCollection.CollectPower, true, transform.position.x, transform.position.y, transform.position.z);
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -2749,6 +2809,9 @@ public class MyPlayer : MonoBehaviour
 
 		//剣の軌跡表示
 		myCharacter.GameScript.ParticleManagerScript.GetComponent<MyTrajectory>().Display();
+
+		//SEの再生
+		MySoundManager.Instance.Play(SeCollection.CarrySwordAttack, true, transform.position.x, transform.position.y, transform.position.z);
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -2761,6 +2824,9 @@ public class MyPlayer : MonoBehaviour
 
 		//剣の軌跡表示
 		myCharacter.GameScript.ParticleManagerScript.GetComponent<MyTrajectory>().Display();
+
+		//SEの再生
+		MySoundManager.Instance.Play(SeCollection.CarrySwordAttack, true, transform.position.x, transform.position.y, transform.position.z);
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -2776,8 +2842,8 @@ public class MyPlayer : MonoBehaviour
 		myCharacter.AttackManagerScript.PlayerAttack(m_workMyPrism12, transform.position, m_maskState, m_powerAttackDeathblow2, m_effectiveDethblow2Time,
 			false, m_extensionTimeDeathblow2, m_extensionDistanceDeathblow2);
 
-		//剣の軌跡表示
-		myCharacter.GameScript.ParticleManagerScript.GetComponent<MyTrajectory>().Display();
+		//SEの再生
+		MySoundManager.Instance.Play(SeCollection.VirusSwordAttack, true, transform.position.x, transform.position.y, transform.position.z);
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -2805,6 +2871,9 @@ public class MyPlayer : MonoBehaviour
 
 		//剣の軌跡表示
 		myCharacter.GameScript.ParticleManagerScript.GetComponent<MyTrajectory>().Display();
+
+		//SEの再生
+		MySoundManager.Instance.Play(SeCollection.MirrorSwordAttack, true, transform.position.x, transform.position.y, transform.position.z);
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -2817,6 +2886,9 @@ public class MyPlayer : MonoBehaviour
 
 		//剣の軌跡表示
 		myCharacter.GameScript.ParticleManagerScript.GetComponent<MyTrajectory>().Display();
+
+		//SEの再生
+		MySoundManager.Instance.Play(SeCollection.MirrorSwordAttack, true, transform.position.x, transform.position.y, transform.position.z);
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -2844,6 +2916,9 @@ public class MyPlayer : MonoBehaviour
 
 		//剣の軌跡表示
 		myCharacter.GameScript.ParticleManagerScript.GetComponent<MyTrajectory>().Display();
+
+		//SEの再生
+		MySoundManager.Instance.Play(SeCollection.MagicSwordAttack, true, transform.position.x, transform.position.y, transform.position.z);
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -2856,6 +2931,45 @@ public class MyPlayer : MonoBehaviour
 
 		//剣の軌跡表示
 		myCharacter.GameScript.ParticleManagerScript.GetComponent<MyTrajectory>().Display();
+
+		//SEの再生
+		MySoundManager.Instance.Play(SeCollection.MagicSwordAttack, true, transform.position.x, transform.position.y, transform.position.z);
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// マスクを変える音
+	/// </summary>
+	void SoundChangeMask()
+	{
+		MySoundManager.Instance.Play(SeCollection.ChangeMask, true, transform.position.x, transform.position.y, transform.position.z);
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// ダメージを受ける音
+	/// </summary>
+	void SoundToBeDamaged()
+	{
+		MySoundManager.Instance.Play(SeCollection.ReceiveDamage, true, transform.position.x, transform.position.y, transform.position.z);
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// ジャンプをする音
+	/// </summary>
+	void SoundToJump()
+	{
+		MySoundManager.Instance.Play(SeCollection.Jump, true, transform.position.x, transform.position.y, transform.position.z);
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// 物をつかむ音
+	/// </summary>
+	void SoundGrabbingThings()
+	{
+		MySoundManager.Instance.Play(SeCollection.GrabThings, true, transform.position.x, transform.position.y, transform.position.z);
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -2865,5 +2979,8 @@ public class MyPlayer : MonoBehaviour
 	void DieEvent()
 	{
 		MySceneManager.Instance.ChangeScene(MyScene.Main, 1);
+
+		//SEの再生
+		MySoundManager.Instance.Play(SeCollection.Die, true, transform.position.x, transform.position.y, transform.position.z);
 	}
 }

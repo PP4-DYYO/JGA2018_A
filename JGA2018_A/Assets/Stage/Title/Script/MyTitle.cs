@@ -114,6 +114,9 @@ public class MyTitle : MonoBehaviour
 
 		//取得アイテム
 		ReadGetItem();
+
+		//BGM
+		MySoundManager.Instance.Play(BgmCollection.Title);
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -218,6 +221,9 @@ public class MyTitle : MonoBehaviour
 				SecondTitle.SetActive(true);
 				myOpening.StartOpening();
 				m_isEnterGuard = true;
+
+				//SEの再生
+				MySoundManager.Instance.Play(SeCollection.DecideItem);
 			}
 		}
 	}
@@ -252,6 +258,9 @@ public class MyTitle : MonoBehaviour
 				m_selectNum = 1;
 			}
 			m_changeFlag = true;
+
+			//SEの再生
+			MySoundManager.Instance.Play(SeCollection.SelectItem);
 		}
 		else if (HorizontalKeyInput >= 0.1f && m_changeFlag == false)
 		{
@@ -264,6 +273,9 @@ public class MyTitle : MonoBehaviour
 				m_selectNum = 1;
 			}
 			m_changeFlag = true;
+
+			//SEの再生
+			MySoundManager.Instance.Play(SeCollection.SelectItem);
 		}
 		if (m_selectNum == 1)
 		{
@@ -319,11 +331,17 @@ public class MyTitle : MonoBehaviour
 		{
 			m_loadSelectNum = (m_loadSelectNum == 0) ? m_loadNum - 1 : m_loadSelectNum - 1;
 			m_changeFlag = true;
+
+			//SEの再生
+			MySoundManager.Instance.Play(SeCollection.SelectItem);
 		}
 		else if (HorizontalKeyInput >= 0.1f && m_changeFlag == false)
 		{
 			m_loadSelectNum = (m_loadSelectNum + 1) % m_loadNum;
 			m_changeFlag = true;
+
+			//SEの再生
+			MySoundManager.Instance.Play(SeCollection.SelectItem);
 		}
 
 		//表示非表示
@@ -345,6 +363,9 @@ public class MyTitle : MonoBehaviour
 	public void OnClickStartButton()
 	{
 		MySceneManager.Instance.ChangeScene(MyScene.Main);
+
+		//SEの再生
+		MySoundManager.Instance.Play(SeCollection.DecideItem);
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -355,5 +376,8 @@ public class MyTitle : MonoBehaviour
 	{
 		LoadObj.SetActive(true);
 		m_isLoad = true;
+
+		//SEの再生
+		MySoundManager.Instance.Play(SeCollection.DecideItem);
 	}
 }

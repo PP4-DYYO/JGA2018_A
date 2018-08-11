@@ -274,6 +274,23 @@ public class MyGame : MonoBehaviour
 			//ステージ番号の保存
 			PlayerPrefs.SetInt(PlayerPrefsKeys.STAGE_NUM, m_stageNum);
 			MyGameInfo.Instance.StageNum = m_stageNum;
+
+			//BGMの切り替え
+			switch (m_stageNum)
+			{
+				case 0:
+					MySoundManager.Instance.Play(BgmCollection.Field1);
+					break;
+				case 1:
+					MySoundManager.Instance.Play(BgmCollection.Field2);
+					break;
+				case 2:
+					MySoundManager.Instance.Play(BgmCollection.Field3);
+					break;
+				case 3:
+					MySoundManager.Instance.Play(BgmCollection.Field4);
+					break;
+			}
 		}
 		else
 		{
@@ -394,9 +411,33 @@ public class MyGame : MonoBehaviour
 			m_player.StartAnimIdle();
 			Debug.Log("ボスの威嚇アニメーションスタート");
 
+			//SEの再生
+			switch (m_stageNum)
+			{
+				case 0:
+					MySoundManager.Instance.Play(SeCollection.RoarOfTheCarryMinister,
+						true, m_boss.transform.position.x, m_boss.transform.position.y, m_boss.transform.position.z);
+					break;
+				case 1:
+					MySoundManager.Instance.Play(SeCollection.RoarOfTheVirusMinister,
+						true, m_boss.transform.position.x, m_boss.transform.position.y, m_boss.transform.position.z);
+					break;
+				case 2:
+					MySoundManager.Instance.Play(SeCollection.RoarOfTheMirrorMinister,
+						true, m_boss.transform.position.x, m_boss.transform.position.y, m_boss.transform.position.z);
+					break;
+				case 3:
+					MySoundManager.Instance.Play(SeCollection.RoarOfTheMagicMinister,
+						true, m_boss.transform.position.x, m_boss.transform.position.y, m_boss.transform.position.z);
+					break;
+			}
+
 			//ワープマネージャ
 			if (myStage.CurrentField.WarpManagerScript)
 				myStage.CurrentField.WarpManagerScript.enabled = false;
+
+			//BGMの停止
+			MySoundManager.Instance.StopBGM();
 
 			m_stageStatePrev = m_stageState;
 		}
@@ -439,6 +480,23 @@ public class MyGame : MonoBehaviour
 			m_boss.StartAI();
 			myCamera.SetPosition(-(m_boss.transform.position - m_player.transform.position));
 
+			//BGMの切り替え
+			switch (m_stageNum)
+			{
+				case 0:
+					MySoundManager.Instance.Play(BgmCollection.Boss1);
+					break;
+				case 1:
+					MySoundManager.Instance.Play(BgmCollection.Boss2);
+					break;
+				case 2:
+					MySoundManager.Instance.Play(BgmCollection.Boss3);
+					break;
+				case 3:
+					MySoundManager.Instance.Play(BgmCollection.Boss4);
+					break;
+			}
+
 			m_stageStatePrev = m_stageState;
 		}
 	}
@@ -460,6 +518,9 @@ public class MyGame : MonoBehaviour
 			m_initPosCameraState = CameraScript.transform.position;
 			m_boss.transform.LookAt(myStage.CurrentField.BossRoomCenterPos);
 			Debug.Log("ボスの敗北アニメーションスタート");
+
+			//BGMの停止
+			MySoundManager.Instance.StopBGM();
 
 			m_stageStatePrev = m_stageState;
 		}

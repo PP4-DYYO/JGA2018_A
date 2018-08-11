@@ -73,11 +73,20 @@ public class MyMenu : MonoBehaviour
             if (m_menuMove != true)
             {
                 m_menuMove = true;
-            }
-            else
+
+				//BGMの小音量
+				MySoundManager.Instance.MakeBgmSmallVolume();
+			}
+			else
             {
                 m_menuMove = false;
+
+				//BGMの音量を戻す
+				MySoundManager.Instance.BgmVolume = 1f;
             }
+
+			//SEの再生
+			MySoundManager.Instance.Play(SeCollection.DecideItem);
         }
 
         //メニューを動かす

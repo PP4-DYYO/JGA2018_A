@@ -617,7 +617,10 @@ public class MyButtonCtrl : MyBaseButtonCtrl
             if (Input.GetKeyDown("return") || Input.GetKeyDown(KeyCode.Joystick1Button0))
             {
                 PressDecideKey(m_choosingNum);
-            }
+
+				//SEの再生
+				MySoundManager.Instance.Play(SeCollection.DecideItem);
+			}
 
             //表示関連
             switch (m_choosingNum)
@@ -690,7 +693,10 @@ public class MyButtonCtrl : MyBaseButtonCtrl
                     m_button5ChooseImage.GetComponent<Image>().enabled = true;
                     m_button6ChooseImage.GetComponent<Image>().enabled = false;
                 }
-            }
+
+				//SEの再生
+				MySoundManager.Instance.Play(SeCollection.DecideItem);
+			}
         }
     }
 
@@ -745,6 +751,9 @@ public class MyButtonCtrl : MyBaseButtonCtrl
 	{
 		var maskSelectionNum = m_maskSelectionNum;
 
+		//SEの再生
+		MySoundManager.Instance.Play(SeCollection.SelectItem);
+
 		//全マスクを検索
 		for (var i = 0; i < m_maskNames.Length; i++)
 		{
@@ -765,6 +774,9 @@ public class MyButtonCtrl : MyBaseButtonCtrl
 	void AddvanceMaskSelectionNum()
 	{
 		var maskSelectionNum = m_maskSelectionNum;
+
+		//SEの再生
+		MySoundManager.Instance.Play(SeCollection.SelectItem);
 
 		//全マスクを検索
 		for (var i = 0; i < m_maskNames.Length; i++)
@@ -875,6 +887,9 @@ public class MyButtonCtrl : MyBaseButtonCtrl
 			retireNum = 0;
 		}
 		MoveChanegeImageRetire(retireNum);
+
+		//SEの再生
+		MySoundManager.Instance.Play(SeCollection.SelectItem);
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -908,6 +923,9 @@ public class MyButtonCtrl : MyBaseButtonCtrl
 			}
 		}
 		MoveChooseImage(m_choosingNum);
+
+		//SEの再生
+		MySoundManager.Instance.Play(SeCollection.SelectItem);
 	}
 
 	//----------------------------------------------------------------------------------------------------

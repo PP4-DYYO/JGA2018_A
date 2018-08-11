@@ -170,6 +170,20 @@ public class MySceneManager : MySingletonMonoBehaviour<MySceneManager>
 		//ロードシーン
 		SceneManager.LoadScene(m_currentScene.ToString());
 		m_sceneState = SceneStatus.CurrentScene;
+
+		//BGM
+		switch(m_currentScene)
+		{
+			case MyScene.Title:
+				MySoundManager.Instance.Play(BgmCollection.Title);
+				break;
+			case MyScene.Main:
+				MySoundManager.Instance.Play(BgmCollection.Main);
+				break;
+			case MyScene.Ending:
+				MySoundManager.Instance.Play(BgmCollection.Ending);
+				break;
+		}
 	}
 
 	//----------------------------------------------------------------------------------------------------

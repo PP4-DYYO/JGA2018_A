@@ -98,6 +98,7 @@
      <Compile Include="Assets\Stage\Script\Common\MyTool.cs" />
      <Compile Include="Assets\Stage\Script\MyGameInfo.cs" />
      <Compile Include="Assets\Stage\Script\MySceneManager.cs" />
+     <Compile Include="Assets\Stage\Script\MySoundManager.cs" />
      <Compile Include="Assets\Stage\StartUp\Script\MyStartUp.cs" />
      <Compile Include="Assets\Stage\Title\Script\MyOpening.cs" />
      <Compile Include="Assets\Stage\Title\Script\MyTitle.cs" />

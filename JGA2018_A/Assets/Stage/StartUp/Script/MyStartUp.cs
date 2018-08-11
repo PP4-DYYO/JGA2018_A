@@ -158,6 +158,7 @@ public class MyStartUp : MonoBehaviour
 		if (m_workColor.a < 0f)
 		{
 			SceneManager.LoadScene("Title");
+			MySoundManager.Instance.Play(BgmCollection.Title);
 		}
 	}
 }

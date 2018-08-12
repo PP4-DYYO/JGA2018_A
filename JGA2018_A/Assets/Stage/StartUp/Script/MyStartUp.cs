@@ -53,6 +53,12 @@ public class MyStartUp : MonoBehaviour
 	Image AuthorLogo;
 
 	/// <summary>
+	/// リセットメッセージ
+	/// </summary>
+	[SerializeField]
+	Text ResetMessage;
+
+	/// <summary>
 	/// 表示状態
 	/// </summary>
 	DisplayStatus m_displayState;
@@ -87,7 +93,10 @@ public class MyStartUp : MonoBehaviour
 	{
 		//データリセット
 		if (Input.GetKeyDown(KeyCode.Escape) && Input.GetKey(KeyCode.Alpha0))
+		{
 			MyGameInfo.Instance.ResetData();
+			ResetMessage.enabled = true;
+		}
 	}
 
 	//----------------------------------------------------------------------------------------------------

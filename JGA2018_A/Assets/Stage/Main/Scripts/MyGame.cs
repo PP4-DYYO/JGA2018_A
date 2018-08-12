@@ -272,7 +272,8 @@ public class MyGame : MonoBehaviour
 			ReproduceInstance();
 
 			//ステージ番号の保存
-			PlayerPrefs.SetInt(PlayerPrefsKeys.STAGE_NUM, m_stageNum);
+			if (MyGameInfo.Instance.StageNum < m_stageNum)
+				PlayerPrefs.SetInt(PlayerPrefsKeys.STAGE_NUM, m_stageNum);
 			MyGameInfo.Instance.StageNum = m_stageNum;
 
 			//BGMの切り替え

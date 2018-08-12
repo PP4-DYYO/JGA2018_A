@@ -23,25 +23,9 @@ public class MyArrowShot : MonoBehaviour
     MyCarryMinisterAI myCarryMinisterAI;
 
     /// <summary>
-    // 発射点//
-    /// </summary>
-    Transform m_throwPoint;
-
-    /// <summary>
     // 弾の速度//
     /// </summary>
     const float ARROWSPEED = 250;
-
-
-    //----------------------------------------------------------------------------------------------------
-    /// <summary>
-    /// 初期状態設定
-    /// </summary>
-    void Start()
-    {
-        m_throwPoint = this.gameObject.transform;
-    }
-
 
     //----------------------------------------------------------------------------------------------------
     /// <summary>
@@ -60,7 +44,6 @@ public class MyArrowShot : MonoBehaviour
             arrows.transform.rotation = gameObject.transform.rotation;
             Vector3 force;
             //力は斜め上に,ランダム性を持たせる
-            float m_random = UnityEngine.Random.Range(15, 30) / 10;
             force = this.gameObject.transform.forward * (3*ARROWSPEED) + this.gameObject.transform.up *ARROWSPEED/2;
             arrows.GetComponent<Rigidbody>().AddForce(force);
         }

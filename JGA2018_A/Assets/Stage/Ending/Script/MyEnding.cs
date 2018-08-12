@@ -28,16 +28,16 @@ public class MyEnding : MonoBehaviour
 	RectTransform StaffRoll;
 
 	/// <summary>
-	/// 指示文1
+	/// 指示1
 	/// </summary>
 	[SerializeField]
-	Text Directive1;
+	GameObject Directive1;
 
 	/// <summary>
-	/// 指示文2
+	/// 指示2
 	/// </summary>
 	[SerializeField]
-	Text Directive2;
+	GameObject Directive2;
 
 	/// <summary>
 	/// 文字の速度
@@ -94,8 +94,8 @@ public class MyEnding : MonoBehaviour
 	/// </summary>
 	void Start()
 	{
-		Directive1.enabled = false;
-		Directive2.enabled = false;
+		Directive1.SetActive(false);
+		Directive2.SetActive(false);
 
 		//BGMの再生
 		MySoundManager.Instance.Play(BgmCollection.Ending);
@@ -122,8 +122,8 @@ public class MyEnding : MonoBehaviour
 	void FixedUpdate()
 	{
 		//点滅
-		Directive1.enabled = !m_endFlag && m_isFlash;
-		Directive2.enabled = m_endFlag && m_isFlash;
+		Directive1.SetActive(!m_endFlag && m_isFlash);
+		Directive2.SetActive(m_endFlag && m_isFlash);
 		m_countFlashTime += Time.deltaTime;
 		if (m_countFlashTime >= m_flashTime)
 		{

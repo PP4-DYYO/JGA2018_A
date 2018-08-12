@@ -28,6 +28,12 @@ public class MyEnding : MonoBehaviour
 	RectTransform StaffRoll;
 
 	/// <summary>
+	/// 最後のテキストオブジェクト
+	/// </summary>
+	[SerializeField]
+	RectTransform LastTextObj;
+
+	/// <summary>
 	/// 指示1
 	/// </summary>
 	[SerializeField]
@@ -132,7 +138,7 @@ public class MyEnding : MonoBehaviour
 		}
 
 		//テキストを流す
-		if (StaffRoll.position.y < m_endPosition)
+		if (LastTextObj.position.y < m_endPosition)
 			StaffRoll.localPosition += new Vector3(0, (m_speed + (m_isKeepPressedOK ? m_additionalSpeed : 0)) * Time.deltaTime, 0);
 		else
 			m_endFlag = true;

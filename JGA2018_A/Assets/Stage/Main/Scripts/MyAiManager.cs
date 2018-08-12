@@ -101,4 +101,14 @@ public class MyAiManager : MonoBehaviour
 		//マスクを捨てる
 		m_workMyMask.ThrowAwayMask(maskAttribute, startPos, targetPos);
 	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// ボスを消す
+	/// </summary>
+	public void DestroyBoss()
+	{
+		if (m_boss)
+			Destroy(m_boss.gameObject);
+	}
 }

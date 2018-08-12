@@ -92,7 +92,6 @@ public class MyBombCtrl : MonoBehaviour
 	{
 		//エフェクトプレファブ
 		GameObject bombEffect = GameObject.Instantiate(m_bombEffect) as GameObject;
-		Debug.Log(m_effectPoint);
 		bombEffect.transform.position = m_effectPoint.position;
 
 		//当たり判定Cube

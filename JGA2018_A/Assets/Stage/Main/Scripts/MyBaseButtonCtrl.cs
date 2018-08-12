@@ -33,6 +33,5 @@ public class MyBaseButtonCtrl : MonoBehaviour {
     protected virtual void OnClick(string objectName)
     {
         // 呼ばれない
-        Debug.Log("Base Button");
     }
 }

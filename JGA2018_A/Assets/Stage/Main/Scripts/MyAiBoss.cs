@@ -524,7 +524,6 @@ public class MyAiBoss : MonoBehaviour
 				break;
 			case "MirrorMinister(Clone)":
 			case "MirrorMinister(Clone)(Clone)":
-				Debug.Log("攻撃");
 				//HPが一定で制限に達していないとき
 				if (m_hitPoint < m_hitPoint / 4 && m_specialAttackCount < m_specialAttackLimit)
 				{
@@ -617,7 +616,6 @@ public class MyAiBoss : MonoBehaviour
 				////当たり判定発生
 				MyCube attackRange = new MyCube(vLDB, vRDB, vLDF, vRDF, vLUB, vRUB, vLUF, vRUF);
 				myAttackManager.EnemyAttack(attackRange, MaskAttribute.Virus, m_attack, 2);
-				Debug.Log("特殊技！！！");
 				m_attack = 25;
 
 				//SEの再生
@@ -626,7 +624,6 @@ public class MyAiBoss : MonoBehaviour
 			case "MirrorMinister(Clone)":
 				break;
 			case "MagicMinister(Clone)":
-				Debug.Log("特殊技！！！");
 				break;
 		}
 		m_gameTime = 0;

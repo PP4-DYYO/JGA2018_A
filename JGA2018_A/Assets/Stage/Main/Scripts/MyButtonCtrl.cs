@@ -275,6 +275,30 @@ public class MyButtonCtrl : MyBaseButtonCtrl
 	int m_maskSelectionNum;
 	#endregion
 
+	#region 点滅
+	[Header("点滅")]
+	/// <summary>
+	/// 点滅時間
+	/// </summary>
+	[SerializeField]
+	float m_blinkingTime;
+
+	/// <summary>
+	///	点滅時間を数える
+	/// </summary>
+	float m_countFlashingTime;
+
+	/// <summary>
+	/// カウントをスタートする時間
+	/// </summary>
+	float m_timeToStartCounting;
+
+	/// <summary>
+	/// 点滅
+	/// </summary>
+	bool m_isFlash;
+	#endregion
+
 	/// <summary>
 	/// 作業用のFloat
 	/// </summary>
@@ -426,8 +450,8 @@ public class MyButtonCtrl : MyBaseButtonCtrl
 		//メニュー表示しているとき
 		if (myMenu.m_menuMove == true)
 		{
-            InputKey();
-            DisplayMenu();
+			InputKey();
+			DisplayMenu();
 		}
 		if (menuStates == MenuStates.treasure)
 		{
@@ -439,135 +463,137 @@ public class MyButtonCtrl : MyBaseButtonCtrl
 		}
 		MaskCollection.SetActive(menuStates == MenuStates.mask);
 		OperationTable.SetActive(menuStates == MenuStates.description);
+
+		Flashing();
 	}
 
-    //----------------------------------------------------------------------------------------------------
-    /// <summary>
-    /// コントローラーの長押し制御
-    /// </summary>
-    void InputKey()
-    {
-        #region 十字キー上下
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// コントローラーの長押し制御
+	/// </summary>
+	void InputKey()
+	{
+		#region 十字キー上下
 
-        float VerticalKeyInput = Input.GetAxis("VerticalKey");
-        if (VerticalKeyInput <= -inputhantei)
-        {
-            if (!m_waitUpCrossKey)
-            {
-                m_inputUpCrossKey = true;
-            }
-        }
-        if (VerticalKeyInput > -inputhantei)
-        {
-            m_waitUpCrossKey = false;
-        }
+		float VerticalKeyInput = Input.GetAxis("VerticalKey");
+		if (VerticalKeyInput <= -inputhantei)
+		{
+			if (!m_waitUpCrossKey)
+			{
+				m_inputUpCrossKey = true;
+			}
+		}
+		if (VerticalKeyInput > -inputhantei)
+		{
+			m_waitUpCrossKey = false;
+		}
 
-        if (VerticalKeyInput >= inputhantei)
-        {
-            if (!m_waitDownCrossKey)
-            {
-                m_inputDownCrossKey = true;
-            }
-        }
-        if (VerticalKeyInput < inputhantei)
-        {
-            m_waitDownCrossKey = false;
-        }
-        #endregion
-        #region　左スティック上下
+		if (VerticalKeyInput >= inputhantei)
+		{
+			if (!m_waitDownCrossKey)
+			{
+				m_inputDownCrossKey = true;
+			}
+		}
+		if (VerticalKeyInput < inputhantei)
+		{
+			m_waitDownCrossKey = false;
+		}
+		#endregion
+		#region　左スティック上下
 
-        float VerticalInput = Input.GetAxis("Vertical");
-        if (VerticalInput <= -inputhantei)
-        {
-            if (!m_waitDownStick)
-            {
-                m_inputDownStick = true;
-            }
-        }
-        if (VerticalInput > -inputhantei)
-        {
-            m_waitDownStick = false;
-        }
+		float VerticalInput = Input.GetAxis("Vertical");
+		if (VerticalInput <= -inputhantei)
+		{
+			if (!m_waitDownStick)
+			{
+				m_inputDownStick = true;
+			}
+		}
+		if (VerticalInput > -inputhantei)
+		{
+			m_waitDownStick = false;
+		}
 
-        if (VerticalInput >= inputhantei)
-        {
-            if (!m_waitUpStick)
-            {
-                m_inputUpStick = true;
-            }
-        }
-        if (VerticalInput < inputhantei)
-        {
-            m_waitUpStick = false;
-        }
-        #endregion
-        #region　左スティック左右
-        float HorizontalInput = Input.GetAxis("Horizontal");
-        if (HorizontalInput <= -inputhantei)
-        {
-            if (!m_waitLeftStick)
-            {
-                m_inputLeftStick = true;
-            }
-        }
-        if (HorizontalInput > -inputhantei)
-        {
-            m_waitLeftStick = false;
-        }
+		if (VerticalInput >= inputhantei)
+		{
+			if (!m_waitUpStick)
+			{
+				m_inputUpStick = true;
+			}
+		}
+		if (VerticalInput < inputhantei)
+		{
+			m_waitUpStick = false;
+		}
+		#endregion
+		#region　左スティック左右
+		float HorizontalInput = Input.GetAxis("Horizontal");
+		if (HorizontalInput <= -inputhantei)
+		{
+			if (!m_waitLeftStick)
+			{
+				m_inputLeftStick = true;
+			}
+		}
+		if (HorizontalInput > -inputhantei)
+		{
+			m_waitLeftStick = false;
+		}
 
-        if (HorizontalInput >= inputhantei)
-        {
-            if (!m_waitRightStick)
-            {
-                m_inputRightStick = true;
-            }
-        }
-        if (HorizontalInput < inputhantei)
-        {
-            m_waitRightStick = false;
-        }
-        #endregion
-        #region　十字キー左右
-        float HorizontalKeyInput = Input.GetAxis("HorizontalKey");
-        if (HorizontalKeyInput <= -inputhantei)
-        {
-            if (!m_waitLeftCrossKey)
-            {
-                m_inputLeftCrossKey = true;
-            }
-        }
-        if (HorizontalKeyInput > -inputhantei)
-        {
-            m_waitLeftCrossKey = false;
-        }
+		if (HorizontalInput >= inputhantei)
+		{
+			if (!m_waitRightStick)
+			{
+				m_inputRightStick = true;
+			}
+		}
+		if (HorizontalInput < inputhantei)
+		{
+			m_waitRightStick = false;
+		}
+		#endregion
+		#region　十字キー左右
+		float HorizontalKeyInput = Input.GetAxis("HorizontalKey");
+		if (HorizontalKeyInput <= -inputhantei)
+		{
+			if (!m_waitLeftCrossKey)
+			{
+				m_inputLeftCrossKey = true;
+			}
+		}
+		if (HorizontalKeyInput > -inputhantei)
+		{
+			m_waitLeftCrossKey = false;
+		}
 
-        if (HorizontalKeyInput >= inputhantei)
-        {
-            if (!m_waitRightCrossKey)
-            {
-                m_inputRightCrossKey = true;
-            }
-        }
-        if (HorizontalKeyInput < inputhantei)
-        {
-            m_waitRightCrossKey = false;
-        }
-        #endregion
-    }
+		if (HorizontalKeyInput >= inputhantei)
+		{
+			if (!m_waitRightCrossKey)
+			{
+				m_inputRightCrossKey = true;
+			}
+		}
+		if (HorizontalKeyInput < inputhantei)
+		{
+			m_waitRightCrossKey = false;
+		}
+		#endregion
+	}
 
-    //----------------------------------------------------------------------------------------------------
-    ///<summary>
-    ///メニュー表示処理
-    ///</summary>
-    void DisplayMenu()
-    {
-        //メニュー基本画面の時
-        if (menuStates == MenuStates.menuBase || menuStates == MenuStates.description
-            || menuStates == MenuStates.treasure || menuStates == MenuStates.mask)
-        {
-            //仮面技
-            if (menuStates == MenuStates.mask)
-            {
+	//----------------------------------------------------------------------------------------------------
+	///<summary>
+	///メニュー表示処理
+	///</summary>
+	void DisplayMenu()
+	{
+		//メニュー基本画面の時
+		if (menuStates == MenuStates.menuBase || menuStates == MenuStates.description
+			|| menuStates == MenuStates.treasure || menuStates == MenuStates.mask)
+		{
+			//仮面技
+			if (menuStates == MenuStates.mask)
+			{
 				if (Input.GetKeyDown("right") || m_inputRightStick == true || m_inputRightCrossKey == true)
 				{
 					m_inputRightStick = false;
@@ -584,127 +610,127 @@ public class MyButtonCtrl : MyBaseButtonCtrl
 					m_waitLeftCrossKey = true;
 					AddvanceMaskSelectionNum();
 				}
-                SelectMask();
-            }
+				SelectMask();
+			}
 
-            //キー入力時
-            if (Input.GetKeyDown("up") || m_inputUpCrossKey == true || m_inputUpStick == true)
-            {
-                ChangeNum("up");
-                m_inputUpCrossKey = false;
-                m_waitUpCrossKey = true;
-                m_inputUpStick = false;
-                m_waitUpStick = true;
-                if (menuStates == MenuStates.treasure || menuStates == MenuStates.mask || menuStates == MenuStates.description)
-                {
-                    menuStates = MenuStates.menuBase;
-                }
-            }
+			//キー入力時
+			if (Input.GetKeyDown("up") || m_inputUpCrossKey == true || m_inputUpStick == true)
+			{
+				ChangeNum("up");
+				m_inputUpCrossKey = false;
+				m_waitUpCrossKey = true;
+				m_inputUpStick = false;
+				m_waitUpStick = true;
+				if (menuStates == MenuStates.treasure || menuStates == MenuStates.mask || menuStates == MenuStates.description)
+				{
+					menuStates = MenuStates.menuBase;
+				}
+			}
 
-            if (Input.GetKeyDown("down") || m_inputDownCrossKey == true || m_inputDownStick == true)
-            {
-                ChangeNum("down");
-                m_inputDownCrossKey = false;
-                m_waitDownCrossKey = true;
-                m_inputDownStick = false;
-                m_waitDownStick = true;
-                if (menuStates == MenuStates.treasure || menuStates == MenuStates.mask || menuStates == MenuStates.description)
-                {
-                    menuStates = MenuStates.menuBase;
-                }
-            }
+			if (Input.GetKeyDown("down") || m_inputDownCrossKey == true || m_inputDownStick == true)
+			{
+				ChangeNum("down");
+				m_inputDownCrossKey = false;
+				m_waitDownCrossKey = true;
+				m_inputDownStick = false;
+				m_waitDownStick = true;
+				if (menuStates == MenuStates.treasure || menuStates == MenuStates.mask || menuStates == MenuStates.description)
+				{
+					menuStates = MenuStates.menuBase;
+				}
+			}
 
-            if (Input.GetKeyDown("return") || Input.GetKeyDown(KeyCode.Joystick1Button0))
-            {
-                PressDecideKey(m_choosingNum);
+			if (Input.GetKeyDown("return") || Input.GetKeyDown(KeyCode.Joystick1Button0))
+			{
+				PressDecideKey(m_choosingNum);
 
 				//SEの再生
 				MySoundManager.Instance.Play(SeCollection.DecideItem);
 			}
 
-            //表示関連
-            switch (m_choosingNum)
-            {
-                case 1:
-                    MoveChooseImage(1);
-                    break;
-                case 2:
-                    MoveChooseImage(2);
-                    break;
-                case 3:
-                    MoveChooseImage(3);
-                    break;
-                case 4:
-                    MoveChooseImage(4);
-                    break;
-            }
-            m_retireText.SetActive(false);
-            m_button5.SetActive(false);
-            m_button6.SetActive(false);
-        }
+			//表示関連
+			switch (m_choosingNum)
+			{
+				case 1:
+					MoveChooseImage(1);
+					break;
+				case 2:
+					MoveChooseImage(2);
+					break;
+				case 3:
+					MoveChooseImage(3);
+					break;
+				case 4:
+					MoveChooseImage(4);
+					break;
+			}
+			m_retireText.SetActive(false);
+			m_button5.SetActive(false);
+			m_button6.SetActive(false);
+		}
 
-        //リタイア画面の時
-        else if (menuStates == MenuStates.retire)
-        {
-            //アイコン表示
-            MoveChanegeImageRetire(retireNum);
-            m_retireText.SetActive(true);
-            m_button5.SetActive(true);
-            m_button6.SetActive(true);
-            //アイコン移動
-            if (Input.GetKeyDown("right") || m_inputRightStick == true || m_inputRightCrossKey == true)
-            {
-                ChangeRetire();
-                m_inputRightStick = false;
-                m_waitRightStick = true;
-                m_inputRightCrossKey = false;
-                m_waitRightCrossKey = true;
-            }
+		//リタイア画面の時
+		else if (menuStates == MenuStates.retire)
+		{
+			//アイコン表示
+			MoveChanegeImageRetire(retireNum);
+			m_retireText.SetActive(true);
+			m_button5.SetActive(true);
+			m_button6.SetActive(true);
+			//アイコン移動
+			if (Input.GetKeyDown("right") || m_inputRightStick == true || m_inputRightCrossKey == true)
+			{
+				ChangeRetire();
+				m_inputRightStick = false;
+				m_waitRightStick = true;
+				m_inputRightCrossKey = false;
+				m_waitRightCrossKey = true;
+			}
 
-            if (Input.GetKeyDown("left") || m_inputLeftStick == true || m_inputLeftCrossKey == true)
-            {
-                ChangeRetire();
-                m_inputLeftStick = false;
-                m_waitLeftStick = true;
-                m_inputLeftCrossKey = false;
-                m_waitLeftCrossKey = true;
-            }
-            if (Input.GetKeyDown("return") || Input.GetKeyDown(KeyCode.Joystick1Button0))
-            {
-                if (retireNum == 0)
-                {
-                    //"いいえ"で戻る
-                    UiReset();
-                }
-                else
-                {
-                    //"はい"でタイトルへ移動
-                    myMenu.m_menuMove = false;
-                    MySceneManager.Instance.ChangeScene(MyScene.Title);
-                }
+			if (Input.GetKeyDown("left") || m_inputLeftStick == true || m_inputLeftCrossKey == true)
+			{
+				ChangeRetire();
+				m_inputLeftStick = false;
+				m_waitLeftStick = true;
+				m_inputLeftCrossKey = false;
+				m_waitLeftCrossKey = true;
+			}
+			if (Input.GetKeyDown("return") || Input.GetKeyDown(KeyCode.Joystick1Button0))
+			{
+				if (retireNum == 0)
+				{
+					//"いいえ"で戻る
+					UiReset();
+				}
+				else
+				{
+					//"はい"でタイトルへ移動
+					myMenu.m_menuMove = false;
+					MySceneManager.Instance.ChangeScene(MyScene.Title);
+				}
 
-                if (retireNum == 0)
-                {
-                    m_button5ChooseImage.GetComponent<Image>().enabled = false;
-                    m_button6ChooseImage.GetComponent<Image>().enabled = true;
-                }
-                else
-                {
-                    m_button5ChooseImage.GetComponent<Image>().enabled = true;
-                    m_button6ChooseImage.GetComponent<Image>().enabled = false;
-                }
+				if (retireNum == 0)
+				{
+					m_button5ChooseImage.GetComponent<Image>().enabled = false;
+					m_button6ChooseImage.GetComponent<Image>().enabled = true;
+				}
+				else
+				{
+					m_button5ChooseImage.GetComponent<Image>().enabled = true;
+					m_button6ChooseImage.GetComponent<Image>().enabled = false;
+				}
 
 				//SEの再生
 				MySoundManager.Instance.Play(SeCollection.DecideItem);
 			}
-        }
-    }
+		}
+	}
 
-    //----------------------------------------------------------------------------------------------------
-    /// <summary>
-    /// 選択中アイコンの移動、矢印キーかクリック時に移動
-    /// </summary>
-    void MoveChooseImage(int num)
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// 選択中アイコンの移動、矢印キーかクリック時に移動
+	/// </summary>
+	void MoveChooseImage(int num)
 	{
 		switch (num)
 		{
@@ -800,7 +826,7 @@ public class MyButtonCtrl : MyBaseButtonCtrl
 	bool IsObtainedMask(int maskNum)
 	{
 		//マスク番号
-		switch(maskNum)
+		switch (maskNum)
 		{
 			case 0:
 				return CarryMaskCollection.activeInHierarchy;
@@ -1028,5 +1054,42 @@ public class MyButtonCtrl : MyBaseButtonCtrl
 		menuStates = MenuStates.retire;
 		m_choosingNum = 4;
 		MoveChooseImage(m_choosingNum);
+	}
+
+	//----------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// 点滅
+	/// </summary>
+	void Flashing()
+	{
+		m_countFlashingTime = Time.realtimeSinceStartup - m_timeToStartCounting;
+
+		//点滅処理
+		if (m_countFlashingTime >= m_blinkingTime)
+		{
+			m_isFlash = !m_isFlash;
+			m_timeToStartCounting = Time.realtimeSinceStartup;
+		}
+
+		//点滅対象
+		switch (m_choosingNum)
+		{
+			case 1:
+				m_button1ChooseImage.GetComponent<Image>().enabled = m_isFlash;
+				break;
+			case 2:
+				m_button2ChooseImage.GetComponent<Image>().enabled = m_isFlash;
+				break;
+			case 3:
+				m_button3ChooseImage.GetComponent<Image>().enabled = m_isFlash;
+				break;
+			case 4:
+				m_button4ChooseImage.GetComponent<Image>().enabled = m_isFlash;
+				if (retireNum == 0)
+					m_button6ChooseImage.GetComponent<Image>().enabled = !m_isFlash;
+				else
+					m_button5ChooseImage.GetComponent<Image>().enabled = !m_isFlash;
+				break;
+		}
 	}
 }

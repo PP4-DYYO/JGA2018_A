@@ -296,6 +296,7 @@ public class MyGame : MonoBehaviour
 		{
 			//シーン遷移
 			MySceneManager.Instance.ChangeScene(MyScene.Ending);
+			myCharacter.AiManagerScript.DestroyBoss();
 			enabled = false;
 		}
 
@@ -355,7 +356,9 @@ public class MyGame : MonoBehaviour
 	}
 
 	//----------------------------------------------------------------------------------------------------
-	//インスタンスの再コピー
+	/// <summary>
+	/// インスタンスの再コピー
+	/// </summary>
 	void ReproduceInstance()
 	{
 		m_boss = myCharacter.BossScript;

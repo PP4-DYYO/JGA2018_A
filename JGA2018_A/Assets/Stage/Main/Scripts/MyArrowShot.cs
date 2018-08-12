@@ -53,8 +53,6 @@ public class MyArrowShot : MonoBehaviour
         //遠距離
         if (num == 1)
         {
-            Debug.Log(myCarryMinisterAI);
-
             GameObject arrows = Instantiate(m_arrow) as GameObject;
             arrows.transform.parent = myCarryMinisterAI.AttackManagerScript.transform;
             

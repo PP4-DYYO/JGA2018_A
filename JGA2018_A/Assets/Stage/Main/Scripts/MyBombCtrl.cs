@@ -32,9 +32,7 @@ public class MyBombCtrl : MonoBehaviour
 	/// <summary>
 	/// それぞれのスクリプト
 	/// </summary>
-	MyBombShot myBombShot;
 	MyAttackManager myAttackManager;
-	MyCharacter myCharacter;
 	MyAiBoss myAiBoss;
 
 
@@ -54,9 +52,7 @@ public class MyBombCtrl : MonoBehaviour
         {
             myAiBoss = GameObject.Find("VirusMinister").GetComponent<MyAiBoss>();
         }
-		myBombShot = GameObject.Find(m_BombPoint).GetComponent<MyBombShot>();
 		myAttackManager = GameObject.Find("AttackManager").GetComponent<MyAttackManager>();
-        myCharacter = myAiBoss.CharacterScript;
 		m_effectPoint = this.gameObject.transform;
 	}
 

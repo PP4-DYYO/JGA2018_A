@@ -109,10 +109,15 @@ public class MyMask : MonoBehaviour
 			{
 				//落ちた
 				m_isMove = false;
-				transform.position = m_targetPos + Vector3.up * m_height;
+				transform.position = m_targetPos + Vector3.up * m_height / 2;
 				transform.rotation = Quaternion.identity;
 				GetComponent<SphereCollider>().enabled = true;
+				RB.useGravity = false;
 			}
+		}
+		else
+		{
+			transform.position = m_targetPos + Vector3.up * m_height / 2;
 		}
 	}
 

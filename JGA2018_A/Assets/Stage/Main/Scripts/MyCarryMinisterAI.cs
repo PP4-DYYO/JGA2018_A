@@ -13,11 +13,6 @@ using UnityEngine;
 ///</summary>
 public class MyCarryMinisterAI : MyAiBoss
 {
-    /// <summary>
-    /// スクリプト
-    /// </summary>
-    MyArrowShot myArrowShot;
-
     ///<summary>
     ///ワープ先の座標
     ///</summary>
@@ -33,7 +28,6 @@ public class MyCarryMinisterAI : MyAiBoss
     /// ワープ兆し
     /// </summary>
     int m_warpSignFlag;
-
 
     /// <summary>
     /// ワープ待機時間
@@ -65,7 +59,6 @@ public class MyCarryMinisterAI : MyAiBoss
         m_aimode = AIMode.WAIT;
 
         m_gameTime = m_attackInterval/2;
-        myArrowShot = GameObject.Find("ArrowPositionObject").GetComponent<MyArrowShot>();
 
         base.Start();
     }

@@ -454,8 +454,6 @@ public class MyAiBoss : MonoBehaviour
 		//マスクを捨てる
 		if (m_hitPoint < m_maxHitPoint / 2 && m_maskThrow == false)
 		{
-			float randx = Random.Range(1, 3);
-			float randz = Random.Range(1, 3);
 			switch (m_myObjectName)
 			{
 				case "CarryMinister(Clone)":

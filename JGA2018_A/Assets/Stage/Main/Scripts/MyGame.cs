@@ -272,7 +272,8 @@ public class MyGame : MonoBehaviour
 			ReproduceInstance();
 
 			//ステージ番号の保存
-			PlayerPrefs.SetInt(PlayerPrefsKeys.STAGE_NUM, m_stageNum);
+			if (PlayerPrefs.GetInt(PlayerPrefsKeys.STAGE_NUM) < m_stageNum)
+				PlayerPrefs.SetInt(PlayerPrefsKeys.STAGE_NUM, m_stageNum);
 			MyGameInfo.Instance.StageNum = m_stageNum;
 
 			//BGMの切り替え
@@ -481,7 +482,8 @@ public class MyGame : MonoBehaviour
 			m_player.transform.LookAt(m_boss.transform);
 			m_boss.transform.LookAt(m_player.transform);
 			m_boss.StartAI();
-			myCamera.SetPosition(-(m_boss.transform.position - m_player.transform.position));
+			myCamera.SetPosition(-(m_boss.transform.position - m_player.transform.position).normalized
+				+ (Vector3.Scale(myStage.CurrentField.RelativePosCamera,Vector3.up)));
 
 			//BGMの切り替え
 			switch (m_stageNum)

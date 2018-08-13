@@ -93,9 +93,9 @@ public class MyCamera : MonoBehaviour
 
 	//----------------------------------------------------------------------------------------------------
 	/// <summary>
-	/// 初期
+	/// 起動
 	/// </summary>
-	void Start()
+	void Awake()
 	{
 		//対象の設定
 		m_target = myGame.CharacterScript.PlayerScript;
@@ -112,6 +112,10 @@ public class MyCamera : MonoBehaviour
 	/// </summary>
 	void FixedUpdate()
 	{
+		//カメラの位置リセット
+		if (Input.GetKey(KeyCode.Joystick1Button9))
+			SetPosition(-m_target.transform.forward + Vector3.up * 1.75f);
+
 		//カメラの回転量
 		m_rotX = Input.GetAxis("HorizontalR") * Time.deltaTime * m_rotationSensitivity;
 		m_rotY = Input.GetAxis("VerticalR") * Time.deltaTime * m_rotationSensitivity;

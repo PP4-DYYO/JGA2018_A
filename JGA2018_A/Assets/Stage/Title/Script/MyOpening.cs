@@ -239,6 +239,12 @@ public class MyOpening : MonoBehaviour
 	float m_rotationSpeedOfBossImage;
 
 	/// <summary>
+	/// 回転音の間隔
+	/// </summary>
+	[SerializeField]
+	float m_rotationSoundInterval;
+
+	/// <summary>
 	/// ボス画像の倍率
 	/// </summary>
 	[SerializeField]
@@ -264,6 +270,11 @@ public class MyOpening : MonoBehaviour
 	/// 出現画像数
 	/// </summary>
 	int m_numAppearingImages;
+
+	/// <summary>
+	/// 回転音の間隔を数える
+	/// </summary>
+	float m_countRotationSoundInterval;
 	#endregion
 
 	#region キーボード関係
@@ -600,6 +611,14 @@ public class MyOpening : MonoBehaviour
 
 		//回転
 		BossImage[m_numAppearingImages].transform.Rotate(Vector3.forward * (m_rotationSpeedOfBossImage * Time.deltaTime));
+
+		//SEの再生
+		if (m_countRotationSoundInterval >= m_rotationSoundInterval)
+		{
+			MySoundManager.Instance.Play(SeCollection.SwordAttack);
+			m_countRotationSoundInterval = 0;
+		}
+		m_countRotationSoundInterval += Time.deltaTime;
 
 		//出現時間を超えた
 		if (m_countTimeState >= m_bossImageAppearanceTime)

@@ -190,6 +190,11 @@ public class MyGame : MonoBehaviour
 	/// </summary>
 	[SerializeField]
 	float m_appearanceTimeBoss;
+
+	/// <summary>
+	/// ボスが登場した時カメラが止まった
+	/// </summary>
+	bool m_isCameraStoppedWhenTheBossAppeared;
 	#endregion
 
 	#region ボス撃破状態
@@ -413,6 +418,31 @@ public class MyGame : MonoBehaviour
 			//カメラの設定とプレイヤー&ボスのアニメーション
 			m_initPosCameraState = CameraScript.transform.position;
 			m_player.StartAnimIdle();
+			m_isCameraStoppedWhenTheBossAppeared = false;
+
+			//ワープマネージャ
+			if (myStage.CurrentField.WarpManagerScript)
+				myStage.CurrentField.WarpManagerScript.enabled = false;
+
+			//BGMの停止
+			MySoundManager.Instance.StopBGM();
+
+			m_stageStatePrev = m_stageState;
+		}
+
+		//状況認識した時間～カメラが動き終わるまで
+		if (m_countTimeState >= m_situationRecognitionTime && m_countTimeState <= m_situationRecognitionTime + m_timeCameraMovesBoss)
+		{
+			//ボスにカメラがズーム
+			Transposition(CameraScript.gameObject, m_initPosCameraState,
+				m_boss.transform.position + m_boss.transform.forward * m_cameraDistanceTarget + Vector3.up * m_cameraHeight,
+				(m_countTimeState - m_situationRecognitionTime), m_timeCameraMovesBoss);
+		}
+
+		//カメラが動いているandカメラが動き終わる時間
+		if(!m_isCameraStoppedWhenTheBossAppeared && m_countTimeState >= m_situationRecognitionTime + m_timeCameraMovesBoss)
+		{
+			m_isCameraStoppedWhenTheBossAppeared = true;
 			Debug.Log("ボスの威嚇アニメーションスタート");
 
 			//SEの再生
@@ -435,24 +465,6 @@ public class MyGame : MonoBehaviour
 						true, m_boss.transform.position.x, m_boss.transform.position.y, m_boss.transform.position.z);
 					break;
 			}
-
-			//ワープマネージャ
-			if (myStage.CurrentField.WarpManagerScript)
-				myStage.CurrentField.WarpManagerScript.enabled = false;
-
-			//BGMの停止
-			MySoundManager.Instance.StopBGM();
-
-			m_stageStatePrev = m_stageState;
-		}
-
-		//状況認識した時間～カメラが動き終わるまで
-		if (m_countTimeState >= m_situationRecognitionTime && m_countTimeState <= m_situationRecognitionTime + m_timeCameraMovesBoss)
-		{
-			//ボスにカメラがズーム
-			Transposition(CameraScript.gameObject, m_initPosCameraState,
-				m_boss.transform.position + m_boss.transform.forward * m_cameraDistanceTarget + Vector3.up * m_cameraHeight,
-				(m_countTimeState - m_situationRecognitionTime), m_timeCameraMovesBoss);
 		}
 
 		//カメラの見る場所
@@ -460,7 +472,7 @@ public class MyGame : MonoBehaviour
 
 		//状態の終了
 		if (m_countTimeState >= m_appearanceTimeBoss)
-			m_stageState = StageStatus.BossGame;
+			m_stageState = StageStatus.BossGame;			
 	}
 
 	//----------------------------------------------------------------------------------------------------
@@ -483,7 +495,7 @@ public class MyGame : MonoBehaviour
 			m_boss.transform.LookAt(m_player.transform);
 			m_boss.StartAI();
 			myCamera.SetPosition(-(m_boss.transform.position - m_player.transform.position).normalized
-				+ (Vector3.Scale(myStage.CurrentField.RelativePosCamera,Vector3.up)));
+				+ (Vector3.Scale(myStage.CurrentField.RelativePosCamera, Vector3.up)));
 
 			//BGMの切り替え
 			switch (m_stageNum)

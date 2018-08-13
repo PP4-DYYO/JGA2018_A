@@ -93,9 +93,9 @@ public class MyCamera : MonoBehaviour
 
 	//----------------------------------------------------------------------------------------------------
 	/// <summary>
-	/// 初期
+	/// 起動
 	/// </summary>
-	void Start()
+	void Awake()
 	{
 		//対象の設定
 		m_target = myGame.CharacterScript.PlayerScript;

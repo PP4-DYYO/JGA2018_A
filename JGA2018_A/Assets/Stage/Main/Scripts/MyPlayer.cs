@@ -680,6 +680,12 @@ public class MyPlayer : MonoBehaviour
 	#region 攻撃範囲
 	[Header("攻撃範囲")]
 	/// <summary>
+	/// 剣の届く距離
+	/// </summary>
+	[SerializeField]
+	float m_distanceTheSwordCanReach;
+
+	/// <summary>
 	/// 攻撃１のAパターンの頂点
 	/// </summary>
 	static readonly Vector3[] ATTACK1_A_VERTECES =
@@ -2210,6 +2216,10 @@ public class MyPlayer : MonoBehaviour
 			else if (m_workMyAttack)
 				Damage(m_workMyAttack);
 
+			//カウンタの終了
+			if(m_isCounter)
+				m_isCounter = false;
+
 			m_workMyAttack = null;
 		}
 	}
@@ -2688,7 +2698,7 @@ public class MyPlayer : MonoBehaviour
 	{
 		//ワールド座標で(ボス戦の時)ボスの位置とプレイヤーの方向
 		if (myCharacter.GameScript.StageState == StageStatus.BossGame)
-			m_workMatrix.SetTRS(myCharacter.GetPosBoss(), transform.rotation, Vector3.one);
+			m_workMatrix.SetTRS(myCharacter.GetPosBoss() - transform.forward * (m_distanceTheSwordCanReach / 2), transform.rotation, Vector3.one);
 		else
 			m_workMatrix.SetTRS(transform.position, transform.rotation, Vector3.one);
 
@@ -2721,7 +2731,7 @@ public class MyPlayer : MonoBehaviour
 	{
 		//ワールド座標で(ボス戦の時)ボスの位置とプレイヤーの方向
 		if (myCharacter.GameScript.StageState == StageStatus.BossGame)
-			m_workMatrix.SetTRS(myCharacter.GetPosBoss(), transform.rotation, Vector3.one);
+			m_workMatrix.SetTRS(myCharacter.GetPosBoss() - transform.forward * (m_distanceTheSwordCanReach / 2), transform.rotation, Vector3.one);
 		else
 			m_workMatrix.SetTRS(transform.position, transform.rotation, Vector3.one);
 

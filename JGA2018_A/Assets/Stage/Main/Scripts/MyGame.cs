@@ -272,7 +272,7 @@ public class MyGame : MonoBehaviour
 			ReproduceInstance();
 
 			//ステージ番号の保存
-			if (MyGameInfo.Instance.StageNum < m_stageNum)
+			if (PlayerPrefs.GetInt(PlayerPrefsKeys.STAGE_NUM) < m_stageNum)
 				PlayerPrefs.SetInt(PlayerPrefsKeys.STAGE_NUM, m_stageNum);
 			MyGameInfo.Instance.StageNum = m_stageNum;
 

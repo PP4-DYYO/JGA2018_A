@@ -120,21 +120,7 @@ public class MyMirrorMinisterAI : MyAiBoss
 				break;
 			case AIMode.ATTACK:
 				//一定時間毎に攻撃をする
-				if (m_hitPoint < (m_maxHitPoint * 3) / 4 && m_specialAttackCount < m_specialAttackLimit)
-				{
-					Doppelganger = Instantiate(gameObject) as GameObject;
-					Doppelganger.transform.parent = myAiManager.transform;
-					Doppelganger.transform.position = new Vector3(gameObject.transform.position.x + 3f, gameObject.transform.position.y, gameObject.transform.position.z + 3f);
-
-					m_specialAttackCount += 1;
-
-					//SEの再生
-					MySoundManager.Instance.Play(SeCollection.Divide, true, transform.position.x, transform.position.y, transform.position.z);
-				}
-				else
-				{
-					NomalAttack();
-				}
+				NomalAttack();
 				break;
 			case AIMode.APPROACH:
 				//近づく(y座標は固定)            
@@ -154,6 +140,20 @@ public class MyMirrorMinisterAI : MyAiBoss
 	public override void ReceiveDamage(int damage)
 	{
 		base.ReceiveDamage(damage);
+
+		//特殊技
+		if (m_hitPoint < (m_maxHitPoint * 3) / 4 && m_specialAttackCount < m_specialAttackLimit)
+		{
+			Doppelganger = Instantiate(gameObject) as GameObject;
+			Doppelganger.transform.parent = myAiManager.transform;
+			Doppelganger.transform.position = new Vector3(gameObject.transform.position.x + 3f, gameObject.transform.position.y, gameObject.transform.position.z + 3f);
+
+			m_specialAttackCount += 1;
+
+			//SEの再生
+			MySoundManager.Instance.Play(SeCollection.Divide, true, transform.position.x, transform.position.y, transform.position.z);
+		}
+
 		if (m_hitPoint <= 0)
 		{
 			Destroy(Doppelganger);

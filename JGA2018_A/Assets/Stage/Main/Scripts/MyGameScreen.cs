@@ -357,13 +357,19 @@ public class MyGameScreen : MonoBehaviour
 
 	//----------------------------------------------------------------------------------------------------
 	/// <summary>
-	/// 初期
+	/// 起動
 	/// </summary>
-	void Start()
+	void Awake()
 	{
 		//外部のインスタンス
 		m_character = myMainUi.GameScript.CharacterScript;
 		m_player = m_character.PlayerScript;
+
+		MaskGauge.fillAmount = 0f;
+		CarryMaskGauge.fillAmount = 0f;
+		VirusMaskGauge.fillAmount = 0f;
+		MirrorMaskGauge.fillAmount = 0f;
+		MagicMaskGauge.fillAmount = 0f;
 	}
 
 	//----------------------------------------------------------------------------------------------------

@@ -216,6 +216,11 @@ public class MyOpening : MonoBehaviour
 	float m_bossImageAppearanceTime;
 
 	/// <summary>
+	/// フレーム前のアピールテキスト文字
+	/// </summary>
+	string m_appealTextPrev;
+
+	/// <summary>
 	/// ボス画像がアピールする時間
 	/// </summary>
 	[SerializeField]
@@ -612,8 +617,13 @@ public class MyOpening : MonoBehaviour
 	void BossImageAppeal()
 	{
 		//アピール文字
+		m_appealTextPrev = AppealText.text;
 		AppealText.text	= m_bossImageNames[m_numAppearingImages]
 			.Substring(0, (int)(m_bossImageNames[m_numAppearingImages].Length * ((m_countTimeState - m_bossImageAppearanceTime) / m_bossImageAppealTime)));
+
+		//アピール文字が増えた
+		if (m_appealTextPrev != AppealText.text)
+			MySoundManager.Instance.Play(SeCollection.Explosion);
 
 		//アピールタイムが終わった
 		if (m_countTimeState - m_bossImageAppearanceTime >= m_bossImageAppealTime)

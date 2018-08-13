@@ -113,6 +113,7 @@
      <None Include="Assets\Dummy\AssetStore\Particle_Dissolve_Shader\Shaders\legacy\Dissolve_Alpha_Unlit.shader" />
      <None Include="Assets\Dummy\AssetStore\Particle_Dissolve_Shader\Shaders\legacy\DissolveSoft_Alpha_Additive.shader" />
      <None Include="Assets\Dummy\AssetStore\Particle_Dissolve_Shader\Shaders\legacy\Dissolve_Alpha_Additive_softrim.shader" />
+     <None Include="Assets\Stage\Sound\Sound_Copyright.txt" />
      <None Include="Assets\Dummy\AssetStore\Particle_Dissolve_Shader\Shaders\legacy\Dissolve_Alpha_Unlit_softrim.shader" />
      <None Include="Assets\Dummy\AssetStore\Particle_Dissolve_Shader\Shaders\softrim\Particle_softrim_add_stretch.shader" />
      <None Include="Assets\Dummy\AssetStore\Particle_Dissolve_Shader\Shaders\legacy\DissolveSoft_Alpha_Unlit_Opacity_softrim.shader" />

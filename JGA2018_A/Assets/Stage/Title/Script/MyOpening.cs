@@ -615,7 +615,8 @@ public class MyOpening : MonoBehaviour
 		//SEの再生
 		if (m_countRotationSoundInterval >= m_rotationSoundInterval)
 		{
-			MySoundManager.Instance.Play(SeCollection.SwordAttack);
+			MySoundManager.Instance.Play(SeCollection.SwordAttack,
+				true, Camera.main.transform.position.x, Camera.main.transform.position.y, Camera.main.transform.position.z);
 			m_countRotationSoundInterval = 0;
 		}
 		m_countRotationSoundInterval += Time.deltaTime;
@@ -642,7 +643,8 @@ public class MyOpening : MonoBehaviour
 
 		//アピール文字が増えた
 		if (m_appealTextPrev != AppealText.text)
-			MySoundManager.Instance.Play(SeCollection.Explosion);
+			MySoundManager.Instance.Play(SeCollection.Explosion,
+				true, Camera.main.transform.position.x, Camera.main.transform.position.y, Camera.main.transform.position.z);
 
 		//アピールタイムが終わった
 		if (m_countTimeState - m_bossImageAppearanceTime >= m_bossImageAppealTime)

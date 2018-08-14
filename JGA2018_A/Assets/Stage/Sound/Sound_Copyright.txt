@@ -2,6 +2,22 @@
 【アドレス】https://maoudamashii.jokersounds.com/
 ・explosion
 ・boss_kill
+・change_mask
+・choice_item
+・cure
+・die_player
+・die_weakenemy
+・doppelganger
+・foot_steps
+・get_coin
+・grab
+・jump
+・minister_damage
+・player_damage
+・power_charge
+・select_item
+・throw_bomb
+・throw_mask
 
 
 【サイト名】フリー音楽素材 H/MIX GALLERY
@@ -9,5 +25,24 @@
 ・title
 ・opening
 ・ending
-・stage
-・stage_
+・stage1
+・stage2
+・stage3
+・stage1_boss
+・stage2_boss
+・stage3_boss
+
+
+【サイト名】効果音ラボ
+【アドレス】https://soundeffect-lab.info/agreement/
+・receive_poizon
+・guard
+・magic_sword
+・mirror_sword
+・poizon_sword
+・carry_sword
+・minister_shout
+
+【サイト名】びたちー素材館
+【アドレス】http://www.vita-chi.net/sozai1.htm
+・growl

@@ -29,7 +29,7 @@ public class MyShadowMagicMinisterAI : MyAiBoss
         m_WaitingTime += Time.deltaTime;
         if (m_WaitingTime > 7)
         {
-			if (GameObject.Find("MagicMinister(Clone)").GetComponent<MyMagicMinisterAI>())
+			if (GameObject.Find("MagicMinister(Clone)") != null && GameObject.Find("MagicMinister(Clone)").GetComponent<MyMagicMinisterAI>())
 			{
 				GameObject.Find("MagicMinister(Clone)").GetComponent<MyMagicMinisterAI>().m_isApproach = true;
 				GameObject.Find("MagicMinister(Clone)").GetComponent<MyMagicMinisterAI>().m_appearReset = true;

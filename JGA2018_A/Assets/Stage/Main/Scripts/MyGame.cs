@@ -218,8 +218,7 @@ public class MyGame : MonoBehaviour
 	float m_workFloat;
 	#endregion
 
-
-#if DEBUG
+//#if DEBUG
 	#region デバッグ
 	[Header("デバッグ")]
 	/// <summary>
@@ -234,7 +233,7 @@ public class MyGame : MonoBehaviour
 	[SerializeField]
 	bool m_isAddvanceState_debug;
 	#endregion
-#endif
+//#endif
 
 	//----------------------------------------------------------------------------------------------------
 	/// <summary>
@@ -562,7 +561,7 @@ public class MyGame : MonoBehaviour
 	/// </summary>
 	void DebugProcess()
 	{
-#if DEBUG
+//#if DEBUG
 		//ステージを進める
 		if (m_isAddvanceStage_debug)
 		{
@@ -571,7 +570,7 @@ public class MyGame : MonoBehaviour
 		}
 
 		//状態を進める
-		if (m_isAddvanceState_debug)
+		if (m_isAddvanceState_debug || Input.GetKeyDown(KeyCode.F1))
 		{
 			if (m_stageState != StageStatus.BossDestroyed)
 				m_stageState++;
@@ -580,7 +579,7 @@ public class MyGame : MonoBehaviour
 
 			m_isAddvanceState_debug = false;
 		}
-#endif
+//#endif
 	}
 
 	//----------------------------------------------------------------------------------------------------
